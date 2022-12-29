@@ -1,0 +1,28 @@
+@media screen and (min-width: 480px) {
+  .home_page {
+    width: 45%;
+  }
+}
+
+@media screen and (min-width: 320px) {
+  .home_page {
+    margin: 10px;
+  }
+}
+@media only screen and (max-width: 1199px) {
+  .btn_home {
+    width: 100%;
+  }
+}
+@media only screen and (max-width: 1326px) {
+  .btn_home {
+    display: flex;
+    flex-wrap: nowrap !important;
+  }
+}
+
+@media screen and (max-width: 1080px) {
+  .home_btn {
+    flex-wrap: wrap;
+  }
+}
