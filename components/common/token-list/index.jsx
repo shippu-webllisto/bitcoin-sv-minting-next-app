@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import Image from 'next/image';
 import Styles from './token-list.module.css';
 import Addtoken from '@/components/ui/add-token/index';

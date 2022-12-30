@@ -142,9 +142,14 @@ const Connect = () => {
 
   return (
     <>
-      <div className="flex justify-center items-center my-4">
-        <Card className="w-96">
-          <h1 className="text-center font-bold font-5xl p-3 bg-gray-50 mb-4">Welcome to Bitcoin SV Wallet</h1>
+      <div className="flex justify-center items-center mt-4 ">
+        <Card className="w-96 bg-gray-50">
+          <div className="flex flex-col justify-center items-center my-4  p-2">
+            <Image src="/bitcoin-sv-bsv-logo.svg" alt="bsv-logo" width={100} height={100} />
+            <h1 className="text-center text-2xl my-2 font-semibold leading-loose text-gray-900">
+              Welcome to Bitcoin SV Wallet
+            </h1>
+          </div>
           <Button type="button" gradientMonochrome="purple" onClick={handlePopup}>
             Import Account
           </Button>

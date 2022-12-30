@@ -9,9 +9,9 @@
       "type": "image/x-icon"
     },
     {
-      "src": "maskable_icon.png",
+      "src": "bitcoin-sv-bsv-logo.svg",
       "sizes": "196x196",
-      "type": "image/png",
+      "type": "image/svg",
       "purpose": "any maskable"
     },
     {
@@ -28,7 +28,6 @@
   "theme_color": "#000000",
   "background_color": "#ffffff",
   "start_url": "/",
-  "scope": "/",
   "display": "standalone",
   "orientation": "portrait"
 }

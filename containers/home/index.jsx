@@ -39,8 +39,8 @@ const Home = () => {
               className="rounded-full text-center"
               src="/assets/images/Bsv-icon-small.png"
               alt="bsv-logo"
-              width={50}
-              height={40}
+              width={60}
+              height={60}
               priority
             />
             <div className="text-end text-lg text-bold">

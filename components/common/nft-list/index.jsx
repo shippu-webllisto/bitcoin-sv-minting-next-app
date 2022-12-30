@@ -1,7 +1,8 @@
 import React from 'react';
 import Image from 'next/image';
-import { getShortAddress } from '@/utils/getShortAddress.js';
 import Styles from './nft-list.module.css';
+
+import { getShortAddress } from '@/utils/getShortAddress.js';
 
 const Array = [
   { walletAddress: 'mpEr5y6vatNnxKqAgPVykmyFEG3K4nFmoY', avatar: '/assets/svgs/nft_cion.svg', account: 'NFT-1' },
@@ -35,7 +36,7 @@ const NftList = () => {
                       width={30}
                       height={30}
                     />
-                    <div className="flex flex-col justify-end mx-8">
+                    <div className="flex flex-col mx-8">
                       <span className="font-bold text-sm">{item?.account}</span>
                       <span className="font-mono">{getShortAddress(item?.walletAddress)}</span>
                     </div>

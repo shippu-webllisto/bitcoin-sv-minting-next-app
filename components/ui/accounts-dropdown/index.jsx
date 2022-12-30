@@ -175,8 +175,8 @@ const AccountDropDown = () => {
                 className="rounded-full mt-2"
                 src={WalletConnect?.avatar ?? '/assets/svgs/user.svg'}
                 alt="logo"
-                width={30}
-                height={30}
+                width={40}
+                height={40}
               />
               <div className="flex flex-col justify-end mx-4 text-black">
                 <span className="font-bold text-lg">{WalletConnect?.account}</span>

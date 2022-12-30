@@ -19,15 +19,6 @@ function MyApp({ Component, pageProps }) {
 
   useEffect(() => {
     setInitialRenderComplete(true);
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-        navigator.serviceWorker
-          .register('../serviceWorker.js')
-          .then(() => {})
-          .catch(() => {});
-      });
-    }
-
     import('flowbite/dist/flowbite');
   }, []);
 
