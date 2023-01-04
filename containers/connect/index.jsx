@@ -11,7 +11,7 @@ import { CopyClipboard } from '@/helpers/CopyClipboard.js';
 import { checkEmptyValue } from '@/utils/checkEmptyValue.js';
 import { CreateAccountData, ImportAccountData } from '@/services/web3-service/bsv.js';
 import { AddAccount } from '@/store/features/add-account/index';
-import { ImportWallet } from '@/store/features/wallet-connect/index';
+import { ConnetedWallet } from '@/store/features/wallet-connect/index';
 
 const avatar = 'https://png.pngtree.com/png-vector/20190223/ourmid/pngtree-vector-avatar-icon-png-image_695765.jpg';
 
@@ -30,7 +30,7 @@ const Connect = () => {
   const handleCreateOpenModal = async (e) => {
     e.preventDefault();
     // generating mnemonic key
-    const { getMnemonicKey } = await CreateAccountData();
+    const { getMnemonicKey } = await CreateAccountData('mainnet');
     if (!checkEmptyValue(getMnemonicKey)) {
       setMnemonicKey(getMnemonicKey);
       setGeneratePopup((prev) => !prev);
@@ -42,8 +42,7 @@ const Connect = () => {
     try {
       if (checkEmptyValue(mnemonicValue)) return toast.error('please, fill the required fields.');
 
-      const { getAddress, getBalance, getNetwork } = await CreateAccountData();
-
+      const { getAddress, getBalance, getNetwork } = await CreateAccountData('mainnet');
       if (
         !checkEmptyValue(mnemonicKey) &&
         !checkEmptyValue(getAddress) &&
@@ -54,7 +53,8 @@ const Connect = () => {
           AddAccount({
             walletAddress: getAddress,
             mnemonic: mnemonicValue,
-            privateKey: '',
+            testnetPrivateKey: '',
+            mainnetPrivateKey: '',
             network: getNetwork,
             bsvAmount: getBalance,
             avatar: avatar,
@@ -62,17 +62,17 @@ const Connect = () => {
           }),
         );
         dispatch(
-          ImportWallet({
+          ConnetedWallet({
             walletAddress: getAddress,
             mnemonic: mnemonicValue,
-            privateKey: '',
+            testnetPrivateKey: '',
+            mainnetPrivateKey: '',
             network: getNetwork,
             bsvAmount: getBalance,
             avatar: avatar,
             account: 'Account-1',
           }),
         );
-
         // close popup and clear input
         setGeneratePopup((prev) => !prev);
         setMnemonicValue('');
@@ -99,7 +99,7 @@ const Connect = () => {
     e.preventDefault();
     if (checkEmptyValue(importValue)) return toast.error('please, fill the required fields.');
     try {
-      const { getAddress, getBalance, getNetwork } = await ImportAccountData(importValue);
+      const { getAddress, getBalance, getNetwork } = await ImportAccountData(importValue, 'mainnet');
 
       if (
         !checkEmptyValue(importValue) &&
@@ -111,7 +111,8 @@ const Connect = () => {
           AddAccount({
             walletAddress: getAddress,
             mnemonic: importValue,
-            privateKey: '',
+            testnetPrivateKey: '',
+            mainnetPrivateKey: '',
             network: getNetwork,
             bsvAmount: getBalance,
             avatar: avatar,
@@ -119,10 +120,11 @@ const Connect = () => {
           }),
         );
         dispatch(
-          ImportWallet({
+          ConnetedWallet({
             walletAddress: getAddress,
             mnemonic: importValue,
-            privateKey: '',
+            testnetPrivateKey: '',
+            mainnetPrivateKey: '',
             network: getNetwork,
             bsvAmount: getBalance,
             avatar: avatar,

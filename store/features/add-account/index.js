@@ -11,12 +11,15 @@ const addNewAccount = createSlice({
     AddAccount: (state, action) => {
       state.addAccount = [...state.addAccount, action.payload];
     },
+    UpdateNetwork: (state, action) => {
+      state.addAccount = action.payload;
+    },
     ResetAddAccount: (state) => {
       state.addAccount = [];
     },
   },
 });
 
-export const { AddAccount, ResetAddAccount } = addNewAccount.actions;
+export const { AddAccount, ResetAddAccount, UpdateNetwork } = addNewAccount.actions;
 
 export default addNewAccount.reducer;

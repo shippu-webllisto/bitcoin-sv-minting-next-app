@@ -12,23 +12,21 @@ const Navbar = () => {
     <>
       <header aria-label="Site Header" className=" bg-[#527195] text-gray-100 overflow-hidden sticky top-0 z-30">
         <div className="mx-auto flex items-center gap-8 px-4 h-16 xl:px-32  sm:px-6 lg:px-8 my-2">
-          <Link className="block text-teal-600 hover:text-orange-400 w-1/10 " href="/">
-            <div className="">
-              <Image
-                src="/assets/svgs/nft_cion.svg"
-                alt="logo"
-                width={50}
-                height={50}
-                priority
-                className="inline-block align-middle w-11"
-              />
-              {!checkEmptyValue(network) && (
-                <span className="font-mono font-bold text-center bg-red-700 text-white rounded-md inline-block align-middle w-4/10 ml-2 border-lg px-2 py-1 text-xs">
-                  {network}
-                </span>
-              )}
-            </div>
-          </Link>
+          <div className="block text-teal-600 hover:text-orange-400 w-1/10 ">
+            <Image
+              src="/bitcoin-sv-bsv-logo.svg"
+              alt="logo"
+              width={50}
+              height={50}
+              priority
+              className="inline-block align-middle w-11"
+            />
+            {!checkEmptyValue(network) && (
+              <span className="font-mono font-bold text-center bg-red-700 text-white rounded-md inline-block align-middle w-4/10 ml-2 border-lg px-2 py-1 text-xs">
+                {network}
+              </span>
+            )}
+          </div>
 
           <div className="flex flex-1 items-center justify-end md:justify-between">
             <nav aria-label="Site Nav" className="hidden md:block">

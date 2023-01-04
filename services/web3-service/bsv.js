@@ -1,24 +1,26 @@
-// import BSV from 'bsv-wallet';
 const { Wallet } = require('bsv-wallet');
 
-export const CreateAccountData = async () => {
-  const wallet = new Wallet();
+export const CreateAccountData = async (network) => {
+  const Network = network === 'mainnet' ? 'livenet' : 'testnet';
+  const wallet = new Wallet({ network: Network });
 
-  const getMnemonicKey = wallet.getPrivateKey();
+  const getMnemonicKey = wallet.mnemonic;
   const getAddress = await wallet.getAddress();
   const getBalance = await wallet.getBalance();
-  const getNetwork = wallet.masterHDPrivateKey.network.alias;
-  // const privateKey = wallet.masterHDPrivateKey.xprivkey;
+  const getNetwork =
+    Network === 'livenet' ? wallet.masterHDPrivateKey.network.alias : wallet.masterHDPrivateKey.network.name;
 
   return { getMnemonicKey, getAddress, getBalance, getNetwork };
 };
 
-export const ImportAccountData = async (mnemonicKey) => {
-  const wallet = new Wallet({ key: mnemonicKey });
+export const ImportAccountData = async (mnemonicKey, network) => {
+  const Network = network === 'mainnet' ? 'livenet' : 'testnet';
+  const wallet = new Wallet({ key: mnemonicKey, network: Network });
 
   const getAddress = await wallet.getAddress();
   const getBalance = await wallet.getBalance();
-  const getNetwork = wallet.masterHDPrivateKey.network.alias;
+  const getNetwork =
+    Network === 'livenet' ? wallet.masterHDPrivateKey.network.alias : wallet.masterHDPrivateKey.network.name;
 
   return { getAddress, getBalance, getNetwork };
 };

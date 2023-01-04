@@ -132,11 +132,11 @@ const Home = () => {
         </div>
       </div>
 
-      {/* nfts list  */}
-      <NftList />
-
       {/* tokens list  */}
       <TokenList />
+
+      {/* nfts list  */}
+      <NftList />
     </div>
   );
 };

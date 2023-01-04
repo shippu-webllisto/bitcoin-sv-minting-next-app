@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "target": "ESNext",
-    "module": "ESNext",
+    "module": "NodeNext",
     "useDefineForClassFields": true,
     "allowJs": true,
     "esModuleInterop": false,
@@ -16,6 +16,6 @@
       "@/*": ["*"]
     }
   },
-  "include": ["**/*.ts", "**/*.tsx", "**/*.jsx", "**/*.js"],
+  "include": ["**/*.jsx", "**/*.js"],
   "exclude": ["node_modules"]
 }

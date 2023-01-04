@@ -8,11 +8,11 @@ module.exports = {
     './components/**/*.+(js|jsx|ts|tsx|html|css|scss)',
     './containers/**/*.+(js|jsx|ts|tsx|html|css|scss)',
   ],
+  plugins: [require('flowbite/plugin')],
   darkMode: true,
   theme: {
     extend: {},
   },
-  plugins: [require('flowbite/plugin')],
   corePlugins: {
     preflight: true,
   },

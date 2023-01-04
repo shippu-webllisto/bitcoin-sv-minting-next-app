@@ -7,9 +7,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import { endpoints } from '@/routes/endpoints.js';
 import { getShortAddress } from '@/utils/getShortAddress';
 import PopupModal from '@/components/ui/popup-modal/index.jsx';
-import { ImportWallet, ResetWallet } from '@/store/features/wallet-connect/index.jsx';
-import { AddAccount, ResetAddAccount } from '@/store/features/add-account/index';
+import { ConnetedWallet, ResetWallet } from '@/store/features/wallet-connect/index.jsx';
+import { ResetAddAccount, UpdateNetwork } from '@/store/features/add-account/index';
 import ExportDataModal from '@/components/common/export-data-modal/index';
+import { ImportAccountData } from '@/services/web3-service/bsv';
+import { checkEmptyValue } from '@/utils/checkEmptyValue';
 
 const Setting = () => {
   const router = useRouter();
@@ -28,10 +30,6 @@ const Setting = () => {
     return router.push(endpoints.connect);
   };
 
-  const handleBack = () => {
-    return router.push(endpoints.home);
-  };
-
   const handlePopup = (e) => {
     e.preventDefault();
     setPopup((prev) => !prev);
@@ -42,12 +40,27 @@ const Setting = () => {
     setSwichNetworkpopup((prev) => !prev);
   };
 
-  const handleChangeNetwork = () => {
+  const handleChangeNetwork = async () => {
     const network = WalletConnect?.network === 'testnet' ? 'mainnet' : 'testnet';
-    dispatch(ImportWallet({ ...WalletConnect, network }));
-    const data = addAccount?.find((item) => item.walletAddress === WalletConnect.walletAddress);
-    dispatch(AddAccount({ ...data, network }));
-    setSwichNetworkpopup(false);
+    const { getAddress, getBalance, getNetwork } = await ImportAccountData(WalletConnect.mnemonic, network);
+    if (
+      !checkEmptyValue(network) &&
+      !checkEmptyValue(getAddress) &&
+      !checkEmptyValue(getBalance) &&
+      !checkEmptyValue(getNetwork)
+    ) {
+      const updatedData = addAccount?.map((item) => {
+        if (item.mnemonic === WalletConnect.mnemonic) {
+          return { ...WalletConnect, network: getNetwork, walletAddress: getAddress, bsvAmount: getBalance };
+        }
+        return item;
+      });
+      dispatch(
+        ConnetedWallet({ ...WalletConnect, network: getNetwork, walletAddress: getAddress, bsvAmount: getBalance }),
+      );
+      dispatch(UpdateNetwork(updatedData));
+      setSwichNetworkpopup(false);
+    }
   };
 
   const handleExportMnemonic = () => {
@@ -70,7 +83,7 @@ const Setting = () => {
               alt="cross-icon"
               width={20}
               height={20}
-              onClick={handleBack}
+              onClick={() => router.push(endpoints.home)}
             />
           </div>
           <h5 className="text-base font-semibold text-gray-900 dark:text-white lg:text-xl">Account Management</h5>
@@ -109,7 +122,7 @@ const Setting = () => {
                 <span className="ml-3 flex-1 whitespace-nowrap">View Account on blockcheck.info</span>
               </a>
             </li>
-            <li key={3}>
+            {/* <li key={3}>
               <button
                 type="button"
                 className="group flex w-full rounded-lg bg-gray-200 p-3 text-base font-bold text-gray-900 hover:bg-gray-300 hover:shadow dark:bg-gray-600 dark:text-white dark:hover:bg-gray-500"
@@ -118,7 +131,7 @@ const Setting = () => {
                 <Image className="rounded-full w-6" src="/assets/svgs/global.svg" alt="global" width={20} height={20} />
                 <span className="ml-3 flex-1 whitespace-nowrap">Change Network</span>
               </button>
-            </li>
+            </li> */}
             <li key={4}>
               <button
                 type="button"
@@ -145,13 +158,7 @@ const Setting = () => {
                 className="group flex w-full rounded-lg bg-gray-200 p-3 text-base font-bold text-gray-900 hover:bg-gray-300 hover:shadow dark:bg-gray-600 dark:text-white dark:hover:bg-gray-500"
                 onClick={handlePopup}
               >
-                <Image
-                  className="rounded-full w-6"
-                  src="/assets/svgs/garbage-bin.svg"
-                  alt="Delete-Icon"
-                  width={20}
-                  height={20}
-                />
+                <Image src="/assets/svgs/garbage-bin.svg" alt="Delete-Icon" width={20} height={20} />
                 <span className="ml-3 flex-1 whitespace-nowrap">Delete Current Account</span>
               </button>
             </li>
@@ -161,13 +168,7 @@ const Setting = () => {
                 className="group flex w-full rounded-lg bg-gray-200 p-3 text-base font-bold text-gray-900 hover:bg-gray-300 hover:shadow dark:bg-gray-600 dark:text-white dark:hover:bg-gray-500"
                 onClick={handleLogout}
               >
-                <Image
-                  className=""
-                  src="/assets/svgs/export-arrow-14569.svg"
-                  alt="Logout-Icon"
-                  width={20}
-                  height={20}
-                />
+                <Image src="/assets/svgs/export-arrow-14569.svg" alt="Logout-Icon" width={20} height={20} />
                 <span className="ml-3 flex-1 whitespace-nowrap">Lock</span>
               </button>
             </li>

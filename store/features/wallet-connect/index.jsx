@@ -14,7 +14,7 @@ const WalletConnect = createSlice({
   name: 'walletConnect',
   initialState,
   reducers: {
-    ImportWallet: (state, action) => {
+    ConnetedWallet: (state, action) => {
       state.walletAddress = action.payload.walletAddress;
       state.mnemonic = action.payload.mnemonic;
       state.privateKey = action.payload.privateKey;
@@ -35,6 +35,6 @@ const WalletConnect = createSlice({
   },
 });
 
-export const { ImportWallet, ResetWallet } = WalletConnect.actions;
+export const { ConnetedWallet, ResetWallet } = WalletConnect.actions;
 
 export default WalletConnect.reducer;

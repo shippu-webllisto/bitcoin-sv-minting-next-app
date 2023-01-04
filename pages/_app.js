@@ -19,7 +19,7 @@ function MyApp({ Component, pageProps }) {
 
   useEffect(() => {
     setInitialRenderComplete(true);
-    import('flowbite/dist/flowbite');
+    require('flowbite/dist/flowbite');
   }, []);
 
   if (!initialRenderComplete) {
@@ -27,19 +27,17 @@ function MyApp({ Component, pageProps }) {
   } else {
     return (
       <>
-        <React.StrictMode>
-          <Provider store={store}>
-            <App>
-              <Navbar />
-              <Head>
-                <title>bitcoin-sv-minting-app</title>
-              </Head>
-              <Component key={router.asPath} {...pageProps} />
-              <ToastContainer theme="colored" autoClose={2000} hideProgressBar={true} />
-              <Footer />
-            </App>
-          </Provider>
-        </React.StrictMode>
+        <Provider store={store}>
+          <App>
+            <Navbar />
+            <Head>
+              <title>bitcoin-sv-minting-app</title>
+            </Head>
+            <Component key={router.asPath} {...pageProps} />
+            <ToastContainer theme="colored" autoClose={2000} hideProgressBar={true} />
+            <Footer />
+          </App>
+        </Provider>
       </>
     );
   }

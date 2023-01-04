@@ -10,7 +10,7 @@ import { endpoints } from '@/routes/endpoints';
 import { checkEmptyValue } from '@/utils/checkEmptyValue';
 import { AddAccount } from '@/store/features/add-account/index';
 import { CopyClipboard } from '@/helpers/CopyClipboard';
-import { ImportWallet } from '@/store/features/wallet-connect/index';
+import { ConnetedWallet } from '@/store/features/wallet-connect/index';
 import InputPopupModal from '../input-popup-modal/index';
 import { CreateAccountData, ImportAccountData } from '@/services/web3-service/bsv';
 
@@ -46,7 +46,7 @@ const AccountDropDown = () => {
   const handleCreateOpenModal = async (e) => {
     e.preventDefault();
     // generating mnemonic key
-    const { getMnemonicKey } = await CreateAccountData();
+    const { getMnemonicKey } = await CreateAccountData(WalletConnect.network);
     if (!checkEmptyValue(getMnemonicKey)) {
       setMnemonicKey(getMnemonicKey);
       setGeneratePopup((prev) => !prev);
@@ -58,7 +58,7 @@ const AccountDropDown = () => {
     try {
       if (checkEmptyValue(mnemonicValue)) return toast.error('please, fill the required fields.');
 
-      const { getAddress, getBalance, getNetwork } = await CreateAccountData();
+      const { getAddress, getBalance, getNetwork } = await CreateAccountData(WalletConnect.network);
 
       if (
         !checkEmptyValue(getAddress) &&
@@ -72,7 +72,8 @@ const AccountDropDown = () => {
           AddAccount({
             walletAddress: getAddress,
             mnemonic: mnemonicValue,
-            privateKey: '',
+            testnetPrivateKey: '',
+            mainnetPrivateKey: '',
             network: getNetwork,
             bsvAmount: getBalance,
             avatar: avatar,
@@ -80,10 +81,11 @@ const AccountDropDown = () => {
           }),
         );
         dispatch(
-          ImportWallet({
+          ConnetedWallet({
             walletAddress: getAddress,
             mnemonic: mnemonicValue,
-            privateKey: '',
+            testnetPrivateKey: '',
+            mainnetPrivateKey: '',
             network: getNetwork,
             bsvAmount: getBalance,
             avatar: avatar,
@@ -118,7 +120,7 @@ const AccountDropDown = () => {
     e.preventDefault();
     if (checkEmptyValue(importValue)) return toast.error('please, fill the required fields.');
     try {
-      const { getAddress, getBalance, getNetwork } = await ImportAccountData(importValue);
+      const { getAddress, getBalance, getNetwork } = await ImportAccountData(importValue, WalletConnect.network);
 
       if (
         !checkEmptyValue(getAddress) &&
@@ -131,7 +133,8 @@ const AccountDropDown = () => {
           AddAccount({
             walletAddress: getAddress,
             mnemonic: importValue,
-            privateKey: '',
+            testnetPrivateKey: '',
+            mainnetPrivateKey: '',
             network: getNetwork,
             bsvAmount: getBalance,
             avatar: avatar,
@@ -139,10 +142,11 @@ const AccountDropDown = () => {
           }),
         );
         dispatch(
-          ImportWallet({
+          ConnetedWallet({
             walletAddress: getAddress,
             mnemonic: importValue,
-            privateKey: '',
+            testnetPrivateKey: '',
+            mainnetPrivateKey: '',
             network: getNetwork,
             bsvAmount: getBalance,
             avatar: avatar,
@@ -162,7 +166,7 @@ const AccountDropDown = () => {
   };
 
   const handleSeletcedAccount = (item) => {
-    dispatch(ImportWallet(item));
+    dispatch(ConnetedWallet(item));
   };
 
   return (
@@ -268,7 +272,7 @@ const AccountDropDown = () => {
       </Modal>
 
       {/* create your Account - modal  */}
-      <Modal show={generatePopup} size="md" popup={true} onClose={handleCreateOpenModal}>
+      <Modal show={generatePopup} size="md" popup={true} onClose={() => setGeneratePopup(false)}>
         <Modal.Header />
         <Modal.Body>
           <div className="text-center">
