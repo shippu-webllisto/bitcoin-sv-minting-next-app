@@ -12,6 +12,7 @@ import { ResetAddAccount, UpdateNetwork } from '@/store/features/add-account/ind
 import ExportDataModal from '@/components/common/export-data-modal/index';
 import { ImportAccountData } from '@/services/web3-service/bsv';
 import { checkEmptyValue } from '@/utils/checkEmptyValue';
+import { Decryption } from '@/helpers/encryptionAndDecryption';
 
 const Setting = () => {
   const router = useRouter();
@@ -22,7 +23,10 @@ const Setting = () => {
   const [popup, setPopup] = useState(false);
   const [swichNetworkpopup, setSwichNetworkpopup] = useState(false);
   const [exportMnemonicPopup, setExportMnemonicPopup] = useState(false);
-  const [exportPrivateKeyPopup, setExportPrivateKeyPopup] = useState(false);
+  // const [exportPrivateKeyPopup, setExportPrivateKeyPopup] = useState(false);
+
+  const [mnemonicHash, setMnemonicHash] = useState('');
+  // const [privateKeyHash, setPrivateKeyHash] = useState('');
 
   const handleLogout = () => {
     dispatch(ResetWallet());
@@ -64,12 +68,22 @@ const Setting = () => {
   };
 
   const handleExportMnemonic = () => {
-    setExportMnemonicPopup((prev) => !prev);
+    const decryptedMnemonicKey = Decryption(WalletConnect?.mnemonic);
+    if (!checkEmptyValue(decryptedMnemonicKey)) {
+      setMnemonicHash(decryptedMnemonicKey);
+      setExportMnemonicPopup((prev) => !prev);
+    }
   };
 
-  const handleExportPrivateKey = () => {
-    setExportPrivateKeyPopup((prev) => !prev);
-  };
+  //   const handleExportPrivateKey = () => {
+  //     const decryptedPrivateKey = Decryption(
+  //       WalletConnect?.privateKey,
+  //     );
+  //     if (!checkEmptyValue(decryptedPrivateKey)) {
+  //       setPrivateKeyHash(decryptedPrivateKey);
+  //       setExportPrivateKeyPopup((prev) => !prev);
+  //     }
+  //   };
 
   return (
     <>
@@ -201,18 +215,18 @@ const Setting = () => {
       {/* export Mnemonic Popup modal  */}
       <ExportDataModal
         title="Export Mnemonic"
-        data={WalletConnect?.mnemonic}
+        data={mnemonicHash}
         popup={exportMnemonicPopup}
-        onClose={handleExportMnemonic}
+        onClose={() => setExportMnemonicPopup(false)}
       />
 
       {/* export Private Key Popup modal  */}
-      <ExportDataModal
+      {/* <ExportDataModal
         title="Export Private Key"
-        data={WalletConnect?.privateKey || "we does't have a private key"}
+        data={privateKeyHash}
         popup={exportPrivateKeyPopup}
-        onClose={handleExportPrivateKey}
-      />
+        onClose={() => setExportPrivateKeyPopup(false)}
+      /> */}
     </>
   );
 };

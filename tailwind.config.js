@@ -4,11 +4,10 @@ module.exports = {
   content: [
     './node_modules/flowbite/**/*.js',
     './node_modules/flowbite-react/**/*.js',
-    './pages/**/*.+(js|jsx|ts|tsx|html|css|scss)',
-    './components/**/*.+(js|jsx|ts|tsx|html|css|scss)',
-    './containers/**/*.+(js|jsx|ts|tsx|html|css|scss)',
+    './pages/**/*.{js,jsx,ts,tsx,html,css,scss}',
+    './components/**/*.{js,jsx,ts,tsx,html,css,scss}',
+    './containers/**/*.{js,jsx,ts,tsx,html,css,scss}',
   ],
-  plugins: [require('flowbite/plugin')],
   darkMode: true,
   theme: {
     extend: {},
@@ -16,4 +15,5 @@ module.exports = {
   corePlugins: {
     preflight: true,
   },
+  plugins: [require('flowbite/plugin')],
 };

@@ -13,6 +13,7 @@ import { CopyClipboard } from '@/helpers/CopyClipboard';
 import { ConnetedWallet } from '@/store/features/wallet-connect/index';
 import InputPopupModal from '../input-popup-modal/index';
 import { CreateAccountData, ImportAccountData } from '@/services/web3-service/bsv';
+import { Encryption } from '@/helpers/encryptionAndDecryption';
 
 const avatar = 'https://png.pngtree.com/png-vector/20190223/ourmid/pngtree-vector-avatar-icon-png-image_695765.jpg';
 
@@ -58,20 +59,21 @@ const AccountDropDown = () => {
     try {
       if (checkEmptyValue(mnemonicValue)) return toast.error('please, fill the required fields.');
 
+      const encryptedMnemonicKey = Encryption(mnemonicValue);
       const { getAddress, getBalance, getNetwork } = await CreateAccountData(WalletConnect.network);
-
       if (
         !checkEmptyValue(getAddress) &&
         !checkEmptyValue(mnemonicKey) &&
         !checkEmptyValue(getBalance) &&
-        !checkEmptyValue(getNetwork)
+        !checkEmptyValue(getNetwork) &&
+        !checkEmptyValue(encryptedMnemonicKey)
       ) {
         const count = addAccount.length + 1;
 
         dispatch(
           AddAccount({
             walletAddress: getAddress,
-            mnemonic: mnemonicValue,
+            mnemonic: encryptedMnemonicKey,
             testnetPrivateKey: '',
             mainnetPrivateKey: '',
             network: getNetwork,
@@ -83,7 +85,7 @@ const AccountDropDown = () => {
         dispatch(
           ConnetedWallet({
             walletAddress: getAddress,
-            mnemonic: mnemonicValue,
+            mnemonic: encryptedMnemonicKey,
             testnetPrivateKey: '',
             mainnetPrivateKey: '',
             network: getNetwork,
@@ -92,7 +94,6 @@ const AccountDropDown = () => {
             account: `Account-${count}`,
           }),
         );
-
         // close popup and clear input
         setGeneratePopup((prev) => !prev);
         setMnemonicValue('');
@@ -120,19 +121,28 @@ const AccountDropDown = () => {
     e.preventDefault();
     if (checkEmptyValue(importValue)) return toast.error('please, fill the required fields.');
     try {
-      const { getAddress, getBalance, getNetwork } = await ImportAccountData(importValue, WalletConnect.network);
+      const existsAccount = addAccount?.find((item) => item?.walletAddress === WalletConnect?.walletAddress);
+      if (existsAccount) {
+        setImportValue('');
+        setPopupImportModal(false);
+        return toast.error('The mnemonic already exists.');
+      }
 
+      const encryptedMnemonicKey = Encryption(importValue);
+      const { getAddress, getBalance, getNetwork } = await ImportAccountData(importValue, WalletConnect.network);
       if (
         !checkEmptyValue(getAddress) &&
         !checkEmptyValue(importValue) &&
         !checkEmptyValue(getBalance) &&
-        !checkEmptyValue(getNetwork)
+        !checkEmptyValue(getNetwork) &&
+        !checkEmptyValue(encryptedMnemonicKey)
       ) {
         const count = addAccount.length + 1;
+
         dispatch(
           AddAccount({
             walletAddress: getAddress,
-            mnemonic: importValue,
+            mnemonic: encryptedMnemonicKey,
             testnetPrivateKey: '',
             mainnetPrivateKey: '',
             network: getNetwork,
@@ -144,7 +154,7 @@ const AccountDropDown = () => {
         dispatch(
           ConnetedWallet({
             walletAddress: getAddress,
-            mnemonic: importValue,
+            mnemonic: encryptedMnemonicKey,
             testnetPrivateKey: '',
             mainnetPrivateKey: '',
             network: getNetwork,
@@ -153,7 +163,6 @@ const AccountDropDown = () => {
             account: `Account-${count}`,
           }),
         );
-
         // close popup and clear input
         setPopupImportModal((prev) => !prev);
         setImportValue('');

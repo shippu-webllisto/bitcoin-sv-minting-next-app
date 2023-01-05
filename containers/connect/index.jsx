@@ -12,6 +12,7 @@ import { checkEmptyValue } from '@/utils/checkEmptyValue.js';
 import { CreateAccountData, ImportAccountData } from '@/services/web3-service/bsv.js';
 import { AddAccount } from '@/store/features/add-account/index';
 import { ConnetedWallet } from '@/store/features/wallet-connect/index';
+import { Encryption } from '@/helpers/encryptionAndDecryption';
 
 const avatar = 'https://png.pngtree.com/png-vector/20190223/ourmid/pngtree-vector-avatar-icon-png-image_695765.jpg';
 
@@ -42,17 +43,19 @@ const Connect = () => {
     try {
       if (checkEmptyValue(mnemonicValue)) return toast.error('please, fill the required fields.');
 
+      const encryptedMnemonicKey = Encryption(mnemonicValue);
       const { getAddress, getBalance, getNetwork } = await CreateAccountData('mainnet');
       if (
         !checkEmptyValue(mnemonicKey) &&
         !checkEmptyValue(getAddress) &&
         !checkEmptyValue(getBalance) &&
-        !checkEmptyValue(getNetwork)
+        !checkEmptyValue(getNetwork) &&
+        !checkEmptyValue(encryptedMnemonicKey)
       ) {
         dispatch(
           AddAccount({
             walletAddress: getAddress,
-            mnemonic: mnemonicValue,
+            mnemonic: encryptedMnemonicKey,
             testnetPrivateKey: '',
             mainnetPrivateKey: '',
             network: getNetwork,
@@ -64,7 +67,7 @@ const Connect = () => {
         dispatch(
           ConnetedWallet({
             walletAddress: getAddress,
-            mnemonic: mnemonicValue,
+            mnemonic: encryptedMnemonicKey,
             testnetPrivateKey: '',
             mainnetPrivateKey: '',
             network: getNetwork,
@@ -99,18 +102,19 @@ const Connect = () => {
     e.preventDefault();
     if (checkEmptyValue(importValue)) return toast.error('please, fill the required fields.');
     try {
+      const encryptedMnemonicKey = Encryption(importValue);
       const { getAddress, getBalance, getNetwork } = await ImportAccountData(importValue, 'mainnet');
-
       if (
         !checkEmptyValue(importValue) &&
         !checkEmptyValue(getAddress) &&
         !checkEmptyValue(getBalance) &&
-        !checkEmptyValue(getNetwork)
+        !checkEmptyValue(getNetwork) &&
+        !checkEmptyValue(encryptedMnemonicKey)
       ) {
         dispatch(
           AddAccount({
             walletAddress: getAddress,
-            mnemonic: importValue,
+            mnemonic: encryptedMnemonicKey,
             testnetPrivateKey: '',
             mainnetPrivateKey: '',
             network: getNetwork,
@@ -122,7 +126,7 @@ const Connect = () => {
         dispatch(
           ConnetedWallet({
             walletAddress: getAddress,
-            mnemonic: importValue,
+            mnemonic: encryptedMnemonicKey,
             testnetPrivateKey: '',
             mainnetPrivateKey: '',
             network: getNetwork,

@@ -16,10 +16,10 @@ const Navbar = () => {
             <Image
               src="/bitcoin-sv-bsv-logo.svg"
               alt="logo"
-              width={50}
-              height={50}
+              width={35}
+              height={35}
               priority
-              className="inline-block align-middle w-11"
+              className="inline-block align-middle"
             />
             {!checkEmptyValue(network) && (
               <span className="font-mono font-bold text-center bg-red-700 text-white rounded-md inline-block align-middle w-4/10 ml-2 border-lg px-2 py-1 text-xs">
