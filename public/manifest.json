@@ -1,7 +1,7 @@
 {
   "name": "bitcoin sv minting app",
-  "short_name": "bitcoin sv minting",
-  "description": "This app is Bitcoin SV Minting App",
+  "short_name": "bsv-wallet",
+  "description": "this app is bitcoin sv minting app, you can receive and transfer bsv-coin or you can do many more with this wallet.",
   "icons": [
     {
       "src": "pwa-icons/manifest-icon-192.maskable.png",
@@ -32,5 +32,23 @@
   "background_color": "#ffffff",
   "start_url": "/",
   "display": "standalone",
-  "orientation": "portrait"
+  "orientation": "portrait",
+  "categories": ["bsv", "bsv-blockchain", "bitcoin sv", "bsv-wallet", "bsv-app"],
+  "screenshots": [
+    {
+      "src": "screenshots/Connect Wallet.jpg",
+      "sizes": "586x1041",
+      "type": "image/png"
+    },
+    {
+      "src": "screenshots/Account.jpg",
+      "sizes": "586x1041",
+      "type": "image/png"
+    },
+    {
+      "src": "screenshots/Account Management Setting.jpg",
+      "sizes": "586x1041",
+      "type": "image/png"
+    }
+  ]
 }

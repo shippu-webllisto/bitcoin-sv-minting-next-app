@@ -3,7 +3,7 @@ import { Button, Card, Label, Modal, TextInput } from 'flowbite-react';
 import { useRouter } from 'next/router';
 import Image from 'next/image';
 import { toast } from 'react-toastify';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { endpoints } from '@/routes/endpoints.js';
 import InputPopupModal from '@/components/ui/input-popup-modal/index.jsx';
@@ -13,12 +13,15 @@ import { CreateAccountData, ImportAccountData } from '@/services/web3-service/bs
 import { AddAccount } from '@/store/features/add-account/index';
 import { ConnetedWallet } from '@/store/features/wallet-connect/index';
 import { Encryption } from '@/helpers/encryptionAndDecryption';
+import SignUpPage from '@/components/common/signup/index';
+import LoginPage from '@/components/common/login/index';
 
 const avatar = 'https://png.pngtree.com/png-vector/20190223/ourmid/pngtree-vector-avatar-icon-png-image_695765.jpg';
 
 const Connect = () => {
   const router = useRouter();
   const dispatch = useDispatch();
+  const { password } = useSelector((state) => state.authentication);
 
   const [generatePopup, setGeneratePopup] = useState(false);
   const [mnemonicKey, setMnemonicKey] = useState('');
@@ -27,15 +30,28 @@ const Connect = () => {
   const [popupImportModal, setPopupImportModal] = useState(false);
   const [importValue, setImportValue] = useState('');
 
-  //! create a new Account
-  const handleCreateOpenModal = async (e) => {
-    e.preventDefault();
+  // const [resetWalletModal, setResetWalletModal] = useState(false);
+  const [loginModal, setLoginModal] = useState(false);
+  const [signupModal, setSignupModal] = useState(false);
+  const [modal1, setModal1] = useState(false);
+  const [modal2, setModal2] = useState(false);
+
+  /**
+   *! create a new Account
+   */
+  const handleCreateOpenModal = async () => {
     // generating mnemonic key
     const { getMnemonicKey } = await CreateAccountData('mainnet');
     if (!checkEmptyValue(getMnemonicKey)) {
       setMnemonicKey(getMnemonicKey);
       setGeneratePopup((prev) => !prev);
     }
+  };
+
+  const handleCopyText = (e) => {
+    e.preventDefault();
+    CopyClipboard(mnemonicKey);
+    return toast.success('copied');
   };
 
   const handleCreateAccount = async (e) => {
@@ -86,15 +102,11 @@ const Connect = () => {
     }
   };
 
-  const handleCopyText = (e) => {
-    e.preventDefault();
-    CopyClipboard(mnemonicKey);
-    return toast.success('copyed');
-  };
+  /**
+   *! import_account - adding a exist account
+   */
 
-  //! adding a exist account (import account)
-  const handlePopup = (e) => {
-    e.preventDefault();
+  const handlePopup = () => {
     setPopupImportModal((prev) => !prev);
   };
 
@@ -146,6 +158,25 @@ const Connect = () => {
     }
   };
 
+  /**@Authentications */
+  // const handleResetWalletModal = () => {
+  //   setResetWalletModal((prev) => !prev);
+  // };
+
+  const handleSignAuthencation1 = () => {
+    setSignupModal((prev) => !prev);
+    setModal1((prev) => !prev);
+  };
+
+  const handleSignAuthencation2 = () => {
+    setSignupModal((prev) => !prev);
+    setModal2((prev) => !prev);
+  };
+
+  const handleLogin = () => {
+    setLoginModal((prev) => !prev);
+  };
+
   return (
     <>
       <div className="flex justify-center items-center mt-4 ">
@@ -156,19 +187,24 @@ const Connect = () => {
               Welcome to Bitcoin SV Wallet
             </h1>
           </div>
-          <Button type="button" gradientMonochrome="purple" onClick={handlePopup}>
+          <Button type="button" gradientMonochrome="purple" onClick={password ? handleLogin : handleSignAuthencation1}>
             Import Account
           </Button>
-          <Button type="button" gradientMonochrome="pink" onClick={handleCreateOpenModal}>
+          <Button type="button" gradientMonochrome="pink" onClick={password ? handleLogin : handleSignAuthencation2}>
             Create Account
           </Button>
+          {/* <div className="text-center">
+            <button type="button" onClick={handleResetWalletModal}>
+              Reset Account
+            </button>
+          </div> */}
         </Card>
       </div>
 
       {/* import your Account - modal  */}
       <InputPopupModal
         popup={popupImportModal}
-        handlePopup={handlePopup}
+        handlePopup={() => setPopupImportModal(false)}
         title="Import an Account"
         description="add your Mnemonic key here below down."
         placeholder="Enter Your Mnemonic Key"
@@ -177,8 +213,8 @@ const Connect = () => {
         onSubmit={submitImportAccount}
       />
 
-      {/* create your Account - modal  */}
-      <Modal show={generatePopup} size="md" popup={true} onClose={handleCreateOpenModal}>
+      {/* create your Account - modal (generate mnemonic key)  */}
+      <Modal show={generatePopup} size="md" popup={true} onClose={() => setGeneratePopup(false)}>
         <Modal.Header />
         <Modal.Body>
           <div className="text-center">
@@ -219,6 +255,17 @@ const Connect = () => {
           </div>
         </Modal.Body>
       </Modal>
+
+      {/* login modal  */}
+      <LoginPage loginModal={loginModal} onClose={() => setLoginModal(false)} password={password} />
+
+      {/* signup modal for create account  */}
+      {modal2 && (
+        <SignUpPage signupModal={signupModal} onClose={() => setSignupModal(false)} signup={handleCreateOpenModal} />
+      )}
+
+      {/* signup modal for import account  */}
+      {modal1 && <SignUpPage signupModal={signupModal} onClose={() => setSignupModal(false)} signup={handlePopup} />}
     </>
   );
 };

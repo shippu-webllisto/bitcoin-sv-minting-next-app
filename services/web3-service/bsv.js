@@ -1,3 +1,5 @@
+import { Decryption } from '@/helpers/encryptionAndDecryption';
+
 const { Wallet } = require('bsv-wallet');
 
 export const CreateAccountData = async (network) => {
@@ -23,6 +25,20 @@ export const ImportAccountData = async (mnemonicKey, network) => {
     Network === 'livenet' ? wallet.masterHDPrivateKey.network.alias : wallet.masterHDPrivateKey.network.name;
 
   return { getAddress, getBalance, getNetwork };
+};
+
+export const SendTranasction = async (mnemonicKey, network, to, amount) => {
+  const Network = network === 'mainnet' ? 'livenet' : 'testnet';
+  const decryptionMnemonicKey = Decryption(mnemonicKey);
+
+  const wallet = new Wallet({ key: decryptionMnemonicKey, network: Network });
+
+  const transactionId = await wallet.sendMoney({
+    to,
+    amount,
+  });
+
+  return transactionId;
 };
 
 // export const GetAddress = async () => await wallet.getAddress();

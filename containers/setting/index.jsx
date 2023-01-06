@@ -13,6 +13,7 @@ import ExportDataModal from '@/components/common/export-data-modal/index';
 import { ImportAccountData } from '@/services/web3-service/bsv';
 import { checkEmptyValue } from '@/utils/checkEmptyValue';
 import { Decryption } from '@/helpers/encryptionAndDecryption';
+import { ResetAuthentication } from '@/store/features/authentication/index';
 
 const Setting = () => {
   const router = useRouter();
@@ -29,8 +30,13 @@ const Setting = () => {
   // const [privateKeyHash, setPrivateKeyHash] = useState('');
 
   const handleLogout = () => {
+    dispatch(ResetAuthentication());
     dispatch(ResetWallet());
     dispatch(ResetAddAccount());
+    return router.push(endpoints.connect);
+  };
+
+  const handleLock = () => {
     return router.push(endpoints.connect);
   };
 
@@ -180,7 +186,7 @@ const Setting = () => {
               <button
                 type="button"
                 className="group flex w-full rounded-lg bg-gray-200 p-3 text-base font-bold text-gray-900 hover:bg-gray-300 hover:shadow dark:bg-gray-600 dark:text-white dark:hover:bg-gray-500"
-                onClick={handleLogout}
+                onClick={handleLock}
               >
                 <Image src="/assets/svgs/export-arrow-14569.svg" alt="Logout-Icon" width={20} height={20} />
                 <span className="ml-3 flex-1 whitespace-nowrap">Lock</span>
