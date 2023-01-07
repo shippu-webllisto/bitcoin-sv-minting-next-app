@@ -1,6 +1,6 @@
 {
   "name": "bitcoin sv minting app",
-  "short_name": "bsv-wallet",
+  "short_name": "bsv wallet",
   "description": "this app is bitcoin sv minting app, you can receive and transfer bsv-coin or you can do many more with this wallet.",
   "icons": [
     {

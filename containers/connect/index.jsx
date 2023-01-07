@@ -3,7 +3,7 @@ import { Button, Card, Label, Modal, TextInput } from 'flowbite-react';
 import { useRouter } from 'next/router';
 import Image from 'next/image';
 import { toast } from 'react-toastify';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 
 import { endpoints } from '@/routes/endpoints.js';
 import InputPopupModal from '@/components/ui/input-popup-modal/index.jsx';
@@ -14,14 +14,12 @@ import { AddAccount } from '@/store/features/add-account/index';
 import { ConnetedWallet } from '@/store/features/wallet-connect/index';
 import { Encryption } from '@/helpers/encryptionAndDecryption';
 import SignUpPage from '@/components/common/signup/index';
-import LoginPage from '@/components/common/login/index';
 
 const avatar = 'https://png.pngtree.com/png-vector/20190223/ourmid/pngtree-vector-avatar-icon-png-image_695765.jpg';
 
 const Connect = () => {
   const router = useRouter();
   const dispatch = useDispatch();
-  const { password } = useSelector((state) => state.authentication);
 
   const [generatePopup, setGeneratePopup] = useState(false);
   const [mnemonicKey, setMnemonicKey] = useState('');
@@ -30,8 +28,6 @@ const Connect = () => {
   const [popupImportModal, setPopupImportModal] = useState(false);
   const [importValue, setImportValue] = useState('');
 
-  // const [resetWalletModal, setResetWalletModal] = useState(false);
-  const [loginModal, setLoginModal] = useState(false);
   const [signupModal, setSignupModal] = useState(false);
   const [modal1, setModal1] = useState(false);
   const [modal2, setModal2] = useState(false);
@@ -159,9 +155,6 @@ const Connect = () => {
   };
 
   /**@Authentications */
-  // const handleResetWalletModal = () => {
-  //   setResetWalletModal((prev) => !prev);
-  // };
 
   const handleSignAuthencation1 = () => {
     setSignupModal((prev) => !prev);
@@ -173,13 +166,9 @@ const Connect = () => {
     setModal2((prev) => !prev);
   };
 
-  const handleLogin = () => {
-    setLoginModal((prev) => !prev);
-  };
-
   return (
     <>
-      <div className="flex justify-center items-center mt-4 ">
+      <div className="flex justify-center items-center mt-4">
         <Card className="w-96 bg-gray-50">
           <div className="flex flex-col justify-center items-center my-4  p-2">
             <Image src="/bitcoin-sv-bsv-logo.svg" alt="bsv-logo" width={100} height={100} />
@@ -187,17 +176,12 @@ const Connect = () => {
               Welcome to Bitcoin SV Wallet
             </h1>
           </div>
-          <Button type="button" gradientMonochrome="purple" onClick={password ? handleLogin : handleSignAuthencation1}>
+          <Button type="button" gradientMonochrome="purple" onClick={handleSignAuthencation1}>
             Import Account
           </Button>
-          <Button type="button" gradientMonochrome="pink" onClick={password ? handleLogin : handleSignAuthencation2}>
+          <Button type="button" gradientMonochrome="pink" onClick={handleSignAuthencation2}>
             Create Account
           </Button>
-          {/* <div className="text-center">
-            <button type="button" onClick={handleResetWalletModal}>
-              Reset Account
-            </button>
-          </div> */}
         </Card>
       </div>
 
@@ -255,9 +239,6 @@ const Connect = () => {
           </div>
         </Modal.Body>
       </Modal>
-
-      {/* login modal  */}
-      <LoginPage loginModal={loginModal} onClose={() => setLoginModal(false)} password={password} />
 
       {/* signup modal for create account  */}
       {modal2 && (

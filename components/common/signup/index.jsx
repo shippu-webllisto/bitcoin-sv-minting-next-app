@@ -25,8 +25,7 @@ function SignUpPage({ signupModal, onClose, signup }) {
     e.preventDefault();
     if (checkEmptyValue(signupData?.password) || checkEmptyValue(signupData?.confirmPassword))
       return toast.error('please, fill the required filed.');
-    if (signupData?.password.length < 8 || signupData?.confirmPassword.length < 8)
-      return toast.error('password length should must be 8-digits.');
+    if (signupData?.password.length < 8) return toast.error('password length should must be 8-digits.');
     if (signupData?.password !== signupData?.confirmPassword)
       return toast.error('password and confirm-password are not same.');
 

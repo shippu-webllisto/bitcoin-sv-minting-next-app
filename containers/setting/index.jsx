@@ -37,7 +37,7 @@ const Setting = () => {
   };
 
   const handleLock = () => {
-    return router.push(endpoints.connect);
+    return router.push(endpoints.login);
   };
 
   const handlePopup = (e) => {
