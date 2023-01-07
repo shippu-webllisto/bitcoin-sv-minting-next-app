@@ -6,6 +6,7 @@ import { endpoints } from '@/routes/endpoints.js';
 import { checkEmptyValue } from '@/utils/checkEmptyValue.js';
 
 const Navbar = () => {
+  const { auth } = useSelector((state) => state.authentication);
   const { walletAddress, network } = useSelector((state) => state.walletConnect);
 
   return (
@@ -21,7 +22,7 @@ const Navbar = () => {
               priority
               className="inline-block align-middle"
             />
-            {!checkEmptyValue(network) && (
+            {auth && !checkEmptyValue(network) && (
               <span className="font-mono font-bold text-center bg-red-700 text-white rounded-md inline-block align-middle w-4/10 ml-2 border-lg px-2 py-1 text-xs">
                 {network}
               </span>
@@ -35,7 +36,7 @@ const Navbar = () => {
 
             <div className="flex items-center gap-4">
               <div className="sm:flex sm:gap-4">
-                {!checkEmptyValue(walletAddress) && (
+                {auth && !checkEmptyValue(walletAddress) && (
                   <Link href={endpoints.setting}>
                     <Image
                       className="cursor-pointer"

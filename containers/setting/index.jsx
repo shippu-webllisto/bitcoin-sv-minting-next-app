@@ -13,11 +13,12 @@ import ExportDataModal from '@/components/common/export-data-modal/index';
 import { ImportAccountData } from '@/services/web3-service/bsv';
 import { checkEmptyValue } from '@/utils/checkEmptyValue';
 import { Decryption } from '@/helpers/encryptionAndDecryption';
-import { ResetAuthentication } from '@/store/features/authentication/index';
+import { AuthenticatedUser, ResetAuthentication } from '@/store/features/authentication/index';
 
 const Setting = () => {
   const router = useRouter();
   const dispatch = useDispatch();
+  const { password } = useSelector((state) => state.authentication);
   const { addAccount } = useSelector((state) => state.addAccount);
   const WalletConnect = useSelector((state) => state.walletConnect);
 
@@ -37,6 +38,7 @@ const Setting = () => {
   };
 
   const handleLock = () => {
+    dispatch(AuthenticatedUser({ password: password, auth: false }));
     return router.push(endpoints.login);
   };
 

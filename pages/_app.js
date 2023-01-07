@@ -18,11 +18,11 @@ const Footer = dynamic(() => import('@/layouts/footer/index.jsx'), { ssr: false 
 
 export const App = ({ children }) => {
   const router = useRouter();
-  const { password } = useSelector((state) => state.authentication);
+  const { password, auth } = useSelector((state) => state.authentication);
 
   useEffect(() => {
     // protected routes
-    if (checkEmptyValue(password)) {
+    if (checkEmptyValue(password) && !auth) {
       router.replace(endpoints.connectWallet);
     } else {
       router.replace(endpoints.login);

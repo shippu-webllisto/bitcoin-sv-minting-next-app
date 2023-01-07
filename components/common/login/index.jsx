@@ -2,15 +2,17 @@ import { useState } from 'react';
 import { useRouter } from 'next/router';
 import { Button, Card, Label, TextInput } from 'flowbite-react';
 import { toast } from 'react-toastify';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { checkEmptyValue } from '@/utils/checkEmptyValue';
 import { ComparingPassword } from '@/helpers/bcryptjs';
 import { endpoints } from '@/routes/endpoints';
+import { AuthenticatedUser } from '@/store/features/authentication/index';
 
 function Login() {
   const router = useRouter();
   const { password } = useSelector((state) => state.authentication);
+  const dispatch = useDispatch();
 
   const [loginData, setLoginData] = useState('');
   // const [resetWalletModal, setResetWalletModal] = useState(false);
@@ -21,6 +23,7 @@ function Login() {
     if (checkEmptyValue(password)) return toast.error('Invalid Password!!');
     const getPassword = ComparingPassword(loginData, password);
     if (getPassword) {
+      dispatch(AuthenticatedUser({ password, auth: true }));
       setLoginData('');
       return router.push(endpoints.home);
     } else {

@@ -31,7 +31,7 @@ function SignUpPage({ signupModal, onClose, signup }) {
 
     const hashPassword = HashPassword(signupData.password);
     if (!checkEmptyValue(hashPassword)) {
-      dispatch(AuthenticatedUser(hashPassword));
+      dispatch(AuthenticatedUser({ password: hashPassword, auth: true }));
       setSignupData(signupForm);
       onClose(); // close this modal
       signup(); // for create and import wallet account
