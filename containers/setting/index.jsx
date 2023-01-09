@@ -8,7 +8,7 @@ import { endpoints } from '@/routes/endpoints.js';
 import { getShortAddress } from '@/utils/getShortAddress';
 import PopupModal from '@/components/ui/popup-modal/index.jsx';
 import { ConnetedWallet, ResetWallet } from '@/store/features/wallet-connect/index.jsx';
-import { ResetAddAccount, UpdateNetwork } from '@/store/features/add-account/index';
+import { ResetAddAccount, UpdateAccount } from '@/store/features/add-account/index';
 import ExportDataModal from '@/components/common/export-data-modal/index';
 import { ImportAccountData } from '@/services/web3-service/bsv';
 import { checkEmptyValue } from '@/utils/checkEmptyValue';
@@ -70,7 +70,7 @@ const Setting = () => {
       dispatch(
         ConnetedWallet({ ...WalletConnect, network: getNetwork, walletAddress: getAddress, bsvAmount: getBalance }),
       );
-      dispatch(UpdateNetwork(updatedData));
+      dispatch(UpdateAccount(updatedData));
       setSwichNetworkpopup(false);
     }
   };

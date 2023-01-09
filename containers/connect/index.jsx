@@ -92,10 +92,11 @@ const Connect = () => {
           }),
         );
         // remove auth for a week(7*24*60*60)
+        const oneWeek = 7 * 24 * 60 * 60 * 1000;
         setTimeout(() => {
           dispatch(AuthenticatedUser({ password: password, auth: false }));
           router.replace(endpoints.login);
-        }, 60 * 1000);
+        }, oneWeek);
 
         // close popup and clear input
         setGeneratePopup((prev) => !prev);
@@ -153,10 +154,11 @@ const Connect = () => {
           }),
         );
         // remove auth for a week(7*24*60*60)
+        const oneWeek = 7 * 24 * 60 * 60 * 1000;
         setTimeout(() => {
           dispatch(AuthenticatedUser({ password: password, auth: false }));
           router.replace(endpoints.login);
-        }, 60 * 1000);
+        }, oneWeek);
 
         // close popup and clear input
         setPopupImportModal((prev) => !prev);
