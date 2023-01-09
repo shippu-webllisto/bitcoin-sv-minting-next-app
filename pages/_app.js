@@ -18,11 +18,11 @@ const Footer = dynamic(() => import('@/layouts/footer/index.jsx'), { ssr: false 
 
 export const App = ({ children }) => {
   const router = useRouter();
-  const { password, auth } = useSelector((state) => state.authentication);
+  const { password } = useSelector((state) => state.authentication);
 
   useEffect(() => {
     // protected routes
-    if (checkEmptyValue(password) && !auth) {
+    if (checkEmptyValue(password)) {
       router.replace(endpoints.connectWallet);
     } else {
       router.replace(endpoints.login);
@@ -34,17 +34,12 @@ export const App = ({ children }) => {
 };
 
 function MyApp({ Component, pageProps }) {
-  // const [initialRenderComplete, setInitialRenderComplete] = React.useState(false);
   const router = useRouter();
 
   useEffect(() => {
-    // setInitialRenderComplete(true);
     require('flowbite/dist/flowbite');
   }, []);
 
-  // if (!initialRenderComplete) {
-  //   return null;
-  // } else {
   return (
     <>
       <Provider store={store}>
@@ -60,7 +55,6 @@ function MyApp({ Component, pageProps }) {
       </Provider>
     </>
   );
-  // }
 }
 
 export default MyApp;

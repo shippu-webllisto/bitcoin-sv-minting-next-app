@@ -3,7 +3,7 @@ import { Button, Card, Label, Modal, TextInput } from 'flowbite-react';
 import { useRouter } from 'next/router';
 import Image from 'next/image';
 import { toast } from 'react-toastify';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { endpoints } from '@/routes/endpoints.js';
 import InputPopupModal from '@/components/ui/input-popup-modal/index.jsx';
@@ -14,10 +14,13 @@ import { AddAccount } from '@/store/features/add-account/index';
 import { ConnetedWallet } from '@/store/features/wallet-connect/index';
 import { Encryption } from '@/helpers/encryptionAndDecryption';
 import SignUpPage from '@/components/common/signup/index';
+import { AuthenticatedUser } from '@/store/features/authentication/index';
 
+// import avatar from '@/assets/svgs/user-avatar.svg';
 const avatar = 'https://png.pngtree.com/png-vector/20190223/ourmid/pngtree-vector-avatar-icon-png-image_695765.jpg';
 
 const Connect = () => {
+  const { password } = useSelector((state) => state.authentication);
   const router = useRouter();
   const dispatch = useDispatch();
 
@@ -88,6 +91,12 @@ const Connect = () => {
             account: 'Account-1',
           }),
         );
+        // remove auth for a week(7*24*60*60)
+        setTimeout(() => {
+          dispatch(AuthenticatedUser({ password: password, auth: false }));
+          router.replace(endpoints.login);
+        }, 60 * 1000);
+
         // close popup and clear input
         setGeneratePopup((prev) => !prev);
         setMnemonicValue('');
@@ -143,6 +152,11 @@ const Connect = () => {
             account: 'Account-1',
           }),
         );
+        // remove auth for a week(7*24*60*60)
+        setTimeout(() => {
+          dispatch(AuthenticatedUser({ password: password, auth: false }));
+          router.replace(endpoints.login);
+        }, 60 * 1000);
 
         // close popup and clear input
         setPopupImportModal((prev) => !prev);

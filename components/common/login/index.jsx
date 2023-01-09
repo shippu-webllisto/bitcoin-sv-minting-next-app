@@ -23,6 +23,12 @@ function Login() {
     if (checkEmptyValue(password)) return toast.error('Invalid Password!!');
     const getPassword = ComparingPassword(loginData, password);
     if (getPassword) {
+      // remove auth for a week(7*24*60*60)
+      setTimeout(() => {
+        dispatch(AuthenticatedUser({ password: password, auth: false }));
+        router.replace(endpoints.login);
+      }, 60 * 1000);
+
       dispatch(AuthenticatedUser({ password, auth: true }));
       setLoginData('');
       return router.push(endpoints.home);

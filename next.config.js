@@ -13,7 +13,7 @@ module.exports = withPWA({
   reactStrictMode: true,
   swcMinify: true,
   images: {
-    domains: ['png.pngtree.com'],
+    domains: ['png.pngtree.com', 'svgrepo.com'],
   },
   // webpack: true,
   // webpack: (config, options) => {

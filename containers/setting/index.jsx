@@ -216,7 +216,7 @@ const Setting = () => {
         popup={popup}
         handlePopup={handlePopup}
         title="Delete Account"
-        description="are you sure to delete your account ?"
+        description="are you sure to delete your account ? you all data has been deleted"
         onClick={handleLogout}
       />
 

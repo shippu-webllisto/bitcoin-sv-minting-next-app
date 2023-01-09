@@ -10,6 +10,7 @@ const QRCodeGenerater = ({ walletAddress }) => {
       <div className="text-center my-1">
         <QRCode className="inline-block my-2" value={walletAddress} renderAs="canvas" />
       </div>
+      <span className="text-center font-mono text-slate-500">or</span>
       <CopyClipBoard walletAddress={walletAddress} />
       <p className="text-sm font-thin">The address can only receive BSV Assets</p>
     </div>
