@@ -9,6 +9,10 @@ dist
 build
 /build/*
 
+test.js
+test1.js
+op.js
+
 # Auto Generated PWA files
 **/public/sw.js
 **/public/workbox-*.js
