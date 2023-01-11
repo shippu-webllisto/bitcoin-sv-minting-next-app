@@ -178,7 +178,6 @@ const Connect = () => {
 
     setMnemonicVerifyModel(true);
   };
-  console.log(first);
 
   /**@Authentications */
 
