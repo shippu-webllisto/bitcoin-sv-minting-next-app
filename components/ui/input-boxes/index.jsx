@@ -50,6 +50,7 @@ const InputBoxes = () => {
     <>
       <div className="grid grid-cols-4 gap-2">
         <TextInput
+          disabled={verify}
           title="1"
           placeholder="1"
           type="text"
@@ -59,6 +60,7 @@ const InputBoxes = () => {
           value={mnemonicValue?.one}
         />
         <TextInput
+          disabled={verify}
           title="2"
           placeholder="2"
           type="text"
@@ -68,6 +70,7 @@ const InputBoxes = () => {
           onChange={onChange}
         />
         <TextInput
+          disabled={verify}
           title="3"
           placeholder="3"
           type="text"
@@ -77,6 +80,7 @@ const InputBoxes = () => {
           onChange={onChange}
         />
         <TextInput
+          disabled={verify}
           title="4"
           placeholder="4"
           type="text"
@@ -86,6 +90,7 @@ const InputBoxes = () => {
           onChange={onChange}
         />
         <TextInput
+          disabled={verify}
           title="5"
           placeholder="5"
           type="text"
@@ -95,6 +100,7 @@ const InputBoxes = () => {
           onChange={onChange}
         />
         <TextInput
+          disabled={verify}
           title="6"
           placeholder="6"
           type="text"
@@ -104,6 +110,7 @@ const InputBoxes = () => {
           onChange={onChange}
         />
         <TextInput
+          disabled={verify}
           title="7"
           placeholder="7"
           type="text"
@@ -113,6 +120,7 @@ const InputBoxes = () => {
           onChange={onChange}
         />
         <TextInput
+          disabled={verify}
           title="8"
           placeholder="8"
           type="text"
@@ -122,6 +130,7 @@ const InputBoxes = () => {
           onChange={onChange}
         />
         <TextInput
+          disabled={verify}
           title="9"
           placeholder="9"
           type="text"
@@ -131,6 +140,7 @@ const InputBoxes = () => {
           onChange={onChange}
         />
         <TextInput
+          disabled={verify}
           title="10"
           placeholder="10"
           type="text"
@@ -140,6 +150,7 @@ const InputBoxes = () => {
           onChange={onChange}
         />
         <TextInput
+          disabled={verify}
           title="11"
           placeholder="11"
           type="text"
@@ -149,6 +160,7 @@ const InputBoxes = () => {
           onChange={onChange}
         />
         <TextInput
+          disabled={verify}
           title="12"
           placeholder="12"
           type="text"
@@ -163,8 +175,7 @@ const InputBoxes = () => {
         <Button
           title="verify-your-mnemonic-key"
           type="button"
-          gradientDuoTone="pinkToOrange"
-          outline={true}
+          className={`${verify ? 'bg-green-400' : 'bg-red-500'}`}
           onClick={handleVerify}
           disabled={verify}
         >

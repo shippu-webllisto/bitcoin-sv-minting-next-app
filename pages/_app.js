@@ -18,14 +18,14 @@ const Footer = dynamic(() => import('@/layouts/footer/index.jsx'), { ssr: false 
 
 export const App = ({ children }) => {
   const router = useRouter();
-  const { password } = useSelector((state) => state.authentication);
-  const WalletConnect = useSelector((state) => state.walletConnect);
+  const { password, auth } = useSelector((state) => state.authentication);
+  // const WalletConnect = useSelector((state) => state.walletConnect);
 
   useEffect(() => {
     // protected routes
-    if (checkEmptyValue(password) || checkEmptyValue(WalletConnect.walletConnect)) {
+    if (checkEmptyValue(password)) {
       router.replace(endpoints.connectWallet);
-    } else {
+    } else if (!auth) {
       router.replace(endpoints.login);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

@@ -306,17 +306,17 @@ const AccountDropDown = () => {
       </Modal>
       {/* create your Account - modal  */}
 
-      <Modal show={mnemonicVerifyModel} size="md" popup={true} onClose={() => setMnemonicVerifyModel(false)}>
+      <Modal show={mnemonicVerifyModel} size="lg" popup={true} onClose={() => setMnemonicVerifyModel(false)}>
         <Modal.Header />
         <Modal.Body>
           <div className="text-center">
             <h3 className="mb-5 text-3xl font-bold text-gray-900 dark:text-gray-400">Create an Account</h3>
-            <p className="mb-5 text-base  font-normal text-gray-500 dark:text-gray-400">
-              Your Secret Recovery Phrase makes it easy to back up and restore your account.
+            <p className="mb-5 text-sm  font-mono text-gray-500 dark:text-gray-400">
+              your secret recovery phrase makes it easy to back up and restore your account.
             </p>
-
             <p className="mb-5 text-base  font-normal mt-1 text-gray-500 dark:text-gray-400">
-              WARNING: Never disclose your Secret Recovery Phrase. Anyone with this phrase can take your Ether forever.
+              WARNING: never disclose your secret recovery mnemonic key. anyone with this phrase can take your ether
+              forever.
             </p>
 
             <div className="flex flex-col gap-4 my-4">
