@@ -39,7 +39,8 @@ const Setting = () => {
 
   const handleLock = () => {
     dispatch(AuthenticatedUser({ password: password, auth: false }));
-    return router.push(endpoints.login);
+    router.reload();
+    return router.replace(endpoints.login);
   };
 
   const handlePopup = (e) => {

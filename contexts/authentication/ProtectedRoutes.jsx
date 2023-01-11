@@ -1,7 +1,9 @@
 // import { useRouter } from 'next/router';
 // import PropTypes from 'prop-types';
 // import { toast } from 'react-toastify';
+// import { useSelector } from 'react-redux';
 // import { checkEmptyValue } from '@/utils/checkEmptyValue';
+// import { endpoints } from '@/routes/endpoints';
 
 // export const ProtectedRoutes = ({ children }) => {
 //   const { password } = useSelector((state) => state.authentication);

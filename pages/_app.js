@@ -21,15 +21,15 @@ export const App = ({ children }) => {
   const { password, auth } = useSelector((state) => state.authentication);
   // const WalletConnect = useSelector((state) => state.walletConnect);
 
+  // protected routes
   useEffect(() => {
-    // protected routes
-    if (checkEmptyValue(password)) {
-      router.replace(endpoints.connectWallet);
-    } else if (!auth) {
+    if (!checkEmptyValue(password) && !auth) {
       router.replace(endpoints.login);
+    } else if (checkEmptyValue(password)) {
+      router.replace(endpoints.connectWallet);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [auth, password]);
 
   return children;
 };
