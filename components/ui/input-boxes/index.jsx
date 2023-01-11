@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Button, TextInput } from 'flowbite-react';
 import Image from 'next/image';
 import { useSelector } from 'react-redux';
@@ -158,8 +158,16 @@ const InputBoxes = () => {
           onChange={onChange}
         />
       </div>
+
       <div className="my-4 mb-0 flex justify-center items-center">
-        <Button type="button" gradientDuoTone="pinkToOrange" outline={true} onClick={handleVerify} disabled={verify}>
+        <Button
+          title="verify-your-mnemonic-key"
+          type="button"
+          gradientDuoTone="pinkToOrange"
+          outline={true}
+          onClick={handleVerify}
+          disabled={verify}
+        >
           <span>Verify</span>
           {verify && <Image src="/assets/svgs/check.svg" alt="check-icon" className="mx-2" width={20} height={20} />}
         </Button>

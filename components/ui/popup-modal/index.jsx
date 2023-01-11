@@ -8,8 +8,8 @@ const PopupModal = ({ popup, handlePopup, title, description, onClick }) => {
       <Modal.Header />
       <Modal.Body>
         <div className="text-center">
-          <h3 className="mb-5 text-lg font-normal text-gray-900 dark:text-gray-400">{title}</h3>
-          <p className="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">{description}</p>
+          <h3 className="mb-5 text-2xl font-bold text-gray-900 dark:text-gray-400">{title}</h3>
+          <p className="mb-5 text-md font-serif text-gray-500 dark:text-gray-400">{description}</p>
           <div className="flex justify-center gap-4">
             <Button gradientDuoTone="purpleToBlue" onClick={onClick}>
               Yes, Im sure

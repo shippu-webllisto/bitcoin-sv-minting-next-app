@@ -52,10 +52,10 @@ function SignUpPage({ signupModal, onClose, signup }) {
           <form className="p-2 flex flex-col gap-4" onSubmit={handleSignupSubmit}>
             <div>
               <div className="mb-2 block">
-                <Label htmlFor="password" />
+                <Label htmlFor="input1" />
               </div>
               <TextInput
-                id="password"
+                id="input1"
                 type="password"
                 placeholder="password"
                 name="password"
@@ -67,10 +67,10 @@ function SignUpPage({ signupModal, onClose, signup }) {
             </div>
             <div>
               <div className="mb-2 block">
-                <Label htmlFor="confirmPassword" />
+                <Label htmlFor="input2" />
               </div>
               <TextInput
-                id="confirmPassword"
+                id="input2"
                 type="password"
                 placeholder="confirm password"
                 name="confirmPassword"

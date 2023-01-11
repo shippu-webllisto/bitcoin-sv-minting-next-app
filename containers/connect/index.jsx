@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button, Card, Modal } from 'flowbite-react';
 import { useRouter } from 'next/router';
 import Image from 'next/image';
@@ -6,15 +6,14 @@ import { toast } from 'react-toastify';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { endpoints } from '@/routes/endpoints.js';
-import InputPopupModal from '@/components/ui/input-popup-modal/index.jsx';
 import { checkEmptyValue } from '@/utils/checkEmptyValue.js';
-import { CreateAccountData, ImportAccountData } from '@/services/web3-service/bsv.js';
+import { CreateAccountData } from '@/services/web3-service/bsv.js';
 import { AddAccount } from '@/store/features/add-account/index';
 import { ConnetedWallet } from '@/store/features/wallet-connect/index';
 import { Encryption } from '@/helpers/encryptionAndDecryption';
 import SignUpPage from '@/components/common/signup/index';
 import { AuthenticatedUser } from '@/store/features/authentication/index';
-import { useEffect } from 'react';
+import ImportAccountModal from '@/components/ui/input-popup-modal/index.jsx';
 
 // import avatar from '@/assets/svgs/user-avatar.svg';
 const avatar = 'https://png.pngtree.com/png-vector/20190223/ourmid/pngtree-vector-avatar-icon-png-image_695765.jpg';
@@ -29,7 +28,6 @@ const Connect = () => {
 
   const [popupImportModal, setPopupImportModal] = useState(false);
   const [mnemonicVerifyModel, setMnemonicVerifyModel] = useState(false);
-  const [importValue, setImportValue] = useState('');
 
   const [signupModal, setSignupModal] = useState(false);
   const [modal1, setModal1] = useState(false);
@@ -41,15 +39,18 @@ const Connect = () => {
   const [isMatchIndex, setMatchIndex] = useState([]);
 
   /**
-   *! create a new Account
+   *@create a new Account
    */
   const handleCreateOpenModal = async () => {
+    // generating mnemonic-key
     const { getMnemonicKey } = await CreateAccountData('mainnet');
     if (!checkEmptyValue(getMnemonicKey)) {
       setMnemonicKey(getMnemonicKey);
       const Mnemonic_split_string = getMnemonicKey?.split(' ');
-      setMnemonicKeyArray(Mnemonic_split_string?.reverse());
+
+      setMnemonicKeyArray(Mnemonic_split_string);
       setMatchIndex(Mnemonic_split_string);
+
       setGeneratePopup((prev) => !prev);
     }
   };
@@ -72,7 +73,7 @@ const Connect = () => {
 
   // for update keys
   const handleSeqenceKeys = (e, val, index) => {
-    e.preventDefault();
+    e.stopPropagation();
 
     setSequenceMnemonicKey((oldItem) => [...oldItem, val]);
 
@@ -83,7 +84,7 @@ const Connect = () => {
   };
   // for remove keys
   const removeMnemonicKey = (e, val, index) => {
-    e.preventDefault();
+    e.stopPropagation();
 
     setSequenceMnemonicKey([
       ...sequenceMnemonicKey.slice(0, index),
@@ -146,85 +147,56 @@ const Connect = () => {
   };
 
   /**
-   *! import_account - adding a exist account
+   *@import_account - adding a exist account
    */
 
-  const handlePopup = () => {
+  const handlePopup = async () => {
     setPopupImportModal((prev) => !prev);
   };
 
-  const handleCreateMnemonic = (e) => {
-    e.preventDefault();
+  // for random keys
+  function randomize(values) {
+    let index = values.length,
+      randomIndex;
+    // While there remain elements to shuffle.
+    while (index != 0) {
+      // Pick a remaining element.
+      randomIndex = Math.floor(Math.random() * index);
+      index--;
+      // And swap it with the current element.
+      [values[index], values[randomIndex]] = [values[randomIndex], values[index]];
+    }
+
+    setMnemonicKeyArray(values);
+  }
+
+  const handleGenerateModal = (e) => {
+    e.stopPropagation();
     setGeneratePopup(false);
     const Mnemonic_split_string = mnemonicKey?.split(' ');
-    setMnemonicKeyArray(Mnemonic_split_string);
+    randomize(Mnemonic_split_string);
+
     setMnemonicVerifyModel(true);
-  };
-
-  const submitImportAccount = async (e) => {
-    e.preventDefault();
-    if (checkEmptyValue(importValue)) return toast.error('please, fill the required fields.');
-    try {
-      const encryptedMnemonicKey = Encryption(importValue);
-      const { getAddress, getBalance, getNetwork } = await ImportAccountData(importValue, 'mainnet');
-      if (
-        !checkEmptyValue(importValue) &&
-        !checkEmptyValue(getAddress) &&
-        !checkEmptyValue(getBalance) &&
-        !checkEmptyValue(getNetwork) &&
-        !checkEmptyValue(encryptedMnemonicKey)
-      ) {
-        dispatch(
-          AddAccount({
-            walletAddress: getAddress,
-            mnemonic: encryptedMnemonicKey,
-            testnetPrivateKey: '',
-            mainnetPrivateKey: '',
-            network: getNetwork,
-            bsvAmount: getBalance,
-            avatar: avatar,
-            account: 'Account-1',
-          }),
-        );
-        dispatch(
-          ConnetedWallet({
-            walletAddress: getAddress,
-            mnemonic: encryptedMnemonicKey,
-            testnetPrivateKey: '',
-            mainnetPrivateKey: '',
-            network: getNetwork,
-            bsvAmount: getBalance,
-            avatar: avatar,
-            account: 'Account-1',
-          }),
-        );
-        // remove auth for a week(7*24*60*60)
-        const oneWeek = 7 * 24 * 60 * 60 * 1000;
-        setTimeout(() => {
-          dispatch(AuthenticatedUser({ password: password, auth: false }));
-          router.replace(endpoints.login);
-        }, oneWeek);
-
-        // close popup and clear input
-        setPopupImportModal((prev) => !prev);
-        setImportValue('');
-        return router.push(endpoints.home);
-      }
-    } catch (error) {
-      return new Error(error.message);
-    }
   };
 
   /**@Authentications */
 
   const handleSignAuthencation1 = () => {
-    setSignupModal((prev) => !prev);
-    setModal1((prev) => !prev);
+    if (checkEmptyValue(password)) {
+      setSignupModal((prev) => !prev);
+      setModal1((prev) => !prev);
+    } else {
+      handlePopup(true);
+    }
   };
 
   const handleSignAuthencation2 = () => {
-    setSignupModal((prev) => !prev);
-    setModal2((prev) => !prev);
+    if (checkEmptyValue(password)) {
+      setSignupModal((prev) => !prev);
+      setModal2((prev) => !prev);
+    } else {
+      handleCreateOpenModal();
+    }
   };
 
   return (
@@ -246,26 +218,16 @@ const Connect = () => {
         </Card>
       </div>
 
-      {/* import your Account - modal  */}
-      <InputPopupModal
-        popup={popupImportModal}
-        handlePopup={() => setPopupImportModal(false)}
-        title="Import an Account"
-        description="add your Mnemonic key here below down."
-        placeholder="Enter Your Mnemonic Key"
-        inputValue={importValue}
-        onChange={setImportValue}
-        onSubmit={submitImportAccount}
-      />
-
-      {/* create your Account - modal (generate mnemonic key)  */}
       <Modal show={generatePopup} size="md" popup={true} onClose={() => setGeneratePopup(false)}>
         <Modal.Header />
         <Modal.Body>
           <div className="text-center">
             <h3 className="mb-5 text-3xl font-bold text-gray-900 dark:text-gray-400"> Secret Recovery Mnemonic</h3>
-            <p className="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
-              don&lsquo;t share this Mnemonic with Anyones.
+            <p className="mb-5 text-base font-normal text-gray-500 dark:text-gray-400">
+              Your Secret Recovery Phrase makes it easy to back up and restore your account.
+            </p>
+            <p className="mb-5 text-base  font-normal text-gray-500 dark:text-gray-400 mt-1">
+              WARNING: Never disclose your Secret Recovery Phrase. Anyone with this phrase can take your Ether forever.
             </p>
             <div className="bg-gray-100  grid grid-cols-2">
               {isMatchIndex?.map((val, i) => {
@@ -276,14 +238,24 @@ const Connect = () => {
                 );
               })}
             </div>
-            <form className="flex flex-col gap-4 my-4" onSubmit={handleCreateMnemonic}>
-              <Button type="submit" gradientDuoTone="purpleToBlue">
+            <div className="flex flex-col gap-4 my-4">
+              <Button type="submit" gradientDuoTone="purpleToBlue" onClick={(e) => handleGenerateModal(e)}>
                 Next
               </Button>
-            </form>
+            </div>
           </div>
         </Modal.Body>
       </Modal>
+
+      {/* import your Account - modal  */}
+      <ImportAccountModal
+        popup={popupImportModal}
+        onClose={() => setPopupImportModal(false)}
+        title="Import an Account !"
+        description="add your mnemonic key here below down!"
+      />
+
+      {/* create your Account - modal (generate mnemonic key)  */}
 
       <Modal show={mnemonicVerifyModel} size="md" popup={true} onClose={() => setMnemonicVerifyModel(false)}>
         <Modal.Header />

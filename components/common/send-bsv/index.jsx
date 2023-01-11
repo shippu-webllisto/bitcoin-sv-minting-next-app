@@ -20,8 +20,6 @@ const SendBsv = ({ walletAddress }) => {
     e.preventDefault();
     if (checkEmptyValue(walletAddress) || checkEmptyValue(formData.to) || checkEmptyValue(formData.amount))
       return toast.error('please, fill the all required fileds.');
-
-    // console.log('Send BSV Data :', { from: walletAddress, ...formData });
   };
 
   return (

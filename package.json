@@ -14,7 +14,7 @@
     "prepare": "rm -rf .husky && husky install && husky add .husky/pre-commit \"yarn lint-staged \nyarn pretty-quick\""
   },
   "lint-staged": {
-    "**/*.+(js|jsx|ts|tsx)": [
+    "/**/*.+(js|jsx|ts|tsx)": [
       "yarn format",
       "yarn lint:fix",
       "yarn lint"

@@ -181,7 +181,7 @@ const Setting = () => {
                 onClick={handlePopup}
               >
                 <Image src="/assets/svgs/garbage-bin.svg" alt="Delete-Icon" width={20} height={20} />
-                <span className="ml-3 flex-1 whitespace-nowrap">Delete Current Account</span>
+                <span className="ml-3 flex-1 whitespace-nowrap">Reset wallet</span>
               </button>
             </li>
             <li key={7}>
@@ -215,7 +215,7 @@ const Setting = () => {
       <PopupModal
         popup={popup}
         handlePopup={handlePopup}
-        title="Delete Account"
+        title="Reset Accounts"
         description="are you sure to delete your account ? you all data has been deleted"
         onClick={handleLogout}
       />
