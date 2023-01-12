@@ -8,7 +8,7 @@ import { CopyClipboard } from '@/helpers/CopyClipboard';
 const ExportDataModal = ({ title, data, popup, onClose }) => {
   const handleCopyText = () => {
     CopyClipboard(data);
-    return toast.success('copyed');
+    return toast.success('copied');
   };
 
   return (

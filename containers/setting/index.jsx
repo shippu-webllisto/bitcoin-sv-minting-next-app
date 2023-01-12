@@ -25,16 +25,40 @@ const Setting = () => {
   const [popup, setPopup] = useState(false);
   const [swichNetworkpopup, setSwichNetworkpopup] = useState(false);
   const [exportMnemonicPopup, setExportMnemonicPopup] = useState(false);
+  const [deleteAccountModal, setDeleteAccountModal] = useState(false);
   // const [exportPrivateKeyPopup, setExportPrivateKeyPopup] = useState(false);
 
   const [mnemonicHash, setMnemonicHash] = useState('');
   // const [privateKeyHash, setPrivateKeyHash] = useState('');
 
-  const handleLogout = () => {
+  const handleResetWallet = () => {
     dispatch(ResetAuthentication());
     dispatch(ResetWallet());
     dispatch(ResetAddAccount());
     return router.push(endpoints.connect);
+  };
+
+  const deleteModalPopup = () => {
+    setDeleteAccountModal((prev) => !prev);
+  };
+
+  const handleCurrentDeleteAccount = () => {
+    // if user have only one account
+    const Length = addAccount.length === 1;
+    if (Length) return handleResetWallet();
+
+    // if user have multiple account
+    const updatedData = addAccount?.filter((item) => item.mnemonic !== WalletConnect.mnemonic);
+    dispatch(ResetWallet());
+
+    const data = updatedData?.map((item, i) => {
+      return { ...item, account: `Account-${i + 1}` };
+    });
+    if (data) {
+      dispatch(ConnetedWallet({ ...data[0] }));
+      dispatch(UpdateAccount(data));
+      return router.push(endpoints.home);
+    }
   };
 
   const handleLock = () => {
@@ -43,13 +67,11 @@ const Setting = () => {
     return router.replace(endpoints.login);
   };
 
-  const handlePopup = (e) => {
-    e.preventDefault();
+  const handlePopup = () => {
     setPopup((prev) => !prev);
   };
 
-  const handleSwitchNetwork = (e) => {
-    e.preventDefault();
+  const handleSwitchNetwork = () => {
     setSwichNetworkpopup((prev) => !prev);
   };
 
@@ -179,13 +201,23 @@ const Setting = () => {
               <button
                 type="button"
                 className="group flex w-full rounded-lg bg-gray-200 p-3 text-base font-bold text-gray-900 hover:bg-gray-300 hover:shadow dark:bg-gray-600 dark:text-white dark:hover:bg-gray-500"
-                onClick={handlePopup}
+                onClick={deleteModalPopup}
               >
-                <Image src="/assets/svgs/garbage-bin.svg" alt="Delete-Icon" width={20} height={20} />
-                <span className="ml-3 flex-1 whitespace-nowrap">Reset wallet</span>
+                <Image src="/assets/svgs/delete-icon.svg" alt="Delete-Icon" width={20} height={20} />
+                <span className="ml-3 flex-1 whitespace-nowrap">Remove Current Account</span>
               </button>
             </li>
             <li key={7}>
+              <button
+                type="button"
+                className="group flex w-full rounded-lg bg-gray-200 p-3 text-base font-bold text-gray-900 hover:bg-gray-300 hover:shadow dark:bg-gray-600 dark:text-white dark:hover:bg-gray-500"
+                onClick={handlePopup}
+              >
+                <Image src="/assets/svgs/garbage-bin.svg" alt="Reset-Icon" width={20} height={20} />
+                <span className="ml-3 flex-1 whitespace-nowrap">Reset wallet</span>
+              </button>
+            </li>
+            <li key={8}>
               <button
                 type="button"
                 className="group flex w-full rounded-lg bg-gray-200 p-3 text-base font-bold text-gray-900 hover:bg-gray-300 hover:shadow dark:bg-gray-600 dark:text-white dark:hover:bg-gray-500"
@@ -212,13 +244,22 @@ const Setting = () => {
         onClick={handleChangeNetwork}
       />
 
-      {/* delete account modal */}
+      {/* Reset wallet modal */}
       <PopupModal
         popup={popup}
         handlePopup={handlePopup}
         title="Reset Accounts"
         description="are you sure to delete your account ? you all data has been deleted"
-        onClick={handleLogout}
+        onClick={handleResetWallet}
+      />
+
+      {/* Delete Current Account modal */}
+      <PopupModal
+        popup={deleteAccountModal}
+        handlePopup={deleteModalPopup}
+        title="Remove Current Account"
+        description="are you sure want to remove your current account?"
+        onClick={handleCurrentDeleteAccount}
       />
 
       {/* export Mnemonic Popup modal  */}

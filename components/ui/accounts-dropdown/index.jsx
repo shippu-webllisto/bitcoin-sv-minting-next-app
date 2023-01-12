@@ -13,6 +13,7 @@ import { ConnetedWallet } from '@/store/features/wallet-connect/index';
 import { CreateAccountData } from '@/services/web3-service/bsv';
 import { Encryption } from '@/helpers/encryptionAndDecryption';
 import ImportAccountModal from '../input-popup-modal/index';
+import CopyClipBoard from '@/components/common/copy-clip-board';
 
 // import avatar from '@/assets/svgs/user-avatar.svg';
 const avatar = 'https://png.pngtree.com/png-vector/20190223/ourmid/pngtree-vector-avatar-icon-png-image_695765.jpg';
@@ -330,6 +331,8 @@ const AccountDropDown = () => {
                 })}
               </div>
 
+              <CopyClipBoard walletAddress={mnemonicKey} isSort={false} />
+
               <Button type="submit" gradientDuoTone="purpleToBlue" onClick={(e) => handleModalState(e)}>
                 Next
               </Button>
@@ -388,7 +391,7 @@ const AccountDropDown = () => {
                 className={`${isMnemonicVerifyBtn ? '' : 'disabled:opacity-30'}`}
                 onClick={(e) => handleCreateAccount(e)}
               >
-                Yes, Im sure..
+                Create your wallet
               </Button>
             </div>
           </div>

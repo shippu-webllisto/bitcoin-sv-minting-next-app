@@ -14,6 +14,7 @@ import { Encryption } from '@/helpers/encryptionAndDecryption';
 import SignUpPage from '@/components/common/signup/index';
 import { AuthenticatedUser } from '@/store/features/authentication/index';
 import ImportAccountModal from '@/components/ui/input-popup-modal/index.jsx';
+import CopyClipBoard from '@/components/common/copy-clip-board';
 
 // import avatar from '@/assets/svgs/user-avatar.svg';
 const avatar = 'https://png.pngtree.com/png-vector/20190223/ourmid/pngtree-vector-avatar-icon-png-image_695765.jpg';
@@ -238,6 +239,8 @@ const Connect = () => {
                 );
               })}
             </div>
+            <CopyClipBoard walletAddress={mnemonicKey} isSort={false} />
+
             <div className="flex flex-col gap-4 my-4">
               <Button type="submit" gradientDuoTone="purpleToBlue" onClick={(e) => handleGenerateModal(e)}>
                 Next
@@ -305,7 +308,7 @@ const Connect = () => {
                 disabled={!isMnemonicVerifyBtn}
                 className={`${isMnemonicVerifyBtn ? '' : 'disabled:opacity-30'}`}
               >
-                Yes, Im sure..
+                Create your wallet
               </Button>
             </form>
           </div>

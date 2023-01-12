@@ -95,6 +95,7 @@ const ImportAccountModal = ({ popup, onClose, title, description }) => {
           router.replace(endpoints.login);
         }, oneWeek);
 
+        setMnemonicValue(mnemonicData);
         onClose();
         return router.push(endpoints.home);
       }
