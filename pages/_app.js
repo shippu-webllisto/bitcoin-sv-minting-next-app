@@ -19,17 +19,17 @@ const Footer = dynamic(() => import('@/layouts/footer/index.jsx'), { ssr: false 
 export const App = ({ children }) => {
   const router = useRouter();
   const { password, auth } = useSelector((state) => state.authentication);
-  // const { mnemonic } = useSelector((state) => state.walletConnect);
+  const { mnemonic } = useSelector((state) => state.walletConnect);
 
   // protected routes
   useEffect(() => {
-    if (!checkEmptyValue(password) && !auth) {
-      router.replace(endpoints.login);
-    } else if (checkEmptyValue(password && auth)) {
-      router.replace(endpoints.connectWallet);
+    if (checkEmptyValue(mnemonic)) {
+      router.push(endpoints.connectWallet);
+    } else if (!checkEmptyValue(password) && !auth) {
+      router.push(endpoints.login);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [auth, password]);
+  }, []);
 
   return children;
 };
@@ -44,15 +44,15 @@ function MyApp({ Component, pageProps }) {
   return (
     <>
       <Provider store={store}>
-        {/* <App> */}
-        <Navbar />
-        <Head>
-          <title>bitcoin-sv-minting-app</title>
-        </Head>
-        <Component key={router.asPath} {...pageProps} />
-        <ToastContainer theme="colored" autoClose={2000} hideProgressBar={true} />
-        <Footer />
-        {/* </App> */}
+        <App>
+          <Navbar />
+          <Head>
+            <title>bitcoin-sv-minting-app</title>
+          </Head>
+          <Component key={router.asPath} {...pageProps} />
+          <ToastContainer theme="colored" autoClose={2000} hideProgressBar={true} />
+          <Footer />
+        </App>
       </Provider>
     </>
   );
