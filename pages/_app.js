@@ -25,7 +25,7 @@ export const App = ({ children }) => {
   useEffect(() => {
     if (checkEmptyValue(mnemonic)) {
       router.push(endpoints.connectWallet);
-    } else if (!checkEmptyValue(password) && !auth) {
+    } else if (!checkEmptyValue(password) && auth == false) {
       router.push(endpoints.login);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

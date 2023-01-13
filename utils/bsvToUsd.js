@@ -1,5 +1,5 @@
 export const bsvToUsd = (bsvAmount) => {
-  const usd = 43.51;
+  const usd = 42.12;
   const balance = bsvAmount * usd;
   return balance;
 };

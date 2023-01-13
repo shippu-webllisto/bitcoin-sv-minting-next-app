@@ -176,7 +176,6 @@ const Connect = () => {
     setGeneratePopup(false);
     const Mnemonic_split_string = mnemonicKey?.split(' ');
     randomize(Mnemonic_split_string);
-
     setMnemonicVerifyModel(true);
   };
 

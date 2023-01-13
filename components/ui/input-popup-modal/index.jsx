@@ -34,11 +34,14 @@ const mnemonicData = {
 const ImportAccountModal = ({ popup, onClose, title, description }) => {
   const { addAccount } = useSelector((state) => state.addAccount);
   const { password } = useSelector((state) => state.authentication);
+
   const router = useRouter();
   const dispatch = useDispatch();
+
   const [mnemonicValue, setMnemonicValue] = useState(mnemonicData);
 
   const onChange = (e) => {
+    e.preventDefault();
     setMnemonicValue((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
@@ -105,6 +108,31 @@ const ImportAccountModal = ({ popup, onClose, title, description }) => {
     }
   };
 
+  const onPasteHandler = (e) => {
+    e.preventDefault();
+
+    const data = e.clipboardData.getData('text').replace(/[^a-zA-Z 0-9\n\r]+/g, '');
+    const arrIndex = data?.split(' ');
+    updateImporTHandle(arrIndex);
+  };
+
+  const updateImporTHandle = (arrIndex) => {
+    setMnemonicValue({
+      one: arrIndex[0],
+      two: arrIndex[1],
+      three: arrIndex[2],
+      four: arrIndex[3],
+      five: arrIndex[4],
+      six: arrIndex[5],
+      seven: arrIndex[6],
+      eight: arrIndex[7],
+      nine: arrIndex[8],
+      ten: arrIndex[9],
+      eleven: arrIndex[10],
+      twelve: arrIndex[11],
+    });
+  };
+
   return (
     <Modal show={popup} size="lg" popup={true} onClose={onClose}>
       <Modal.Header />
@@ -125,6 +153,9 @@ const ImportAccountModal = ({ popup, onClose, title, description }) => {
                     name="one"
                     onChange={onChange}
                     value={mnemonicValue?.one}
+                    onPaste={(event) => {
+                      onPasteHandler(event);
+                    }}
                   />
                   <TextInput
                     title="2"
@@ -134,6 +165,9 @@ const ImportAccountModal = ({ popup, onClose, title, description }) => {
                     value={mnemonicValue?.two}
                     required={true}
                     onChange={onChange}
+                    onPaste={(event) => {
+                      onPasteHandler(event);
+                    }}
                   />
                   <TextInput
                     title="3"
@@ -143,6 +177,9 @@ const ImportAccountModal = ({ popup, onClose, title, description }) => {
                     value={mnemonicValue?.three}
                     required={true}
                     onChange={onChange}
+                    onPaste={(event) => {
+                      onPasteHandler(event);
+                    }}
                   />
                   <TextInput
                     title="4"
@@ -152,6 +189,9 @@ const ImportAccountModal = ({ popup, onClose, title, description }) => {
                     value={mnemonicValue?.four}
                     required={true}
                     onChange={onChange}
+                    onPaste={(event) => {
+                      onPasteHandler(event);
+                    }}
                   />
                   <TextInput
                     title="5"
@@ -161,6 +201,9 @@ const ImportAccountModal = ({ popup, onClose, title, description }) => {
                     value={mnemonicValue?.five}
                     required={true}
                     onChange={onChange}
+                    onPaste={(event) => {
+                      onPasteHandler(event);
+                    }}
                   />
                   <TextInput
                     title="6"
@@ -170,6 +213,9 @@ const ImportAccountModal = ({ popup, onClose, title, description }) => {
                     value={mnemonicValue?.six}
                     required={true}
                     onChange={onChange}
+                    onPaste={(event) => {
+                      onPasteHandler(event);
+                    }}
                   />
                   <TextInput
                     title="7"
@@ -179,6 +225,9 @@ const ImportAccountModal = ({ popup, onClose, title, description }) => {
                     value={mnemonicValue?.seven}
                     required={true}
                     onChange={onChange}
+                    onPaste={(event) => {
+                      onPasteHandler(event);
+                    }}
                   />
                   <TextInput
                     title="8"
@@ -188,6 +237,9 @@ const ImportAccountModal = ({ popup, onClose, title, description }) => {
                     value={mnemonicValue?.eight}
                     required={true}
                     onChange={onChange}
+                    onPaste={(event) => {
+                      onPasteHandler(event);
+                    }}
                   />
                   <TextInput
                     title="9"
@@ -197,6 +249,9 @@ const ImportAccountModal = ({ popup, onClose, title, description }) => {
                     value={mnemonicValue?.nine}
                     required={true}
                     onChange={onChange}
+                    onPaste={(event) => {
+                      onPasteHandler(event);
+                    }}
                   />
                   <TextInput
                     title="10"
@@ -206,6 +261,9 @@ const ImportAccountModal = ({ popup, onClose, title, description }) => {
                     value={mnemonicValue?.ten}
                     required={true}
                     onChange={onChange}
+                    onPaste={(event) => {
+                      onPasteHandler(event);
+                    }}
                   />
                   <TextInput
                     title="11"
@@ -215,6 +273,9 @@ const ImportAccountModal = ({ popup, onClose, title, description }) => {
                     value={mnemonicValue?.eleven}
                     required={true}
                     onChange={onChange}
+                    onPaste={(event) => {
+                      onPasteHandler(event);
+                    }}
                   />
                   <TextInput
                     title="12"
@@ -224,6 +285,9 @@ const ImportAccountModal = ({ popup, onClose, title, description }) => {
                     value={mnemonicValue?.twelve}
                     required={true}
                     onChange={onChange}
+                    onPaste={(event) => {
+                      onPasteHandler(event);
+                    }}
                   />
                 </div>
 

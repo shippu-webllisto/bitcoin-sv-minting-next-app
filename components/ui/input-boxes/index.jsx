@@ -1,35 +1,25 @@
-import { useState } from 'react';
 import { Button, TextInput } from 'flowbite-react';
 import Image from 'next/image';
 import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
+import PropTypes from 'prop-types';
 
 import { Encryption } from '@/helpers/encryptionAndDecryption';
 import { ArrayToString } from '@/helpers/arrayToString';
 
-const mnemonicData = {
-  one: '',
-  two: '',
-  three: '',
-  four: '',
-  five: '',
-  six: '',
-  seven: '',
-  eight: '',
-  nine: '',
-  ten: '',
-  eleven: '',
-  twelve: '',
-};
-
-const InputBoxes = () => {
+const InputBoxes = ({
+  clearDisabledState,
+  verify,
+  mnemonicValue,
+  verifyInputHandler,
+  updateImporTHandle,
+  PopupCloseHanler,
+}) => {
   const { addAccount } = useSelector((state) => state.addAccount);
 
-  const [mnemonicValue, setMnemonicValue] = useState(mnemonicData);
-  const [verify, setVerify] = useState(false);
-
   const onChange = (e) => {
-    setMnemonicValue((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+    e.preventDefault();
+    verifyInputHandler(e);
   };
 
   const handleVerify = () => {
@@ -39,11 +29,24 @@ const InputBoxes = () => {
 
       const encryptedMnemonicKey = Encryption(getMnemonic);
       const getUser = addAccount?.find((item) => item.mnemonic === encryptedMnemonicKey);
-      if (!getUser) return toast.error('Invalid Mnemonic Key');
-      setVerify(true);
+      if (!getUser) {
+        PopupCloseHanler();
+        return toast.error('Invalid Mnemonic Key');
+      }
+      clearDisabledState(true);
     } catch (error) {
+      PopupCloseHanler();
       return new Error(error.message);
     }
+  };
+
+  // onPasteHandler
+  const onPasteHandler = (e) => {
+    e.preventDefault();
+
+    const data = e.clipboardData.getData('text').replace(/[^a-zA-Z 0-9\n\r]+/g, '');
+    const arrIndex = data?.split(' ');
+    updateImporTHandle(arrIndex);
   };
 
   return (
@@ -58,6 +61,9 @@ const InputBoxes = () => {
           name="one"
           onChange={onChange}
           value={mnemonicValue?.one}
+          onPaste={(event) => {
+            onPasteHandler(event);
+          }}
         />
         <TextInput
           disabled={verify}
@@ -68,6 +74,9 @@ const InputBoxes = () => {
           value={mnemonicValue?.two}
           required={true}
           onChange={onChange}
+          onPaste={(event) => {
+            onPasteHandler(event);
+          }}
         />
         <TextInput
           disabled={verify}
@@ -78,6 +87,9 @@ const InputBoxes = () => {
           value={mnemonicValue?.three}
           required={true}
           onChange={onChange}
+          onPaste={(event) => {
+            onPasteHandler(event);
+          }}
         />
         <TextInput
           disabled={verify}
@@ -88,6 +100,9 @@ const InputBoxes = () => {
           value={mnemonicValue?.four}
           required={true}
           onChange={onChange}
+          onPaste={(event) => {
+            onPasteHandler(event);
+          }}
         />
         <TextInput
           disabled={verify}
@@ -98,6 +113,9 @@ const InputBoxes = () => {
           value={mnemonicValue?.five}
           required={true}
           onChange={onChange}
+          onPaste={(event) => {
+            onPasteHandler(event);
+          }}
         />
         <TextInput
           disabled={verify}
@@ -108,6 +126,9 @@ const InputBoxes = () => {
           value={mnemonicValue?.six}
           required={true}
           onChange={onChange}
+          onPaste={(event) => {
+            onPasteHandler(event);
+          }}
         />
         <TextInput
           disabled={verify}
@@ -118,6 +139,9 @@ const InputBoxes = () => {
           value={mnemonicValue?.seven}
           required={true}
           onChange={onChange}
+          onPaste={(event) => {
+            onPasteHandler(event);
+          }}
         />
         <TextInput
           disabled={verify}
@@ -128,6 +152,9 @@ const InputBoxes = () => {
           value={mnemonicValue?.eight}
           required={true}
           onChange={onChange}
+          onPaste={(event) => {
+            onPasteHandler(event);
+          }}
         />
         <TextInput
           disabled={verify}
@@ -138,6 +165,9 @@ const InputBoxes = () => {
           value={mnemonicValue?.nine}
           required={true}
           onChange={onChange}
+          onPaste={(event) => {
+            onPasteHandler(event);
+          }}
         />
         <TextInput
           disabled={verify}
@@ -148,6 +178,9 @@ const InputBoxes = () => {
           value={mnemonicValue?.ten}
           required={true}
           onChange={onChange}
+          onPaste={(event) => {
+            onPasteHandler(event);
+          }}
         />
         <TextInput
           disabled={verify}
@@ -158,6 +191,9 @@ const InputBoxes = () => {
           value={mnemonicValue?.eleven}
           required={true}
           onChange={onChange}
+          onPaste={(event) => {
+            onPasteHandler(event);
+          }}
         />
         <TextInput
           disabled={verify}
@@ -168,6 +204,9 @@ const InputBoxes = () => {
           value={mnemonicValue?.twelve}
           required={true}
           onChange={onChange}
+          onPaste={(event) => {
+            onPasteHandler(event);
+          }}
         />
       </div>
 
@@ -185,6 +224,15 @@ const InputBoxes = () => {
       </div>
     </>
   );
+};
+
+InputBoxes.propTypes = {
+  verify: PropTypes.bool,
+  clearDisabledState: PropTypes.func,
+  mnemonicValue: PropTypes.any,
+  verifyInputHandler: PropTypes.func,
+  updateImporTHandle: PropTypes.func,
+  PopupCloseHanler: PropTypes.func,
 };
 
 export default InputBoxes;

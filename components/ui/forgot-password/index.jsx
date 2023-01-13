@@ -3,20 +3,41 @@ import PropTypes from 'prop-types';
 import { Button, Label, Modal, TextInput } from 'flowbite-react';
 import { useDispatch } from 'react-redux';
 import { toast } from 'react-toastify';
+import { useRouter } from 'next/router';
 
 import { checkEmptyValue } from '@/utils/checkEmptyValue';
 import { HashPassword } from '@/helpers/bcryptjs';
 import { AuthenticatedUser } from '@/store/features/authentication/index';
 import InputBoxes from '../input-boxes/index';
+import { useCallback } from 'react';
 
 const forgotForm = {
   password: '',
   confirmPassword: '',
 };
 
+const mnemonicData = {
+  one: '',
+  two: '',
+  three: '',
+  four: '',
+  five: '',
+  six: '',
+  seven: '',
+  eight: '',
+  nine: '',
+  ten: '',
+  eleven: '',
+  twelve: '',
+};
+
 function ForgotPassword({ forgotModal, onClose }) {
+  const router = useRouter();
   const dispatch = useDispatch();
   const [signupData, setSignupData] = useState(forgotForm);
+
+  const [verify, setVerify] = useState(false);
+  const [mnemonicValue, setMnemonicValue] = useState(mnemonicData);
 
   const onChange = (e) => {
     setSignupData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
@@ -35,16 +56,55 @@ function ForgotPassword({ forgotModal, onClose }) {
         dispatch(AuthenticatedUser({ password: hashPassword, auth: false }));
 
         setSignupData(forgotForm);
-        onClose(); // close modal
+        PopupCloseHanler(); // close modal
+        clearDisabledState();
+        setMnemonicValue({ ...mnemonicData });
         return router.push(endpoints.login);
       }
     } catch (error) {
+      clearDisabledState();
       return new Error(error.message);
     }
   };
 
+  const clearDisabledState = (data) => {
+    setVerify(data);
+  };
+
+  const verifyInputHandler = useCallback(
+    (e) => {
+      setMnemonicValue((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [mnemonicValue],
+  );
+
+  const updateImporTHandle = (arrIndex) => {
+    setMnemonicValue({
+      one: arrIndex[0],
+      two: arrIndex[1],
+      three: arrIndex[2],
+      four: arrIndex[3],
+      five: arrIndex[4],
+      six: arrIndex[5],
+      seven: arrIndex[6],
+      eight: arrIndex[7],
+      nine: arrIndex[8],
+      ten: arrIndex[9],
+      eleven: arrIndex[10],
+      twelve: arrIndex[11],
+    });
+  };
+
+  const PopupCloseHanler = () => {
+    onClose();
+    setMnemonicValue({ ...mnemonicData });
+    setVerify(false);
+    setSignupData({ ...forgotForm });
+  };
+
   return (
-    <Modal show={forgotModal} size="lg" popup={true} onClose={onClose}>
+    <Modal show={forgotModal} size="lg" popup={true} onClose={PopupCloseHanler}>
       <Modal.Header />
       <Modal.Body>
         <div className="text-center">
@@ -53,7 +113,14 @@ function ForgotPassword({ forgotModal, onClose }) {
           <div className="border-2 flex justify-center items-center p-3 rounded-lg">
             <div className="flex flex-col justify-between">
               {/* 12 input box for Mnemonic key  */}
-              <InputBoxes />
+              <InputBoxes
+                clearDisabledState={clearDisabledState}
+                verify={verify}
+                verifyInputHandler={verifyInputHandler}
+                mnemonicValue={mnemonicValue}
+                updateImporTHandle={updateImporTHandle}
+                PopupCloseHanler={PopupCloseHanler}
+              />
             </div>
           </div>
           <div className="my-4">
