@@ -43,8 +43,7 @@ const Navbar = () => {
             <div className="flex items-center gap-4">
               {auth && !checkEmptyValue(walletAddress) && (
                 <div>
-                  {' '}
-                  <button onClick={(e) => refreshHandler(e)}>
+                  <button onClick={(e) => refreshHandler(e)} title="Refresh Balance">
                     <Image
                       className="cursor-pointer"
                       src="/assets/svgs/refresh-svgrepo-com.svg"

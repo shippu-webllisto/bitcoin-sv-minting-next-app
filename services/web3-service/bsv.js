@@ -11,6 +11,7 @@ export const CreateAccountData = async (network) => {
 
   const getMnemonicKey = wallet.mnemonic;
   const getAddress = await wallet.getAddress();
+  const getBalance = await wallet.getBalance();
   const getNetwork =
     Network === 'livenet' ? wallet.masterHDPrivateKey.network.alias : wallet.masterHDPrivateKey.network.name;
 

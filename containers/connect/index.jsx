@@ -218,6 +218,7 @@ const Connect = () => {
         </Card>
       </div>
 
+      {/* create modal  */}
       <Modal show={generatePopup} size="md" popup={true} onClose={() => setGeneratePopup(false)}>
         <Modal.Header />
         <Modal.Body>
@@ -238,6 +239,8 @@ const Connect = () => {
                 );
               })}
             </div>
+            <span className="text-center text-gray-600">or</span>
+            {/* copy mnemonic key */}
             <CopyClipBoard walletAddress={mnemonicKey} isSort={false} />
 
             <div className="flex flex-col gap-4 my-4">

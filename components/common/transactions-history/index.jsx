@@ -58,15 +58,15 @@ export default function TranscationsHistory() {
                     <Table.HeadCell>Fee Paid</Table.HeadCell>
                   </Table.Head>
                   <Table.Body className="divide-y">
-                    {Array?.map((item, i) => {
+                    {Array?.reverse()?.map((item, i) => {
                       return (
                         <Table.Row className="bg-gray-50 dark:border-gray-700 dark:bg-gray-800 text-center" key={i}>
                           <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white flex flex-row justify-around">
                             <Image
-                              className="cursor-pointer"
+                              className="cursor-pointer mr-2"
                               src="/assets/svgs/copy-icon.svg"
                               alt="copy-logo"
-                              title="copy"
+                              title="copy hash"
                               width={20}
                               height={20}
                               priority
@@ -99,7 +99,7 @@ export default function TranscationsHistory() {
                 </Table>
               </div>
             )}
-
+            {/* check more transaction on block check  */}
             <a
               className="flex flex-row justify-center p-1 border border-black rounded-lg my-4 bg-slate-200 hover:bg-gray-300"
               href={`https://blockcheck.info/address/detail?address=${walletAddress}`}

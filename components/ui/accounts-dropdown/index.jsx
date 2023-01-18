@@ -107,7 +107,7 @@ const AccountDropDown = () => {
     e.stopPropagation();
     setMnemonicVerifyModel(false);
     const Mnemonic_split_string = mnemonicKey?.split(' ');
-    await randomize(Mnemonic_split_string);
+    randomize(Mnemonic_split_string);
 
     setGeneratePopup(true);
   };
@@ -330,9 +330,9 @@ const AccountDropDown = () => {
                   );
                 })}
               </div>
-
+              <span className="text-center text-gray-600">or</span>
+              {/* copy mnemonic key */}
               <CopyClipBoard walletAddress={mnemonicKey} isSort={false} />
-
               <Button type="submit" gradientDuoTone="purpleToBlue" onClick={(e) => handleModalState(e)}>
                 Next
               </Button>
