@@ -1,13 +1,19 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { useSelector } from 'react-redux';
-
 import { endpoints } from '@/routes/endpoints.js';
 import { checkEmptyValue } from '@/utils/checkEmptyValue.js';
+import { useUpdateBalance } from '@/containers/hooks';
 
 const Navbar = () => {
+  const { CurrenWalletUpdate } = useUpdateBalance();
   const { auth } = useSelector((state) => state.authentication);
-  const { walletAddress, network } = useSelector((state) => state.walletConnect);
+  const { walletAddress, network, mnemonic } = useSelector((state) => state.walletConnect);
+
+  const refreshHandler = (e) => {
+    e.stopPropagation();
+    CurrenWalletUpdate(network, mnemonic);
+  };
 
   return (
     <>
@@ -35,6 +41,21 @@ const Navbar = () => {
             </nav>
 
             <div className="flex items-center gap-4">
+              {auth && !checkEmptyValue(walletAddress) && (
+                <div>
+                  {' '}
+                  <button onClick={(e) => refreshHandler(e)}>
+                    <Image
+                      className="cursor-pointer"
+                      src="/assets/svgs/refresh-svgrepo-com.svg"
+                      alt="setting-logo"
+                      width={20}
+                      height={20}
+                    />
+                  </button>
+                </div>
+              )}
+
               <div className="sm:flex sm:gap-4">
                 {auth && !checkEmptyValue(walletAddress) && (
                   <Link href={endpoints.setting}>

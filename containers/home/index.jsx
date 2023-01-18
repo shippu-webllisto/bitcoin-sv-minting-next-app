@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { Modal } from 'flowbite-react';
 import { useSelector } from 'react-redux';
@@ -12,19 +12,27 @@ import SendBsv from '@/components/common/send-bsv/index.jsx';
 import NftList from '@/components/common/nft-list/index.jsx';
 import TokenList from '@/components/common/token-list/index.jsx';
 import { bsvToUsd } from '@/utils/bsvToUsd';
+import { satoshiToBsvConversion } from '@/helpers/amountConversion';
+import TranscationsHistory from '@/components/common/transactions-history/index';
 
 const Home = () => {
   const [isModalShow, setIsModalShow] = useState(false);
   const [isModalSend, setisModalSend] = useState(false);
   const { walletAddress, bsvAmount } = useSelector((state) => state.walletConnect);
+  const [usd, setUsd] = useState(0);
 
-  const handleQRButton = (e) => {
-    e.preventDefault();
+  useEffect(() => {
+    (async () => {
+      const usdPrice = await bsvToUsd(satoshiToBsvConversion(bsvAmount));
+      setUsd(usdPrice);
+    })();
+  }, [bsvAmount]);
+
+  const handleQRButton = () => {
     setIsModalShow((prev) => !prev);
   };
 
-  const handleSendBsv = (e) => {
-    e.preventDefault();
+  const handleSendBsv = () => {
     setisModalSend((prev) => !prev);
   };
 
@@ -45,10 +53,10 @@ const Home = () => {
             />
             <div className="text-end text-lg text-bold">
               <h1 className="">
-                {bsvAmount} <span>BSV</span>
+                {satoshiToBsvConversion(bsvAmount)} <span>BSV</span>
               </h1>
               <p>
-                $ {bsvToUsd(bsvAmount)} <span>USD</span>
+                $ {usd?.toFixed(3)} <span>USD</span>
               </p>
             </div>
           </div>
@@ -63,6 +71,7 @@ const Home = () => {
             >
               <button
                 type="button"
+                title="receive bsv"
                 className={`flex justify-center px-8 py-2 font-semibold rounded-full dark:bg-gray-100 dark:text-gray-800 border hover:border-red-600 btn-home ${Styles.btn_home}`}
                 onClick={handleQRButton}
               >
@@ -78,6 +87,7 @@ const Home = () => {
 
               <button
                 type="button"
+                title="send bsv"
                 className={`flex justify-center px-8 py-2 font-semibold rounded-full dark:bg-gray-100 dark:text-gray-800 border hover:border-red-600 btn-home ${Styles.btn_home}`}
                 onClick={handleSendBsv}
               >
@@ -95,6 +105,7 @@ const Home = () => {
                 href={`https://blockcheck.info/address/detail?address=${walletAddress}`}
                 target="_blank"
                 type="button"
+                title="check history"
                 className={`flex justify-center px-8 py-2 font-semibold rounded-full dark:bg-gray-100 dark:text-gray-800 border hover:border-red-600 btn-home ${Styles.btn_home}`}
                 rel="noreferrer"
               >
@@ -120,10 +131,9 @@ const Home = () => {
             </Modal>
 
             <Modal show={isModalSend} size="lg" popup={true} onClose={() => setisModalSend((prev) => !prev)}>
-              <Modal.Header />
               <Modal.Body>
                 <div className="space-y-6 p-6">
-                  <SendBsv walletAddress={walletAddress} setSendBsvPopup={() => setSendBsvPopup(false)} />
+                  <SendBsv walletAddress={walletAddress} setSendBsvPopup={() => setisModalSend(false)} />
                 </div>
               </Modal.Body>
               <Modal.Footer />
@@ -131,12 +141,12 @@ const Home = () => {
           </div>
         </div>
       </div>
-
       {/* tokens list  */}
       <TokenList />
-
       {/* nfts list  */}
       <NftList />
+      {/* Transcations History */}
+      <TranscationsHistory />
     </div>
   );
 };

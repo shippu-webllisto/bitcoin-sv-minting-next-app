@@ -3,27 +3,135 @@ import Image from 'next/image';
 import PropTypes from 'prop-types';
 import { toast } from 'react-toastify';
 import { checkEmptyValue } from '@/utils/checkEmptyValue.js';
+import { SendTranasction, updatedBalance } from '@/services/web3-service/bsv';
+import { useSelector } from 'react-redux';
+import { ConnetedWallet } from '@/store/features/wallet-connect/index';
+import { useDispatch } from 'react-redux';
+import { UpdateAccount } from '@/store/features/add-account';
+import { satoshiToBsvConversion } from '@/helpers/amountConversion';
 
 const emptyForm = {
   to: '',
   amount: '',
 };
 
-const SendBsv = ({ walletAddress }) => {
-  const [formData, setFormData] = useState(emptyForm);
+const amountInput = {
+  toBalError: '',
+};
 
-  const onChange = (e) => {
+const SendBsv = ({ walletAddress, setSendBsvPopup }) => {
+  const WalletConnect = useSelector((state) => state.walletConnect);
+  const { addAccount } = useSelector((state) => state.addAccount);
+  const { network, mnemonic, bsvAmount } = useSelector((state) => state.walletConnect);
+  const dispatch = useDispatch();
+
+  const [formData, setFormData] = useState(emptyForm);
+  const [error, setError] = useState(amountInput);
+  const [loading, setLoading] = useState(false);
+
+  const onChange = async (e) => {
+    const { name, value } = e.target;
+
+    if (name === 'amount') {
+      setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+      if (+value * 100000000 > bsvAmount) {
+        setError({
+          ...error,
+          toBalError: 'Insufficient balance',
+        });
+      } else if (+value <= 0) {
+        setError({
+          ...error,
+          toBalError: 'Enter greater than 0',
+        });
+      } else {
+        setError({
+          ...error,
+          toBalError: '',
+        });
+      }
+    }
+
     setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
-  const handleSubmit = (e) => {
+  const closeModalState = () => {
+    setLoading(false);
+    setSendBsvPopup();
+    setFormData({ ...emptyForm });
+    setError({ ...amountInput });
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (checkEmptyValue(walletAddress) || checkEmptyValue(formData.to) || checkEmptyValue(formData.amount))
       return toast.error('please, fill the all required fileds.');
+
+    if (error?.toBalError) return toast.error(error?.toBalError);
+    if (formData.amount > bsvAmount) return toast.error('you does not have a sufficient amount.');
+    try {
+      setLoading(true);
+      const { tx, getBalance } = await SendTranasction(mnemonic, network, formData?.to, formData.amount);
+
+      if (!checkEmptyValue(tx) && !checkEmptyValue(getBalance)) {
+        setLoading(true);
+        // updating balance of addAccount
+        const updatedData = addAccount?.map((item) => {
+          if (item.mnemonic === mnemonic) {
+            return { ...item, bsvAmount: getBalance };
+          }
+          return item;
+        });
+        dispatch(UpdateAccount(updatedData));
+        // updating balance of connect-wallet
+        dispatch(
+          ConnetedWallet({
+            ...WalletConnect,
+            bsvAmount: getBalance,
+          }),
+        );
+
+        // updating balance of user-second wallet if user have imported and created.
+        const updatedOldData = addAccount?.find((item) => item.walletAddress === formData.to);
+        if (!checkEmptyValue(updatedOldData?.mnemonic)) {
+          const updatedAmountData = addAccount?.map((item) => {
+            if (item.mnemonic === updatedOldData.mnemonic) {
+              updatedBalance(network, item?.mnemonic)
+                .then((getBal) => {
+                  return { ...item, bsvAmount: getBal };
+                })
+                .catch((err) => {
+                  return toast.error(`${err}`);
+                });
+            }
+            return item;
+          });
+          dispatch(UpdateAccount(updatedAmountData));
+        }
+
+        closeModalState();
+        toast.success('Token transferred successfully');
+      }
+    } catch (error) {
+      closeModalState();
+      return toast.error(error.message);
+    }
   };
 
+  const handleCloseModal = () => {
+    setLoading(false);
+    setSendBsvPopup();
+    setFormData({ ...emptyForm });
+    setError({ ...amountInput });
+  };
   return (
-    <div className="flex justify-center flex-col border rounded-lg bg-gray-50">
+    <div
+      className=" relative flex justify-center flex-col border rounded-lg bg-gray-50"
+      style={{ pointerEvents: loading ? 'none' : 'auto' }}
+    >
+      <div className="absolute top-2 right-2 cursor-pointer font-semibold text-lg" onClick={() => handleCloseModal()}>
+        X{' '}
+      </div>
       <h1 className="text-center text-2xl font-mono my-2">Send BSV</h1>
       <div className="flex flex-row justify-center">
         <p>
@@ -52,10 +160,8 @@ const SendBsv = ({ walletAddress }) => {
             disabled
           />
         </div>
-        <div className="form-group mb-6">
-          <label htmlFor="exampleInputPassword1" className="form-label inline-block mb-2 text-gray-700">
-            To
-          </label>
+        <div className="form-group mb-3">
+          <label htmlFor="exampleInputPassword1" className="form-label inline-block mb-2 text-gray-700"></label>
           <input
             type="text"
             className="form-control block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
@@ -70,7 +176,7 @@ const SendBsv = ({ walletAddress }) => {
         <div className="form-group mb-6">
           <label htmlFor="exampleInputPassword2" className="form-label inline-block mb-2 text-gray-700"></label>
           <input
-            type="text"
+            type="number"
             className="form-control block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
             id="exampleInputPassword2"
             placeholder="input amount (unit:BSV)"
@@ -79,13 +185,17 @@ const SendBsv = ({ walletAddress }) => {
             value={formData?.amount}
             required
           />
+          <div className="flex justify-between mt-1">
+            <span className="text-red-600 text-sm">{error?.toBalError}</span>
+            <span className="text-sm"> your current bsv : {satoshiToBsvConversion(bsvAmount)}</span>
+          </div>
         </div>
 
         <button
           type="submit"
           className=" w-full px-6 py-2.5 bg-blue-600 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out"
         >
-          Send
+          {loading ? 'Loading...' : 'Send'}
         </button>
       </form>
     </div>
@@ -94,6 +204,7 @@ const SendBsv = ({ walletAddress }) => {
 
 SendBsv.propTypes = {
   walletAddress: PropTypes.string.isRequired,
+  setSendBsvPopup: PropTypes.func,
 };
 
 export default SendBsv;
