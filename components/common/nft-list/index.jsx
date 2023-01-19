@@ -17,7 +17,7 @@ const mintForm = {
   name: '',
   description: '',
   symbol: '',
-  supply: '',
+  supply: 1,
 };
 
 const NftList = () => {
@@ -49,7 +49,7 @@ const NftList = () => {
       !getFile
     )
       return toast.info('please fill all the required fileds!!');
-    if (Number(mintData.supply) > 0) return toast.info('supply must be 1 or more!!');
+    // if (Number(mintData.supply) >= 0) return toast.info('supply must be 1 or more!!');
     try {
       setIsLoading(true);
       let form = new FormData();
@@ -216,8 +216,8 @@ const NftList = () => {
                       onChange={(e) => setGetFile(e.target.files[0])}
                       required
                     />
+                    <p className="text-xs text-gray-500 dark:text-gray-400">SVG, PNG, JPG or GIF</p>
                   </div>
-                  <p className="text-xs text-gray-500 dark:text-gray-400">SVG, PNG, JPG or GIF</p>
                 </div>
 
                 {/* <div className="flex items-center justify-center w-full">
@@ -263,7 +263,7 @@ const NftList = () => {
 
               <button
                 type="submit"
-                className="w-full  inline-block rounded-lg bg-blue-500 px-5 py-3 text-sm font-medium text-white"
+                className="w-full inline-block rounded-lg bg-blue-500 px-5 py-3 text-sm font-medium text-white"
                 disabled={isLoading}
               >
                 {isLoading ? 'Loading...' : 'Mint'}

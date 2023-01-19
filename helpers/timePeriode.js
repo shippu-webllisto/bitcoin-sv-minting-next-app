@@ -10,5 +10,5 @@ export const useTimePeriode = (seconds) => {
   setTimeout(() => {
     dispatch(AuthenticatedUser({ password: password, auth: false }));
     router.replace(endpoints.login);
-  }, 1000 * seconds);
+  }, seconds * 1000);
 };

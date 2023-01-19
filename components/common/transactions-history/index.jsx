@@ -11,7 +11,7 @@ const Array = [
   {
     transactionHash: 'b3fafedd3dd259399b346a6a243149dabe3ff931b224af77233d040b5d5b7b02',
     status: 'pending',
-    Block: 10,
+    Block: 12,
     feePaid: 0.00000557,
   },
   {
@@ -23,7 +23,7 @@ const Array = [
   {
     transactionHash: 'b3fafedd3dd259399b346a6a243149dabe3ff931b224af77233d040b5d5b7b02',
     status: 'pending',
-    Block: 12,
+    Block: 10,
     feePaid: 0.00000557,
   },
 ];
@@ -58,7 +58,7 @@ export default function TranscationsHistory() {
                     <Table.HeadCell>Fee Paid</Table.HeadCell>
                   </Table.Head>
                   <Table.Body className="divide-y">
-                    {Array?.reverse()?.map((item, i) => {
+                    {Array?.map((item, i) => {
                       return (
                         <Table.Row className="bg-gray-50 dark:border-gray-700 dark:bg-gray-800 text-center" key={i}>
                           <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white flex flex-row justify-around">
@@ -86,6 +86,7 @@ export default function TranscationsHistory() {
                               href={`https://blockcheck.info/transaction/detail?tx=${item?.transactionHash}`}
                               target="_blank"
                               rel="noreferrer"
+                              title="check transaction hash"
                             >
                               <Image src="/assets/svgs/link-logo.svg" alt="block-check-link" width={20} height={20} />
                             </a>
@@ -101,10 +102,11 @@ export default function TranscationsHistory() {
             )}
             {/* check more transaction on block check  */}
             <a
-              className="flex flex-row justify-center p-1 border border-black rounded-lg my-4 bg-slate-200 hover:bg-gray-300"
+              className="flex flex-row justify-center items-center p-1 border border-black rounded-lg my-4 bg-slate-200 hover:bg-gray-300 w-[50%] mx-auto"
               href={`https://blockcheck.info/address/detail?address=${walletAddress}`}
               target="_blank"
               rel="noreferrer"
+              title="check more transaction history"
             >
               <Image src="/assets/svgs/link-logo.svg" alt="block-check-link" width={15} height={15} />
               <span className="ml-2 text-md text-black">check more...</span>
