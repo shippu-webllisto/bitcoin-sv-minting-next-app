@@ -17,7 +17,7 @@ const mintForm = {
   name: '',
   description: '',
   symbol: '',
-  supply: 1,
+  supply: '',
 };
 
 const NftList = () => {
@@ -49,7 +49,7 @@ const NftList = () => {
       !getFile
     )
       return toast.info('please fill all the required fileds!!');
-    // if (Number(mintData.supply) >= 0) return toast.info('supply must be 1 or more!!');
+    if (Number(mintData.supply) <= 0) return toast.info('supply must be 1 or more!!');
     try {
       setIsLoading(true);
       let form = new FormData();
@@ -78,6 +78,7 @@ const NftList = () => {
           }),
         );
         setIsLoading(false);
+        setMintData(mintForm);
         setIsModalMint(false);
         // }
       }

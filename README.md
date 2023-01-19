@@ -19,30 +19,17 @@ yarn lint or npm run lint
 
 ## important - create .env.local file
 
+```
+Note : we gave you an example in .env.example file. how to use environment variables.
+```
+
 - create .env.local -> file for development in local
-
-<!-- - create .env.production -> file for production -->
-
-> how to use variable or data in .env and .env.production file - given an example in .env.example file
-
-<!-- - .env.example -> file for demo to how use envirenment variables (available in root dir). -->
-
-<!-- # after creating a .env and .env.production file then start below command. -->
 
 ## Running the app
 
 ```bash
-# development (using .env file)
+# development (using .env.local file)
 yarn dev or npm run dev
-
-# production  (using .env.production file)
-#yarn dev:production or npm run dev:production
-
-# build for development (using .env file)
-#yarn build:dev or npm run build:dev
-
-# build for production  (using .env.production file)
-# yarn build:production or npm run build:production
 
 #build production
 yarn build or npm run build
