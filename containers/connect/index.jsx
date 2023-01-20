@@ -218,6 +218,14 @@ const Connect = () => {
         </Card>
       </div>
 
+      {/* import your Account - modal  */}
+      <ImportAccountModal
+        popup={popupImportModal}
+        onClose={() => setPopupImportModal(false)}
+        title="Import an Account !"
+        description="add your mnemonic key here below down!"
+      />
+
       {/* create modal  */}
       <Modal show={generatePopup} size="md" popup={true} onClose={() => setGeneratePopup(false)}>
         <Modal.Header />
@@ -252,17 +260,16 @@ const Connect = () => {
         </Modal.Body>
       </Modal>
 
-      {/* import your Account - modal  */}
-      <ImportAccountModal
-        popup={popupImportModal}
-        onClose={() => setPopupImportModal(false)}
-        title="Import an Account !"
-        description="add your mnemonic key here below down!"
-      />
-
       {/* create your Account - modal (generate mnemonic key)  */}
-
-      <Modal show={mnemonicVerifyModel} size="md" popup={true} onClose={() => setMnemonicVerifyModel(false)}>
+      <Modal
+        show={mnemonicVerifyModel}
+        size="md"
+        popup={true}
+        onClose={() => {
+          setMnemonicVerifyModel(false);
+          setGeneratePopup(true);
+        }}
+      >
         <Modal.Header />
         <Modal.Body>
           <div className="text-center">

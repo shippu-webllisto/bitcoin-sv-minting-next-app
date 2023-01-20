@@ -7,30 +7,9 @@ import Styles from './transactions-history.module.css';
 import { CopyClipboard } from '@/helpers/CopyClipboard.js';
 import { getShortAddress } from '@/utils/getShortAddress';
 
-const Array = [
-  {
-    transactionHash: 'b3fafedd3dd259399b346a6a243149dabe3ff931b224af77233d040b5d5b7b02',
-    status: 'pending',
-    Block: 12,
-    feePaid: 0.00000557,
-  },
-  {
-    transactionHash: 'b3fafedd3dd259399b346a6a243149dabe3ff931b224af77233d040b5d5b7b02',
-    status: 'confirm',
-    Block: 11,
-    feePaid: 0.00000557,
-  },
-  {
-    transactionHash: 'b3fafedd3dd259399b346a6a243149dabe3ff931b224af77233d040b5d5b7b02',
-    status: 'pending',
-    Block: 10,
-    feePaid: 0.00000557,
-  },
-];
-
 export default function TranscationsHistory() {
   const { walletAddress } = useSelector((state) => state.walletConnect);
-  //   const { history } = useSelector((state) => state.history);
+  const { history } = useSelector((state) => state.history);
 
   const handleCopyText = (TransactionHash) => {
     CopyClipboard(TransactionHash);
@@ -45,7 +24,7 @@ export default function TranscationsHistory() {
             <h1 className="ml-2">Transactions</h1>
           </div>
           <div className="">
-            {Array?.length === 0 ? (
+            {history.length === 0 ? (
               <h6 className="text-center text-gray-500 p-6">Empty</h6>
             ) : (
               <div className="p-1">
@@ -58,7 +37,7 @@ export default function TranscationsHistory() {
                     <Table.HeadCell>Fee Paid</Table.HeadCell>
                   </Table.Head>
                   <Table.Body className="divide-y">
-                    {Array?.map((item, i) => {
+                    {history?.map((item, i) => {
                       return (
                         <Table.Row className="bg-gray-50 dark:border-gray-700 dark:bg-gray-800 text-center" key={i}>
                           <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white flex flex-row justify-around">
@@ -75,10 +54,12 @@ export default function TranscationsHistory() {
                             {getShortAddress(item?.transactionHash)}
                           </Table.Cell>
                           <Table.Cell>
-                            {item?.status === 'confirm' ? (
-                              <span className="border bg-green-400 p-2 rounded-lg text-black">confirm</span>
+                            {item?.status === 'confirmed' ? (
+                              <span className="border-2 border-green-400 bg-green-200 p-2 rounded-lg text-black">
+                                Confirmed
+                              </span>
                             ) : (
-                              <span className="border bg-yellow-300 p-2 rounded-lg text-black">pending</span>
+                              <span className="border-2 bg-yellow-300  p-2 rounded-lg text-black">Pending</span>
                             )}
                           </Table.Cell>
                           <Table.Cell className="text-black flex justify-center items-center">
@@ -91,7 +72,7 @@ export default function TranscationsHistory() {
                               <Image src="/assets/svgs/link-logo.svg" alt="block-check-link" width={20} height={20} />
                             </a>
                           </Table.Cell>
-                          <Table.Cell className="text-black">{item?.Block}</Table.Cell>
+                          <Table.Cell className="text-black">{item?.block}</Table.Cell>
                           <Table.Cell className="text-black">{item?.feePaid} BSV</Table.Cell>
                         </Table.Row>
                       );

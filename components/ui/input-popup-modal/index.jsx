@@ -103,7 +103,6 @@ const ImportAccountModal = ({ popup, onClose, title, description }) => {
         return router.push(endpoints.home);
       }
     } catch (error) {
-      setMnemonicValue(mnemonicData);
       return toast.error(error.message);
     }
   };
@@ -146,23 +145,25 @@ const ImportAccountModal = ({ popup, onClose, title, description }) => {
               <form className="flex flex-col gap-4" onSubmit={submitImportAccount}>
                 <div className="grid grid-cols-3 gap-4">
                   <TextInput
+                    className="lowercase"
                     title="1"
                     placeholder="1"
                     type="text"
                     required={true}
                     name="one"
                     onChange={onChange}
-                    value={mnemonicValue?.one}
+                    value={mnemonicValue?.one?.toLowerCase()}
                     onPaste={(event) => {
                       onPasteHandler(event);
                     }}
                   />
                   <TextInput
+                    className="lowercase"
                     title="2"
                     placeholder="2"
                     type="text"
                     name="two"
-                    value={mnemonicValue?.two}
+                    value={mnemonicValue?.two?.toLowerCase()}
                     required={true}
                     onChange={onChange}
                     onPaste={(event) => {
@@ -170,11 +171,12 @@ const ImportAccountModal = ({ popup, onClose, title, description }) => {
                     }}
                   />
                   <TextInput
+                    className="lowercase"
                     title="3"
                     placeholder="3"
                     type="text"
                     name="three"
-                    value={mnemonicValue?.three}
+                    value={mnemonicValue?.three?.toLowerCase()}
                     required={true}
                     onChange={onChange}
                     onPaste={(event) => {
@@ -182,11 +184,12 @@ const ImportAccountModal = ({ popup, onClose, title, description }) => {
                     }}
                   />
                   <TextInput
+                    className="lowercase"
                     title="4"
                     placeholder="4"
                     type="text"
                     name="four"
-                    value={mnemonicValue?.four}
+                    value={mnemonicValue?.four?.toLowerCase()}
                     required={true}
                     onChange={onChange}
                     onPaste={(event) => {
@@ -194,11 +197,12 @@ const ImportAccountModal = ({ popup, onClose, title, description }) => {
                     }}
                   />
                   <TextInput
+                    className="lowercase"
                     title="5"
                     placeholder="5"
                     type="text"
                     name="five"
-                    value={mnemonicValue?.five}
+                    value={mnemonicValue?.five?.toLowerCase()}
                     required={true}
                     onChange={onChange}
                     onPaste={(event) => {
@@ -206,11 +210,12 @@ const ImportAccountModal = ({ popup, onClose, title, description }) => {
                     }}
                   />
                   <TextInput
+                    className="lowercase"
                     title="6"
                     placeholder="6"
                     type="text"
                     name="six"
-                    value={mnemonicValue?.six}
+                    value={mnemonicValue?.six?.toLowerCase()}
                     required={true}
                     onChange={onChange}
                     onPaste={(event) => {
@@ -218,11 +223,12 @@ const ImportAccountModal = ({ popup, onClose, title, description }) => {
                     }}
                   />
                   <TextInput
+                    className="lowercase"
                     title="7"
                     placeholder="7"
                     type="text"
                     name="seven"
-                    value={mnemonicValue?.seven}
+                    value={mnemonicValue?.seven?.toLowerCase()}
                     required={true}
                     onChange={onChange}
                     onPaste={(event) => {
@@ -230,11 +236,12 @@ const ImportAccountModal = ({ popup, onClose, title, description }) => {
                     }}
                   />
                   <TextInput
+                    className="lowercase"
                     title="8"
                     placeholder="8"
                     type="text"
                     name="eight"
-                    value={mnemonicValue?.eight}
+                    value={mnemonicValue?.eight?.toLowerCase()}
                     required={true}
                     onChange={onChange}
                     onPaste={(event) => {
@@ -242,11 +249,12 @@ const ImportAccountModal = ({ popup, onClose, title, description }) => {
                     }}
                   />
                   <TextInput
+                    className="lowercase"
                     title="9"
                     placeholder="9"
                     type="text"
                     name="nine"
-                    value={mnemonicValue?.nine}
+                    value={mnemonicValue?.nine?.toLowerCase()}
                     required={true}
                     onChange={onChange}
                     onPaste={(event) => {
@@ -254,11 +262,12 @@ const ImportAccountModal = ({ popup, onClose, title, description }) => {
                     }}
                   />
                   <TextInput
+                    className="lowercase"
                     title="10"
                     placeholder="10"
                     type="text"
                     name="ten"
-                    value={mnemonicValue?.ten}
+                    value={mnemonicValue?.ten?.toLowerCase()}
                     required={true}
                     onChange={onChange}
                     onPaste={(event) => {
@@ -266,11 +275,12 @@ const ImportAccountModal = ({ popup, onClose, title, description }) => {
                     }}
                   />
                   <TextInput
+                    className="lowercase"
                     title="11"
                     placeholder="11"
                     type="text"
                     name="eleven"
-                    value={mnemonicValue?.eleven}
+                    value={mnemonicValue?.eleven?.toLowerCase()}
                     required={true}
                     onChange={onChange}
                     onPaste={(event) => {
@@ -278,11 +288,12 @@ const ImportAccountModal = ({ popup, onClose, title, description }) => {
                     }}
                   />
                   <TextInput
+                    className="lowercase"
                     title="12"
                     placeholder="12"
                     type="text"
                     name="twelve"
-                    value={mnemonicValue?.twelve}
+                    value={mnemonicValue?.twelve?.toLowerCase()}
                     required={true}
                     onChange={onChange}
                     onPaste={(event) => {

@@ -53,6 +53,7 @@ const InputBoxes = ({
     <>
       <div className="grid grid-cols-4 gap-2">
         <TextInput
+          className="lowercase"
           disabled={verify}
           title="1"
           placeholder="1"
@@ -60,18 +61,19 @@ const InputBoxes = ({
           required={true}
           name="one"
           onChange={onChange}
-          value={mnemonicValue?.one}
+          value={mnemonicValue?.one?.toLowerCase()}
           onPaste={(event) => {
             onPasteHandler(event);
           }}
         />
         <TextInput
+          className="lowercase"
           disabled={verify}
           title="2"
           placeholder="2"
           type="text"
           name="two"
-          value={mnemonicValue?.two}
+          value={mnemonicValue?.two?.toLowerCase()}
           required={true}
           onChange={onChange}
           onPaste={(event) => {
@@ -79,12 +81,13 @@ const InputBoxes = ({
           }}
         />
         <TextInput
+          className="lowercase"
           disabled={verify}
           title="3"
           placeholder="3"
           type="text"
           name="three"
-          value={mnemonicValue?.three}
+          value={mnemonicValue?.three?.toLowerCase()}
           required={true}
           onChange={onChange}
           onPaste={(event) => {
@@ -92,12 +95,13 @@ const InputBoxes = ({
           }}
         />
         <TextInput
+          className="lowercase"
           disabled={verify}
           title="4"
           placeholder="4"
           type="text"
           name="four"
-          value={mnemonicValue?.four}
+          value={mnemonicValue?.four?.toLowerCase()}
           required={true}
           onChange={onChange}
           onPaste={(event) => {
@@ -105,12 +109,13 @@ const InputBoxes = ({
           }}
         />
         <TextInput
+          className="lowercase"
           disabled={verify}
           title="5"
           placeholder="5"
           type="text"
           name="five"
-          value={mnemonicValue?.five}
+          value={mnemonicValue?.five?.toLowerCase()}
           required={true}
           onChange={onChange}
           onPaste={(event) => {
@@ -118,12 +123,13 @@ const InputBoxes = ({
           }}
         />
         <TextInput
+          className="lowercase"
           disabled={verify}
           title="6"
           placeholder="6"
           type="text"
           name="six"
-          value={mnemonicValue?.six}
+          value={mnemonicValue?.six?.toLowerCase()}
           required={true}
           onChange={onChange}
           onPaste={(event) => {
@@ -131,12 +137,13 @@ const InputBoxes = ({
           }}
         />
         <TextInput
+          className="lowercase"
           disabled={verify}
           title="7"
           placeholder="7"
           type="text"
           name="seven"
-          value={mnemonicValue?.seven}
+          value={mnemonicValue?.seven?.toLowerCase()}
           required={true}
           onChange={onChange}
           onPaste={(event) => {
@@ -144,12 +151,13 @@ const InputBoxes = ({
           }}
         />
         <TextInput
+          className="lowercase"
           disabled={verify}
           title="8"
           placeholder="8"
           type="text"
           name="eight"
-          value={mnemonicValue?.eight}
+          value={mnemonicValue?.eight?.toLowerCase()}
           required={true}
           onChange={onChange}
           onPaste={(event) => {
@@ -157,12 +165,13 @@ const InputBoxes = ({
           }}
         />
         <TextInput
+          className="lowercase"
           disabled={verify}
           title="9"
           placeholder="9"
           type="text"
           name="nine"
-          value={mnemonicValue?.nine}
+          value={mnemonicValue?.nine?.toLowerCase()}
           required={true}
           onChange={onChange}
           onPaste={(event) => {
@@ -170,12 +179,13 @@ const InputBoxes = ({
           }}
         />
         <TextInput
+          className="lowercase"
           disabled={verify}
           title="10"
           placeholder="10"
           type="text"
           name="ten"
-          value={mnemonicValue?.ten}
+          value={mnemonicValue?.ten?.toLowerCase()}
           required={true}
           onChange={onChange}
           onPaste={(event) => {
@@ -183,12 +193,13 @@ const InputBoxes = ({
           }}
         />
         <TextInput
+          className="lowercase"
           disabled={verify}
           title="11"
           placeholder="11"
           type="text"
           name="eleven"
-          value={mnemonicValue?.eleven}
+          value={mnemonicValue?.eleven?.toLowerCase()}
           required={true}
           onChange={onChange}
           onPaste={(event) => {
@@ -196,12 +207,13 @@ const InputBoxes = ({
           }}
         />
         <TextInput
+          className="lowercase"
           disabled={verify}
           title="12"
           placeholder="12"
           type="text"
           name="twelve"
-          value={mnemonicValue?.twelve}
+          value={mnemonicValue?.twelve?.toLowerCase()}
           required={true}
           onChange={onChange}
           onPaste={(event) => {

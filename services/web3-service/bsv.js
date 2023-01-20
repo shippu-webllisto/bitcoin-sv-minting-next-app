@@ -1,9 +1,10 @@
 const { Wallet } = require('bsv-wallet');
 import { toast } from 'react-toastify';
+const axios = require('axios');
 
 import { Decryption } from '@/helpers/encryptionAndDecryption';
 import { bsvToSatoshiConversion } from '@/helpers/amountConversion';
-import { checkEmptyValue } from '@/utils/checkEmptyValue';
+// import { timeDelay } from '@/helpers/time-delay';
 
 export const CreateAccountData = async (network) => {
   const Network = network === 'mainnet' ? 'livenet' : 'testnet';
@@ -30,25 +31,25 @@ export const ImportAccountData = async (mnemonicKey, network) => {
   return { getAddress, getBalance, getNetwork };
 };
 
+/**
+ * @param {mnemonicKey:string,network:string,to:string,bsvAmount:BSV}
+ * @returns transaction-hash and balance
+ */
 export const SendTranasction = async (mnemonicKey, network, to, bsvAmount) => {
   const Network = network === 'mainnet' ? 'livenet' : 'testnet';
   const decryptionMnemonicKey = Decryption(mnemonicKey);
   const amount = bsvToSatoshiConversion(Number(bsvAmount));
   try {
     const wallet = new Wallet({ key: decryptionMnemonicKey, network: Network });
+    const getBalance = await wallet.getBalance();
 
     const transactionId = await wallet.signTx({
       to: to,
       amount: amount,
     });
-    const tx = await wallet.broadcast(transactionId);
-    if (!checkEmptyValue(tx)) {
-      const getBalance = await wallet.getBalance();
-      // const balance = satoshiToBsvConversion(getBalance);
-      // console.log({ balance });
+    const txHash = await wallet.broadcast(transactionId);
 
-      return { tx, getBalance };
-    }
+    return { txHash, getBalance };
   } catch (err) {
     return toast.error(err.message);
   }
@@ -57,6 +58,10 @@ export const SendTranasction = async (mnemonicKey, network, to, bsvAmount) => {
 // send bsv to an address
 // export const SendBSV = async (toAddress, amount, feeRate) => await wallet.send(toAddress, amount, feeRate);
 
+/**
+ * @param {network:string,mnemonicKey:string}
+ * @returns balance
+ */
 export const updatedBalance = async (network, mnemonicKey) => {
   const Network = network === 'mainnet' ? 'livenet' : 'testnet';
   const decryptionMnemonicKey = Decryption(mnemonicKey);
@@ -66,3 +71,45 @@ export const updatedBalance = async (network, mnemonicKey) => {
 
   return { getBal };
 };
+
+/**
+ * @param {address:string,page_size:number}
+ * @returns all transaction-list
+ */
+export async function getTransactionHistory(address, page_size = 3) {
+  const URL = `https://blockcheck.info/apiv1/address/tx-history?address=${address}&current=1&page_size=${page_size}`;
+
+  const response = await axios(URL);
+  if (response.status === 200) return await response?.data?.list;
+}
+
+/**
+ * @param {txHash:string} transaction-hash
+ * @returns transaction-data
+ */
+export async function getTransactionData(txHash) {
+  const URL = `https://blockcheck.info/apiv1/tx/detail?txid=${txHash}`;
+
+  const response = await axios(URL);
+  if (response.status === 200) return await response?.data?.data;
+}
+
+/**
+ * @param {transactionHash:string} transaction-hash
+ * @returns transaction-data and status
+ */
+export async function toCheckTransaction(transactionHash) {
+  try {
+    const getTransaction = await getTransactionData(transactionHash);
+    if (getTransaction.confirmations < 7) {
+      // transaction has been not confirm untill 6, or 6+ minor confirm this transaction
+      // const _function = await getTransactionData(transactionHash);
+      // timeDelay(_function, 600); // 10-minute(600 seconds) delay
+      return { getTransaction, status: 'pending' };
+    } else {
+      return { getTransaction, status: 'confirmed' };
+    }
+  } catch (error) {
+    return toast.error(err.message);
+  }
+}

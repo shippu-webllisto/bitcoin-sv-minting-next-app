@@ -14,6 +14,7 @@ import { ImportAccountData } from '@/services/web3-service/bsv';
 import { checkEmptyValue } from '@/utils/checkEmptyValue';
 import { Decryption } from '@/helpers/encryptionAndDecryption';
 import { AuthenticatedUser, ResetAuthentication } from '@/store/features/authentication/index';
+import InputPasswordModal from '@/components/ui/input-password-modal/index';
 
 const Setting = () => {
   const router = useRouter();
@@ -22,24 +23,31 @@ const Setting = () => {
   const { addAccount } = useSelector((state) => state.addAccount);
   const WalletConnect = useSelector((state) => state.walletConnect);
 
-  const [popup, setPopup] = useState(false);
   const [swichNetworkpopup, setSwichNetworkpopup] = useState(false);
   const [exportMnemonicPopup, setExportMnemonicPopup] = useState(false);
-  const [deleteAccountModal, setDeleteAccountModal] = useState(false);
-  // const [exportPrivateKeyPopup, setExportPrivateKeyPopup] = useState(false);
-
   const [mnemonicHash, setMnemonicHash] = useState('');
+  const [passwordModal1, setPasswordModal1] = useState(false);
+  const [passwordModal2, setPasswordModal2] = useState(false);
+  const [passwordModal3, setPasswordModal3] = useState(false);
+  // const [passwordModal4, setPasswordModal4] = useState(false);
+  // const [exportPrivateKeyPopup, setExportPrivateKeyPopup] = useState(false);
   // const [privateKeyHash, setPrivateKeyHash] = useState('');
+
+  const openMnemonicModal = () => {
+    setPasswordModal1((prev) => !prev);
+  };
+  const openDeleteModal = () => {
+    setPasswordModal2((prev) => !prev);
+  };
+  const openResetModal = () => {
+    setPasswordModal3((prev) => !prev);
+  };
 
   const handleResetWallet = () => {
     dispatch(ResetAuthentication());
     dispatch(ResetWallet());
     dispatch(ResetAddAccount());
     return router.push(endpoints.connect);
-  };
-
-  const deleteModalPopup = () => {
-    setDeleteAccountModal((prev) => !prev);
   };
 
   const handleCurrentDeleteAccount = () => {
@@ -65,10 +73,6 @@ const Setting = () => {
     dispatch(AuthenticatedUser({ password: password, auth: false }));
     router.reload();
     return router.replace(endpoints.login);
-  };
-
-  const handlePopup = () => {
-    setPopup((prev) => !prev);
   };
 
   const handleSwitchNetwork = () => {
@@ -106,6 +110,11 @@ const Setting = () => {
     }
   };
 
+  // for -> private key
+  // const openPrivateModal = () => {
+  //   setPasswordModal4((prev) => !prev);
+  // };
+
   //   const handleExportPrivateKey = () => {
   //     const decryptedPrivateKey = Decryption(
   //       WalletConnect?.privateKey,
@@ -142,7 +151,7 @@ const Setting = () => {
               >
                 <Image
                   className="rounded-full"
-                  src={WalletConnect?.avatar ?? '/assets/svgs/account-icon.svg'}
+                  src="/assets/svgs/account-icon.svg"
                   alt="Delete-Icon"
                   width={20}
                   height={20}
@@ -181,7 +190,7 @@ const Setting = () => {
               <button
                 type="button"
                 className="group flex w-full rounded-lg bg-gray-200 p-3 text-base font-bold text-gray-900 hover:bg-gray-300 hover:shadow dark:bg-gray-600 dark:text-white dark:hover:bg-gray-500"
-                onClick={handleExportMnemonic}
+                onClick={openMnemonicModal}
               >
                 <Image className="rounded-full w-6" src="/assets/svgs/key.svg" alt="global" width={20} height={20} />
                 <span className="ml-3 flex-1 whitespace-nowrap">Export Mnemonic</span>
@@ -191,7 +200,7 @@ const Setting = () => {
               <button
                 type="button"
                 className="group flex w-full rounded-lg bg-gray-200 p-3 text-base font-bold text-gray-900 hover:bg-gray-300 hover:shadow dark:bg-gray-600 dark:text-white dark:hover:bg-gray-500"
-                onClick={handleExportPrivateKey}
+                onClick={openPrivateModal}
               >
                 <Image className="rounded-full w-6" src="/assets/svgs/key.svg" alt="global" width={20} height={20} />
                 <span className="ml-3 flex-1 whitespace-nowrap">Export Private Key</span>
@@ -201,7 +210,7 @@ const Setting = () => {
               <button
                 type="button"
                 className="group flex w-full rounded-lg bg-gray-200 p-3 text-base font-bold text-gray-900 hover:bg-gray-300 hover:shadow dark:bg-gray-600 dark:text-white dark:hover:bg-gray-500"
-                onClick={deleteModalPopup}
+                onClick={openDeleteModal}
               >
                 <Image src="/assets/svgs/delete-icon.svg" alt="Delete-Icon" width={20} height={20} />
                 <span className="ml-3 flex-1 whitespace-nowrap">Remove Current Account</span>
@@ -211,7 +220,7 @@ const Setting = () => {
               <button
                 type="button"
                 className="group flex w-full rounded-lg bg-gray-200 p-3 text-base font-bold text-gray-900 hover:bg-gray-300 hover:shadow dark:bg-gray-600 dark:text-white dark:hover:bg-gray-500"
-                onClick={handlePopup}
+                onClick={openResetModal}
               >
                 <Image src="/assets/svgs/garbage-bin.svg" alt="Reset-Icon" width={20} height={20} />
                 <span className="ml-3 flex-1 whitespace-nowrap">Reset wallet</span>
@@ -244,35 +253,49 @@ const Setting = () => {
         onClick={handleChangeNetwork}
       />
 
-      {/* Reset wallet modal */}
-      <PopupModal
-        popup={popup}
-        handlePopup={handlePopup}
-        title="Reset Accounts"
-        description="are you sure to delete your account ? you all data has been deleted"
-        onClick={handleResetWallet}
-      />
-
-      {/* Delete Current Account modal */}
-      <PopupModal
-        popup={deleteAccountModal}
-        handlePopup={deleteModalPopup}
-        title="Remove Current Account"
-        description="are you sure want to remove your current account?"
-        onClick={handleCurrentDeleteAccount}
-      />
-
       {/* export Mnemonic Popup modal  */}
+      <InputPasswordModal
+        show={passwordModal1}
+        onClose={() => setPasswordModal1(false)}
+        onClick={handleExportMnemonic}
+        title="Export Mnemonic key"
+        description="please, DO NOT share the mnemonic with anyone!"
+      />
       <ExportDataModal
-        title="Export Mnemonic"
+        title="Mnemonic Key"
         data={mnemonicHash}
         popup={exportMnemonicPopup}
         onClose={() => setExportMnemonicPopup(false)}
       />
 
+      {/* Delete Current Account modal */}
+      <InputPasswordModal
+        show={passwordModal2}
+        onClose={() => setPasswordModal2(false)}
+        onClick={handleCurrentDeleteAccount}
+        title="Remove Current Account"
+        description="are you sure want to remove your current account?"
+      />
+
+      {/* Reset wallet modal */}
+      <InputPasswordModal
+        show={passwordModal3}
+        onClose={() => setPasswordModal3(false)}
+        onClick={handleResetWallet}
+        title="Reset Accounts"
+        description="are you sure to delete your account ? you all data has been deleted"
+      />
+
       {/* export Private Key Popup modal  */}
-      {/* <ExportDataModal
+      {/* <InputPasswordModal
+        show={passwordModal4}
+        onClose={() => setPasswordModal4(false)}
+        onClick={handleExportPrivateKey}
         title="Export Private Key"
+        description="please, DO NOT share the private key with anyone!"
+      /> */}
+      {/* <ExportDataModal
+        title="Private Key"
         data={privateKeyHash}
         popup={exportPrivateKeyPopup}
         onClose={() => setExportPrivateKeyPopup(false)}

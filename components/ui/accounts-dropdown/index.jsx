@@ -188,6 +188,7 @@ const AccountDropDown = () => {
     setGeneratePopup(false);
     setSequenceMnemonicKey([]);
     setMnemonicVerifyBtn(false);
+    setMnemonicVerifyModel(true);
   };
 
   //! adding a exist account (import account)
@@ -197,6 +198,7 @@ const AccountDropDown = () => {
 
   const handleSeletcedAccount = (item) => {
     dispatch(ConnetedWallet(item));
+    setOpen(false);
   };
 
   return (
@@ -285,18 +287,13 @@ const AccountDropDown = () => {
           )}
         </div>
       </div>
-      {/* buttons modal   */}
+
+      {/* create and import - buttons group   */}
       <Modal show={popup} size="md" popup={true} onClose={() => setPopup(false)}>
         <Modal.Header />
         <Modal.Body>
           <div className="item-center flex flex-col justify-center">
-            <Button
-              gradientDuoTone="purpleToBlue"
-              className="my-2"
-              onClick={(e) => {
-                handleCreateOpenModal(e);
-              }}
-            >
+            <Button gradientDuoTone="purpleToBlue" className="my-2" onClick={(e) => handleCreateOpenModal(e)}>
               Create New Mnemonic(12-Words) Account
             </Button>
             <Button gradientDuoTone="purpleToPink" className="my-2" onClick={handleRestoreMnemonicModal}>
@@ -305,8 +302,8 @@ const AccountDropDown = () => {
           </div>
         </Modal.Body>
       </Modal>
-      {/* create your Account - modal  */}
 
+      {/* create your Account - modal  */}
       <Modal show={mnemonicVerifyModel} size="lg" popup={true} onClose={() => setMnemonicVerifyModel(false)}>
         <Modal.Header />
         <Modal.Body>
@@ -320,7 +317,7 @@ const AccountDropDown = () => {
               forever.
             </p>
 
-            <div className="flex flex-col gap-4 my-4">
+            <div className="flex flex-col gap-4 my-4 p-4">
               <div className="bg-gray-100  grid grid-cols-2">
                 {isMatchIndex?.map((val, i) => {
                   return (
@@ -332,14 +329,17 @@ const AccountDropDown = () => {
               </div>
               <span className="text-center text-gray-600">or</span>
               {/* copy mnemonic key */}
-              <CopyClipBoard walletAddress={mnemonicKey} isSort={false} />
-              <Button type="submit" gradientDuoTone="purpleToBlue" onClick={(e) => handleModalState(e)}>
+              <div className="border-2 bg-gray-200 rounded-lg">
+                <CopyClipBoard walletAddress={mnemonicKey} isSort={false} />
+              </div>
+              <Button type="button" gradientDuoTone="purpleToBlue" className="" onClick={(e) => handleModalState(e)}>
                 Next
               </Button>
             </div>
           </div>
         </Modal.Body>
       </Modal>
+
       {/* create modal */}
       <Modal show={generatePopup} size="md" popup={true} onClose={() => handlemodallClose()}>
         <Modal.Header />
@@ -350,7 +350,7 @@ const AccountDropDown = () => {
               Please select each Mnemonic in order to make sure it is correct.
             </p>
 
-            <div className="  h-4/5  flex flex-col gap-4 my-4">
+            <div className="h-4/5  flex flex-col gap-4 my-4">
               <div className=" w-full bg-gray-100 grid grid-cols-2 py-3 mt-8 ">
                 {sequenceMnemonicKey?.map((val, i) => {
                   return (
@@ -397,6 +397,7 @@ const AccountDropDown = () => {
           </div>
         </Modal.Body>
       </Modal>
+
       {/* import your Account - modal  */}
       <ImportAccountModal
         popup={popupImportModal}

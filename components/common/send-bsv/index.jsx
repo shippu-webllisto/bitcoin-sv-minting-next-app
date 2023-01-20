@@ -9,6 +9,7 @@ import { ConnetedWallet } from '@/store/features/wallet-connect/index';
 import { useDispatch } from 'react-redux';
 import { UpdateAccount } from '@/store/features/add-account';
 import { satoshiToBsvConversion } from '@/helpers/amountConversion';
+// import { AddTranscation } from '@/store/features/history/index';
 
 const emptyForm = {
   to: '',
@@ -71,9 +72,10 @@ const SendBsv = ({ walletAddress, setSendBsvPopup }) => {
     if (formData.amount > bsvAmount) return toast.error('you does not have a sufficient amount.');
     try {
       setLoading(true);
-      const { tx, getBalance } = await SendTranasction(mnemonic, network, formData?.to, formData.amount);
+      const { txHash, getBalance } = await SendTranasction(mnemonic, network, formData?.to, formData.amount);
+      // const { getTransaction, status } = await toCheckTransaction(walletAddress);
 
-      if (!checkEmptyValue(tx) && !checkEmptyValue(getBalance)) {
+      if (!checkEmptyValue(txHash) && !checkEmptyValue(getBalance)) {
         setLoading(true);
         // updating balance of addAccount
         const updatedData = addAccount?.map((item) => {
@@ -88,8 +90,22 @@ const SendBsv = ({ walletAddress, setSendBsvPopup }) => {
           ConnetedWallet({
             ...WalletConnect,
             bsvAmount: getBalance,
+            // transactionHash: txHash,
+            // txConfirm: status,
           }),
         );
+        // adding transaction-history
+        // dispatch(
+        //   AddTranscation({
+        //     transactionHash: getTransaction.hash,
+        //     status: status,
+        //     Block: getTransaction.blockheight,
+        //     feePaid: getTransaction.fee_paid,
+        //     size: getTransaction.size,
+        //     time: getTransaction.time,
+        //     miner: getTransaction.miner,
+        //   }),
+        // );
 
         // updating balance of user-second wallet if user have imported and created.
         const updatedOldData = addAccount?.find((item) => item.walletAddress === formData.to);
