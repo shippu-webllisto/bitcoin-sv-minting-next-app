@@ -141,7 +141,7 @@ const AccountDropDown = () => {
         !checkEmptyValue(encryptedMnemonicKey)
       ) {
         const count = addAccount.length + 1;
-
+        const _account = !checkEmptyValue(nameField) ? nameField : `Account-${count}`;
         dispatch(
           AddAccount({
             walletAddress: getAddress,
@@ -151,7 +151,7 @@ const AccountDropDown = () => {
             network: getNetwork,
             bsvAmount: getBalance,
             avatar: avatar,
-            account: `Account-${count}`,
+            account: _account,
           }),
         );
         dispatch(
@@ -163,20 +163,17 @@ const AccountDropDown = () => {
             network: getNetwork,
             bsvAmount: getBalance,
             avatar: avatar,
-            account: `Account-${count}`,
+            account: _account,
           }),
         );
         // close popup and clear input
-
         setGeneratePopup(false);
-
         setSequenceMnemonicKey([]);
         setMnemonicVerifyBtn(false);
         return router.push(endpoints.home);
       }
     } catch (error) {
       setGeneratePopup(false);
-
       setSequenceMnemonicKey([]);
       setMnemonicVerifyBtn(false);
       return toast.error(error.message);
@@ -289,7 +286,7 @@ const AccountDropDown = () => {
       </div>
 
       {/* create and import - buttons group   */}
-      <Modal show={popup} size="md" popup={true} onClose={() => setPopup(false)}>
+      <Modal show={popup} size="lg" popup={true} onClose={() => setPopup(false)}>
         <Modal.Header />
         <Modal.Body>
           <div className="item-center flex flex-col justify-center">
@@ -317,21 +314,21 @@ const AccountDropDown = () => {
               forever.
             </p>
 
-            <div className="flex flex-col gap-4 my-4 p-4">
-              <div className="bg-gray-100  grid grid-cols-2">
+            {/* <div className="bg-gray-100  grid grid-cols-2">
                 {isMatchIndex?.map((val, i) => {
                   return (
                     <button className="bg-blue-900 text-white px-4 hover:bg-blue-900 rounded-lg p-1 m-1  " key={i}>
-                      {i + 1}. {val}
+                    {i + 1}. {val}
                     </button>
-                  );
-                })}
-              </div>
-              <span className="text-center text-gray-600">or</span>
-              {/* copy mnemonic key */}
-              <div className="border-2 bg-gray-200 rounded-lg">
-                <CopyClipBoard walletAddress={mnemonicKey} isSort={false} />
-              </div>
+                    );
+                  })}
+                  </div>
+                <span className="text-center text-gray-600">or</span> */}
+            {/* copy mnemonic key */}
+            <div className="border rounded-lg bg-gray-200 p-2">
+              <CopyClipBoard walletAddress={mnemonicKey} isSort={false} />
+            </div>
+            <div className="flex flex-col gap-4 my-4 p-4">
               <Button type="button" gradientDuoTone="purpleToBlue" className="" onClick={(e) => handleModalState(e)}>
                 Next
               </Button>
@@ -383,6 +380,9 @@ const AccountDropDown = () => {
                   );
                 })}
               </div>
+              <Button type="button" gradientMonochrome="failure" onClick={() => handlemodallClose()}>
+                Back
+              </Button>
 
               <Button
                 type="submit"

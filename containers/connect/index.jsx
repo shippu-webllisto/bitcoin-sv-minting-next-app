@@ -238,7 +238,7 @@ const Connect = () => {
             <p className="mb-5 text-base  font-normal text-gray-500 dark:text-gray-400 mt-1">
               WARNING: Never disclose your Secret Recovery Phrase. Anyone with this phrase can take your Ether forever.
             </p>
-            <div className="bg-gray-100  grid grid-cols-2">
+            {/* <div className="bg-gray-100  grid grid-cols-2">
               {isMatchIndex?.map((val, i) => {
                 return (
                   <button className="bg-blue-900 text-white px-4 hover:bg-blue-900 rounded-lg p-1 m-1  " key={i}>
@@ -246,10 +246,12 @@ const Connect = () => {
                   </button>
                 );
               })}
-            </div>
-            <span className="text-center text-gray-600">or</span>
+            </div> */}
+            {/* <span className="text-center text-gray-600">or</span> */}
             {/* copy mnemonic key */}
-            <CopyClipBoard walletAddress={mnemonicKey} isSort={false} />
+            <div className="border rounded-lg bg-gray-200 p-2">
+              <CopyClipBoard walletAddress={mnemonicKey} isSort={false} />
+            </div>
 
             <div className="flex flex-col gap-4 my-4">
               <Button type="submit" gradientDuoTone="purpleToBlue" onClick={(e) => handleGenerateModal(e)}>
@@ -312,12 +314,22 @@ const Connect = () => {
             </div>
             <form className="flex flex-col gap-4 my-4" onSubmit={handleCreateAccount}>
               <Button
+                type="button"
+                gradientMonochrome="failure"
+                onClick={() => {
+                  setMnemonicVerifyModel(false);
+                  setGeneratePopup(true);
+                }}
+              >
+                Back
+              </Button>
+              <Button
                 type="submit"
                 gradientDuoTone="purpleToBlue"
                 disabled={!isMnemonicVerifyBtn}
                 className={`${isMnemonicVerifyBtn ? '' : 'disabled:opacity-30'}`}
               >
-                Create your wallet
+                Create Your Wallet
               </Button>
             </form>
           </div>

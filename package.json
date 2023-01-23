@@ -8,10 +8,10 @@
     "start": "next start",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "format": "prettier --write \"./**/*.+(js|jsx|mjs|cjs|ts|tsx|json|css|scss|sass|md|html)\"",
+    "format": "prettier --write \"./**/*.+(js|jsx|ts|tsx|mjs|cjs|json|css|scss|sass|md|html)\"",
     "lint-staged": "lint-staged --concurrent false",
     "pretty-quick": "pretty-quick --staged",
-    "prepare": "rm -rf .husky && husky install && husky add .husky/pre-commit \"yarn lint-staged \nyarn pretty-quick\""
+    "prepare": "rm -rf .husky && husky install && husky add .husky/pre-commit \"yarn lint-staged && yarn pretty-quick\""
   },
   "lint-staged": {
     "**/*.+(js|jsx|ts|tsx)": [

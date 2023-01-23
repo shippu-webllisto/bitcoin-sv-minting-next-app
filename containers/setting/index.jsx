@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Card } from 'flowbite-react';
+import { Button, Card, Modal, TextInput } from 'flowbite-react';
 import { useRouter } from 'next/router';
 import Image from 'next/image';
 import { useDispatch, useSelector } from 'react-redux';
@@ -15,6 +15,7 @@ import { checkEmptyValue } from '@/utils/checkEmptyValue';
 import { Decryption } from '@/helpers/encryptionAndDecryption';
 import { AuthenticatedUser, ResetAuthentication } from '@/store/features/authentication/index';
 import InputPasswordModal from '@/components/ui/input-password-modal/index';
+import { getString } from '@/utils/getString';
 
 const Setting = () => {
   const router = useRouter();
@@ -32,6 +33,9 @@ const Setting = () => {
   // const [passwordModal4, setPasswordModal4] = useState(false);
   // const [exportPrivateKeyPopup, setExportPrivateKeyPopup] = useState(false);
   // const [privateKeyHash, setPrivateKeyHash] = useState('');
+  const [nameModal, setNameModal] = useState(false);
+  const [aliasName, setAliasName] = useState('');
+  const [getError, setGetError] = useState('');
 
   const openMnemonicModal = () => {
     setPasswordModal1((prev) => !prev);
@@ -60,7 +64,8 @@ const Setting = () => {
     dispatch(ResetWallet());
 
     const data = updatedData?.map((item, i) => {
-      return { ...item, account: `Account-${i + 1}` };
+      const _account = getString(item.account, `Account`) ? item.account : `Account-${i + 1}`;
+      return { ...item, account: _account };
     });
     if (data) {
       dispatch(ConnetedWallet({ ...data[0] }));
@@ -107,6 +112,31 @@ const Setting = () => {
     if (!checkEmptyValue(decryptedMnemonicKey)) {
       setMnemonicHash(decryptedMnemonicKey);
       setExportMnemonicPopup((prev) => !prev);
+    }
+  };
+
+  // for-> alias name
+  const openAliasNameModal = () => {
+    setGetError('');
+    setAliasName('');
+    setNameModal((prev) => !prev);
+  };
+  const handleSubmitAliasName = (e) => {
+    e.preventDefault();
+    if (checkEmptyValue(aliasName)) return setGetError('Invalid Alias Name!');
+    const getOldName = addAccount?.find((item) => item.account === aliasName);
+    if (getOldName?.account) return setGetError(`"${getOldName.account}" Already Exist. Please Choose Another Name!`);
+
+    const data = addAccount?.map((item) => {
+      if (item.mnemonic === WalletConnect.mnemonic) {
+        return { ...item, account: aliasName };
+      }
+      return item;
+    });
+    if (data) {
+      dispatch(ConnetedWallet({ ...WalletConnect, account: aliasName }));
+      dispatch(UpdateAccount(data));
+      openAliasNameModal();
     }
   };
 
@@ -160,6 +190,19 @@ const Setting = () => {
               </button>
             </li>
             <li key={2}>
+              <button
+                type="button"
+                title="edit-name"
+                className="group flex w-full rounded-lg bg-gray-200 p-3 text-base font-bold text-gray-900 hover:bg-gray-300 hover:shadow dark:bg-gray-600 dark:text-white dark:hover:bg-gray-500"
+                onClick={openAliasNameModal}
+              >
+                <Image className="rounded w-4" src="/assets/svgs/edit.png" alt="edit" width={20} height={20} />
+                <span className="ml-3 flex-1 whitespace-nowrap overflow-hidden">
+                  Edit Account Alias: <span className="font-mono text-md text-gray-600">{WalletConnect.account}</span>
+                </span>
+              </button>
+            </li>
+            <li key={3}>
               <a
                 href={`https://blockcheck.info/address/detail?address=${WalletConnect?.walletAddress}`}
                 target="_blank"
@@ -176,7 +219,7 @@ const Setting = () => {
                 <span className="ml-3 flex-1 whitespace-nowrap">View Account on blockcheck.info</span>
               </a>
             </li>
-            {/* <li key={3}>
+            {/* <li key={4}>
               <button
                 type="button"
                 className="group flex w-full rounded-lg bg-gray-200 p-3 text-base font-bold text-gray-900 hover:bg-gray-300 hover:shadow dark:bg-gray-600 dark:text-white dark:hover:bg-gray-500"
@@ -186,7 +229,7 @@ const Setting = () => {
                 <span className="ml-3 flex-1 whitespace-nowrap">Change Network</span>
               </button>
             </li> */}
-            <li key={4}>
+            <li key={5}>
               <button
                 type="button"
                 className="group flex w-full rounded-lg bg-gray-200 p-3 text-base font-bold text-gray-900 hover:bg-gray-300 hover:shadow dark:bg-gray-600 dark:text-white dark:hover:bg-gray-500"
@@ -196,7 +239,7 @@ const Setting = () => {
                 <span className="ml-3 flex-1 whitespace-nowrap">Export Mnemonic</span>
               </button>
             </li>
-            {/* <li key={5}>
+            {/* <li key={6}>
               <button
                 type="button"
                 className="group flex w-full rounded-lg bg-gray-200 p-3 text-base font-bold text-gray-900 hover:bg-gray-300 hover:shadow dark:bg-gray-600 dark:text-white dark:hover:bg-gray-500"
@@ -206,27 +249,27 @@ const Setting = () => {
                 <span className="ml-3 flex-1 whitespace-nowrap">Export Private Key</span>
               </button>
             </li> */}
-            <li key={6}>
+            <li key={7}>
               <button
                 type="button"
                 className="group flex w-full rounded-lg bg-gray-200 p-3 text-base font-bold text-gray-900 hover:bg-gray-300 hover:shadow dark:bg-gray-600 dark:text-white dark:hover:bg-gray-500"
                 onClick={openDeleteModal}
               >
                 <Image src="/assets/svgs/delete-icon.svg" alt="Delete-Icon" width={20} height={20} />
-                <span className="ml-3 flex-1 whitespace-nowrap">Remove Current Account</span>
+                <span className="ml-3 flex-1 whitespace-nowrap">Delete Current Account</span>
               </button>
             </li>
-            <li key={7}>
+            <li key={8}>
               <button
                 type="button"
                 className="group flex w-full rounded-lg bg-gray-200 p-3 text-base font-bold text-gray-900 hover:bg-gray-300 hover:shadow dark:bg-gray-600 dark:text-white dark:hover:bg-gray-500"
                 onClick={openResetModal}
               >
                 <Image src="/assets/svgs/garbage-bin.svg" alt="Reset-Icon" width={20} height={20} />
-                <span className="ml-3 flex-1 whitespace-nowrap">Reset wallet</span>
+                <span className="ml-3 flex-1 whitespace-nowrap">Reset Wallet</span>
               </button>
             </li>
-            <li key={8}>
+            <li key={9}>
               <button
                 type="button"
                 className="group flex w-full rounded-lg bg-gray-200 p-3 text-base font-bold text-gray-900 hover:bg-gray-300 hover:shadow dark:bg-gray-600 dark:text-white dark:hover:bg-gray-500"
@@ -243,6 +286,36 @@ const Setting = () => {
           </div>
         </Card>
       </div>
+
+      {/* change alias name  */}
+      <Modal show={nameModal} size="lg" popup={true} onClose={openAliasNameModal}>
+        <Modal.Header />
+        <Modal.Body>
+          <div className="text-center">
+            <h3 className="text-3xl font-bold text-gray-900 dark:text-gray-400">Alias Name</h3>
+            <div className="flex justify-center items-center p-3 rounded-lg mt-8">
+              <form className="flex flex-col w-full" onSubmit={handleSubmitAliasName}>
+                <div>
+                  <TextInput
+                    autoComplete="off"
+                    className="w-full lowercase"
+                    title="Alias Name"
+                    placeholder="Enter Alias Name"
+                    type="text"
+                    value={aliasName?.toLowerCase()}
+                    onChange={(e) => setAliasName(e.target.value)}
+                    required={true}
+                  />
+                  {getError && <p className="text-start text-red-600 ml-2 my-2">{getError}</p>}
+                </div>
+                <Button type="submit" className="mt-8 w-[50%] m-auto" color="dark" pill={true}>
+                  Submit
+                </Button>
+              </form>
+            </div>
+          </div>
+        </Modal.Body>
+      </Modal>
 
       {/* change network modal  */}
       <PopupModal
@@ -273,8 +346,8 @@ const Setting = () => {
         show={passwordModal2}
         onClose={() => setPasswordModal2(false)}
         onClick={handleCurrentDeleteAccount}
-        title="Remove Current Account"
-        description="are you sure want to remove your current account?"
+        title="Delete Current Account"
+        description="are you sure to want delete your current account?"
       />
 
       {/* Reset wallet modal */}
@@ -282,8 +355,8 @@ const Setting = () => {
         show={passwordModal3}
         onClose={() => setPasswordModal3(false)}
         onClick={handleResetWallet}
-        title="Reset Accounts"
-        description="are you sure to delete your account ? you all data has been deleted"
+        title="Reset Wallet"
+        description="All your accounts and data will be DELETED from this device. Please enter password to confirm deletion."
       />
 
       {/* export Private Key Popup modal  */}

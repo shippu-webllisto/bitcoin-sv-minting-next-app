@@ -39,10 +39,19 @@ const ImportAccountModal = ({ popup, onClose, title, description }) => {
   const dispatch = useDispatch();
 
   const [mnemonicValue, setMnemonicValue] = useState(mnemonicData);
+  const [nameField, setNameField] = useState('');
+  const [getError, setGetError] = useState('');
 
   const onChange = (e) => {
     e.preventDefault();
     setMnemonicValue((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+  };
+
+  const handleOnClose = () => {
+    setMnemonicValue(mnemonicData);
+    setNameField('');
+    setGetError('');
+    onClose();
   };
 
   const submitImportAccount = async (e) => {
@@ -51,7 +60,12 @@ const ImportAccountModal = ({ popup, onClose, title, description }) => {
       const propertyValues = Object.values(mnemonicValue);
       const getMnemonic = ArrayToString(propertyValues);
       if (checkEmptyValue(getMnemonic)) return toast.error('Invalid Mnemonic key!');
-
+      // Name Already Exist
+      const oldName = addAccount?.find((item) => item.account === nameField);
+      if (oldName?.account?.toLowerCase() === nameField?.toLowerCase()) {
+        return setGetError(`"${nameField?.toLowerCase()}" Already Exist! Please Choose Another Name!`);
+      }
+      // mnemonic account already exist
       const encryptedMnemonicKey = Encryption(getMnemonic);
       const existMnemonicKey = addAccount?.find((item) => item.mnemonic === encryptedMnemonicKey);
       if (existMnemonicKey?.mnemonic === encryptedMnemonicKey) {
@@ -67,6 +81,7 @@ const ImportAccountModal = ({ popup, onClose, title, description }) => {
         !checkEmptyValue(getNetwork)
       ) {
         const count = addAccount.length + 1;
+        const _account = !checkEmptyValue(nameField) ? nameField : `Account-${count}`;
         dispatch(
           AddAccount({
             walletAddress: getAddress,
@@ -76,7 +91,7 @@ const ImportAccountModal = ({ popup, onClose, title, description }) => {
             network: getNetwork,
             bsvAmount: getBalance,
             avatar: avatar,
-            account: `Account-${count}`,
+            account: _account,
           }),
         );
         dispatch(
@@ -88,7 +103,7 @@ const ImportAccountModal = ({ popup, onClose, title, description }) => {
             network: getNetwork,
             bsvAmount: getBalance,
             avatar: avatar,
-            account: `Account-${count}`,
+            account: _account,
           }),
         );
         // remove auth for a week(7*24*60*60)
@@ -98,18 +113,16 @@ const ImportAccountModal = ({ popup, onClose, title, description }) => {
           router.replace(endpoints.login);
         }, oneWeek);
 
-        setMnemonicValue(mnemonicData);
-        onClose();
+        handleOnClose();
         return router.push(endpoints.home);
       }
     } catch (error) {
-      return toast.error(error.message);
+      return toast.error('Invalid Mnemonic Key');
     }
   };
 
   const onPasteHandler = (e) => {
     e.preventDefault();
-
     const data = e.clipboardData.getData('text').replace(/[^a-zA-Z 0-9\n\r]+/g, '');
     const arrIndex = data?.split(' ');
     updateImporTHandle(arrIndex);
@@ -133,7 +146,7 @@ const ImportAccountModal = ({ popup, onClose, title, description }) => {
   };
 
   return (
-    <Modal show={popup} size="lg" popup={true} onClose={onClose}>
+    <Modal show={popup} size="lg" popup={true} onClose={handleOnClose}>
       <Modal.Header />
       <Modal.Body>
         <div className="text-center">
@@ -143,8 +156,22 @@ const ImportAccountModal = ({ popup, onClose, title, description }) => {
           <div className="border-2 flex justify-center items-center p-3 rounded-lg">
             <div className="flex flex-col justify-between">
               <form className="flex flex-col gap-4" onSubmit={submitImportAccount}>
-                <div className="grid grid-cols-3 gap-4">
+                <div>
                   <TextInput
+                    autoComplete="off"
+                    className="w-full lowercase"
+                    title="Account Name"
+                    placeholder="Account Name (optional)"
+                    type="text"
+                    value={nameField?.toLowerCase()}
+                    onChange={(e) => setNameField(e.target.value)}
+                    required={false}
+                  />
+                  {getError && <p className="text-start text-red-600 ml-2 my-1">{getError}</p>}
+                </div>
+                <div className="grid grid-cols-3 gap-4 mt-2">
+                  <TextInput
+                    autoComplete="off"
                     className="lowercase"
                     title="1"
                     placeholder="1"
@@ -158,6 +185,7 @@ const ImportAccountModal = ({ popup, onClose, title, description }) => {
                     }}
                   />
                   <TextInput
+                    autoComplete="off"
                     className="lowercase"
                     title="2"
                     placeholder="2"
@@ -171,6 +199,7 @@ const ImportAccountModal = ({ popup, onClose, title, description }) => {
                     }}
                   />
                   <TextInput
+                    autoComplete="off"
                     className="lowercase"
                     title="3"
                     placeholder="3"
@@ -184,6 +213,7 @@ const ImportAccountModal = ({ popup, onClose, title, description }) => {
                     }}
                   />
                   <TextInput
+                    autoComplete="off"
                     className="lowercase"
                     title="4"
                     placeholder="4"
@@ -197,6 +227,7 @@ const ImportAccountModal = ({ popup, onClose, title, description }) => {
                     }}
                   />
                   <TextInput
+                    autoComplete="off"
                     className="lowercase"
                     title="5"
                     placeholder="5"
@@ -210,6 +241,7 @@ const ImportAccountModal = ({ popup, onClose, title, description }) => {
                     }}
                   />
                   <TextInput
+                    autoComplete="off"
                     className="lowercase"
                     title="6"
                     placeholder="6"
@@ -223,6 +255,7 @@ const ImportAccountModal = ({ popup, onClose, title, description }) => {
                     }}
                   />
                   <TextInput
+                    autoComplete="off"
                     className="lowercase"
                     title="7"
                     placeholder="7"
@@ -236,6 +269,7 @@ const ImportAccountModal = ({ popup, onClose, title, description }) => {
                     }}
                   />
                   <TextInput
+                    autoComplete="off"
                     className="lowercase"
                     title="8"
                     placeholder="8"
@@ -249,6 +283,7 @@ const ImportAccountModal = ({ popup, onClose, title, description }) => {
                     }}
                   />
                   <TextInput
+                    autoComplete="off"
                     className="lowercase"
                     title="9"
                     placeholder="9"
@@ -262,6 +297,7 @@ const ImportAccountModal = ({ popup, onClose, title, description }) => {
                     }}
                   />
                   <TextInput
+                    autoComplete="off"
                     className="lowercase"
                     title="10"
                     placeholder="10"
@@ -275,6 +311,7 @@ const ImportAccountModal = ({ popup, onClose, title, description }) => {
                     }}
                   />
                   <TextInput
+                    autoComplete="off"
                     className="lowercase"
                     title="11"
                     placeholder="11"
@@ -288,6 +325,7 @@ const ImportAccountModal = ({ popup, onClose, title, description }) => {
                     }}
                   />
                   <TextInput
+                    autoComplete="off"
                     className="lowercase"
                     title="12"
                     placeholder="12"
