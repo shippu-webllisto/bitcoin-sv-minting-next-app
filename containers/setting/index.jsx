@@ -293,6 +293,9 @@ const Setting = () => {
         <Modal.Body>
           <div className="text-center">
             <h3 className="text-3xl font-bold text-gray-900 dark:text-gray-400">Alias Name</h3>
+            <p className="text-sm dark:text-gray-400 overflow-hidden text-gray-600">
+              your current account name is : {WalletConnect.account}
+            </p>
             <div className="flex justify-center items-center p-3 rounded-lg mt-8">
               <form className="flex flex-col w-full" onSubmit={handleSubmitAliasName}>
                 <div>

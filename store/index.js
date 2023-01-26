@@ -24,7 +24,7 @@ const persistConfig = {
   key: 'root',
   version: 1,
   storage: storage,
-  whitelist: ['authentication', 'walletConnect', 'addAccount', 'tokens', 'nfts', 'history'],
+  whitelist: ['authentication', 'walletConnect', 'addAccount', 'tokens', 'nfts'],
 };
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

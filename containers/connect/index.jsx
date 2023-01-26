@@ -21,6 +21,7 @@ const avatar = 'https://png.pngtree.com/png-vector/20190223/ourmid/pngtree-vecto
 
 const Connect = () => {
   const { password } = useSelector((state) => state.authentication);
+  const { addAccount } = useSelector((state) => state.addAccount);
   const router = useRouter();
   const dispatch = useDispatch();
 
@@ -107,6 +108,8 @@ const Connect = () => {
         !checkEmptyValue(getNetwork) &&
         !checkEmptyValue(encryptedMnemonicKey)
       ) {
+        const count = addAccount.length + 1;
+        const _account = `Account-${count}`;
         dispatch(
           AddAccount({
             walletAddress: getAddress,
@@ -116,7 +119,8 @@ const Connect = () => {
             network: getNetwork,
             bsvAmount: getBalance,
             avatar: avatar,
-            account: 'Account-1',
+            account: _account,
+            transcations: [],
           }),
         );
         dispatch(
@@ -128,7 +132,8 @@ const Connect = () => {
             network: getNetwork,
             bsvAmount: getBalance,
             avatar: avatar,
-            account: 'Account-1',
+            account: _account,
+            transcations: [],
           }),
         );
         // remove auth for a week(7*24*60*60)

@@ -1,15 +1,14 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import Image from 'next/image';
 import PropTypes from 'prop-types';
 import { toast } from 'react-toastify';
+import { useSelector, useDispatch } from 'react-redux';
+
 import { checkEmptyValue } from '@/utils/checkEmptyValue.js';
-import { SendTranasction, updatedBalance } from '@/services/web3-service/bsv';
-import { useSelector } from 'react-redux';
+import { SendTranasction, toCheckTransaction } from '@/services/web3-service/bsv';
 import { ConnetedWallet } from '@/store/features/wallet-connect/index';
-import { useDispatch } from 'react-redux';
 import { UpdateAccount } from '@/store/features/add-account';
 import { satoshiToBsvConversion } from '@/helpers/amountConversion';
-// import { AddTranscation } from '@/store/features/history/index';
 
 const emptyForm = {
   to: '',
@@ -70,68 +69,86 @@ const SendBsv = ({ walletAddress, setSendBsvPopup }) => {
 
     if (error?.toBalError) return toast.error(error?.toBalError);
     if (formData.amount > bsvAmount) return toast.error('you does not have a sufficient amount.');
-    try {
+    // try {
+    setLoading(true);
+    const { txHash, getBalance } = await SendTranasction(mnemonic, network, formData?.to, formData.amount);
+    const { getTransaction, status } = await toCheckTransaction(txHash);
+
+    if (!checkEmptyValue(txHash) && !checkEmptyValue(getBalance)) {
       setLoading(true);
-      const { txHash, getBalance } = await SendTranasction(mnemonic, network, formData?.to, formData.amount);
-      // const { getTransaction, status } = await toCheckTransaction(walletAddress);
-
-      if (!checkEmptyValue(txHash) && !checkEmptyValue(getBalance)) {
-        setLoading(true);
-        // updating balance of addAccount
-        const updatedData = addAccount?.map((item) => {
-          if (item.mnemonic === mnemonic) {
-            return { ...item, bsvAmount: getBalance };
-          }
-          return item;
-        });
-        dispatch(UpdateAccount(updatedData));
-        // updating balance of connect-wallet
-        dispatch(
-          ConnetedWallet({
-            ...WalletConnect,
+      // updating balance and transcations of addAccount
+      const updatedData = addAccount?.map((item) => {
+        if (item.mnemonic === mnemonic) {
+          return {
+            ...item,
             bsvAmount: getBalance,
-            // transactionHash: txHash,
-            // txConfirm: status,
-          }),
-        );
-        // adding transaction-history
-        // dispatch(
-        //   AddTranscation({
-        //     transactionHash: getTransaction.hash,
-        //     status: status,
-        //     Block: getTransaction.blockheight,
-        //     feePaid: getTransaction.fee_paid,
-        //     size: getTransaction.size,
-        //     time: getTransaction.time,
-        //     miner: getTransaction.miner,
-        //   }),
-        // );
-
-        // updating balance of user-second wallet if user have imported and created.
-        const updatedOldData = addAccount?.find((item) => item.walletAddress === formData.to);
-        if (!checkEmptyValue(updatedOldData?.mnemonic)) {
-          const updatedAmountData = addAccount?.map((item) => {
-            if (item.mnemonic === updatedOldData.mnemonic) {
-              updatedBalance(network, item?.mnemonic)
-                .then((getBal) => {
-                  return { ...item, bsvAmount: getBal };
-                })
-                .catch((err) => {
-                  return toast.error(`${err}`);
-                });
-            }
-            return item;
-          });
-          dispatch(UpdateAccount(updatedAmountData));
+            transcations: [
+              ...item.transcations,
+              {
+                status: status,
+                transactionHash: txHash,
+                block: getTransaction?.blockheight,
+                feePaid: getTransaction?.fee_paid,
+                size: getTransaction?.size,
+                time: getTransaction?.time,
+                miner: getTransaction?.miner,
+              },
+            ],
+          };
         }
+        return item;
+      });
+      dispatch(UpdateAccount(updatedData));
+      // updating balance and transcations of connect-wallet
+      dispatch(
+        ConnetedWallet({
+          ...WalletConnect,
+          bsvAmount: getBalance,
+          transcations: [
+            ...WalletConnect.transcations,
+            {
+              status: status,
+              transactionHash: txHash,
+              block: getTransaction?.blockheight,
+              feePaid: getTransaction?.fee_paid,
+              size: getTransaction?.size,
+              time: getTransaction?.time,
+              miner: getTransaction?.miner,
+            },
+          ],
+        }),
+      );
 
-        closeModalState();
-        toast.success('Token transferred successfully');
+      if (status === 'confirmed') {
+        toast.success('Transactions Successfully!');
+      } else {
+        toast.success('Transactions is Pending!');
       }
-    } catch (error) {
+
+      // // updating balance of user-second wallet if user have imported and created.
+      // const updatedOldData = addAccount?.find((item) => item.walletAddress === formData.to);
+      // if (!checkEmptyValue(updatedOldData?.mnemonic)) {
+      //   const updatedAmountData = addAccount?.map((item) => {
+      //     if (item.mnemonic === updatedOldData.mnemonic) {
+      //       updatedBalance(network, item?.mnemonic)
+      //         .then((getBal) => {
+      //           return { ...item, bsvAmount: getBal };
+      //         })
+      //         .catch((err) => {
+      //           return toast.error(`${err}`);
+      //         });
+      //     }
+      //     return item;
+      //   });
+      //   dispatch(UpdateAccount(updatedAmountData));
+      // }
+
       closeModalState();
-      return toast.error(error.message);
     }
+    // } catch (error) {
+    //   closeModalState();
+    //   return toast.error(error.message);
+    // }
   };
 
   const handleCloseModal = () => {

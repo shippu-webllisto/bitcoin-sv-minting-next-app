@@ -92,6 +92,7 @@ const ImportAccountModal = ({ popup, onClose, title, description }) => {
             bsvAmount: getBalance,
             avatar: avatar,
             account: _account,
+            transcations: [],
           }),
         );
         dispatch(
@@ -104,6 +105,7 @@ const ImportAccountModal = ({ popup, onClose, title, description }) => {
             bsvAmount: getBalance,
             avatar: avatar,
             account: _account,
+            transcations: [],
           }),
         );
         // remove auth for a week(7*24*60*60)

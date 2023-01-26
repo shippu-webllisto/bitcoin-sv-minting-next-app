@@ -10,26 +10,25 @@ import { endpoints } from '@/routes/endpoints';
 import { checkEmptyValue } from '@/utils/checkEmptyValue';
 import { AddAccount } from '@/store/features/add-account/index';
 import { ConnetedWallet } from '@/store/features/wallet-connect/index';
-import { CreateAccountData } from '@/services/web3-service/bsv';
+import { CreateAccountData, updatedBalance } from '@/services/web3-service/bsv';
 import { Encryption } from '@/helpers/encryptionAndDecryption';
 import ImportAccountModal from '../input-popup-modal/index';
 import CopyClipBoard from '@/components/common/copy-clip-board';
+// import { useTransactionRefresh } from '@/hooks/useTransactionRefresh';
 
-// import avatar from '@/assets/svgs/user-avatar.svg';
 const avatar = 'https://png.pngtree.com/png-vector/20190223/ourmid/pngtree-vector-avatar-icon-png-image_695765.jpg';
 
 const AccountDropDown = () => {
-  const router = useRouter();
-  const dispatch = useDispatch();
   const { addAccount } = useSelector((state) => state.addAccount);
   const WalletConnect = useSelector((state) => state.walletConnect);
+  // const { transcationUpdated } = useTransactionRefresh();
+  const router = useRouter();
+  const dispatch = useDispatch();
 
   const [open, setOpen] = useState(false);
   const [popup, setPopup] = useState(false);
-
   const [generatePopup, setGeneratePopup] = useState(false);
   const [mnemonicKey, setMnemonicKey] = useState('');
-
   const [popupImportModal, setPopupImportModal] = useState(false);
 
   const [mnemonicKeyArray, setMnemonicKeyArray] = useState([]);
@@ -152,6 +151,7 @@ const AccountDropDown = () => {
             bsvAmount: getBalance,
             avatar: avatar,
             account: _account,
+            transcations: [],
           }),
         );
         dispatch(
@@ -164,6 +164,7 @@ const AccountDropDown = () => {
             bsvAmount: getBalance,
             avatar: avatar,
             account: _account,
+            transcations: [],
           }),
         );
         // close popup and clear input
@@ -193,7 +194,18 @@ const AccountDropDown = () => {
     setPopupImportModal((prev) => !prev);
   };
 
-  const handleSeletcedAccount = (item) => {
+  const handleSeletcedAccount = async (item) => {
+    // updating balance
+    const { getBal } = await updatedBalance(item?.network, item?.mnemonic);
+    if (getBal) {
+      dispatch(
+        ConnetedWallet({
+          ...item,
+          bsvAmount: getBal,
+        }),
+      );
+    }
+    // transcationUpdated(item?.walletAddress); // updating transaction
     dispatch(ConnetedWallet(item));
     setOpen(false);
   };

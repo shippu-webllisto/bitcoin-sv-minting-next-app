@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { Table } from 'flowbite-react';
 import Image from 'next/image';
 import { toast } from 'react-toastify';
@@ -6,10 +7,16 @@ import { useSelector } from 'react-redux';
 import Styles from './transactions-history.module.css';
 import { CopyClipboard } from '@/helpers/CopyClipboard.js';
 import { getShortAddress } from '@/utils/getShortAddress';
+import { useTransactionRefresh } from '@/hooks/useTransactionRefresh';
 
 export default function TranscationsHistory() {
-  const { walletAddress } = useSelector((state) => state.walletConnect);
-  const { history } = useSelector((state) => state.history);
+  const { walletAddress, transcations } = useSelector((state) => state.walletConnect);
+  const { transcationUpdated } = useTransactionRefresh();
+
+  useEffect(() => {
+    // updating transaction
+    transcationUpdated(walletAddress);
+  }, []);
 
   const handleCopyText = (TransactionHash) => {
     CopyClipboard(TransactionHash);
@@ -24,7 +31,7 @@ export default function TranscationsHistory() {
             <h1 className="ml-2">Transactions</h1>
           </div>
           <div className="">
-            {history.length === 0 ? (
+            {transcations?.length === 0 ? (
               <h6 className="text-center text-gray-500 p-6">Empty</h6>
             ) : (
               <div className="p-1">
@@ -37,7 +44,7 @@ export default function TranscationsHistory() {
                     <Table.HeadCell>Fee Paid</Table.HeadCell>
                   </Table.Head>
                   <Table.Body className="divide-y">
-                    {history?.map((item, i) => {
+                    {transcations?.map((item, i) => {
                       return (
                         <Table.Row className="bg-gray-50 dark:border-gray-700 dark:bg-gray-800 text-center" key={i}>
                           <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white flex flex-row justify-around">
@@ -72,8 +79,8 @@ export default function TranscationsHistory() {
                               <Image src="/assets/svgs/link-logo.svg" alt="block-check-link" width={20} height={20} />
                             </a>
                           </Table.Cell>
-                          <Table.Cell className="text-black">{item?.block}</Table.Cell>
-                          <Table.Cell className="text-black">{item?.feePaid} BSV</Table.Cell>
+                          <Table.Cell className="text-black">{item?.block ? item?.block : 'pending'}</Table.Cell>
+                          <Table.Cell className="text-black">{item?.feePaid ? item?.feePaid : 0} BSV</Table.Cell>
                         </Table.Row>
                       );
                     })}

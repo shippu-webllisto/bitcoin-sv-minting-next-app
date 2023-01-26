@@ -8,6 +8,7 @@ const initialState = {
   bsvAmount: 0,
   avatar: '',
   account: '',
+  transcations: [],
 };
 
 const WalletConnect = createSlice({
@@ -22,6 +23,7 @@ const WalletConnect = createSlice({
       state.bsvAmount = action.payload.bsvAmount;
       state.avatar = action.payload.avatar;
       state.account = action.payload.account;
+      state.transcations = action.payload.transcations;
     },
     ResetWallet: (state) => {
       state.walletAddress = '';
@@ -31,10 +33,21 @@ const WalletConnect = createSlice({
       state.bsvAmount = 0;
       state.avatar = '';
       state.account = '';
+      state.transcations = [];
+    },
+    AddTranscation: (state, action) => {
+      state.transcations = [...state.transcations, action.payload];
+    },
+    DeletedTranscation: (state, action) => {
+      state.transcations = state.transcations?.filter((item) => item.transactionHash !== action.payload);
+    },
+    UpdateTranscationsHistory: (state, action) => {
+      state.transcations = action.payload;
     },
   },
 });
 
-export const { ConnetedWallet, ResetWallet } = WalletConnect.actions;
+export const { ConnetedWallet, ResetWallet, AddTranscation, DeletedTranscation, UpdateTranscationsHistory } =
+  WalletConnect.actions;
 
 export default WalletConnect.reducer;

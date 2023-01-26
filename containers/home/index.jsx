@@ -1,25 +1,34 @@
-import { useEffect, useState } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 import Image from 'next/image';
 import { Modal } from 'flowbite-react';
 import { useSelector } from 'react-redux';
+import dynamic from 'next/dynamic';
 
 import Styles from './home.module.css';
-import AccountDropDown from '@/components/ui/accounts-dropdown/index.jsx';
 import QRCodeGenerater from '@/components/common/qr-generate/index.jsx';
 import CopyClipBoard from '@/components/common/copy-clip-board/index.jsx';
-
 import SendBsv from '@/components/common/send-bsv/index.jsx';
 import NftList from '@/components/common/nft-list/index.jsx';
 import TokenList from '@/components/common/token-list/index.jsx';
 import { bsvToUsd } from '@/utils/bsvToUsd';
 import { satoshiToBsvConversion } from '@/helpers/amountConversion';
-import TranscationsHistory from '@/components/common/transactions-history/index';
+import useUpdateBalance from '../hooks/use-updatebalance';
+import Spinner_ from '@/components/ui/spinner_/index';
+
+const AccountDropDown = dynamic(() => import('@/components/ui/accounts-dropdown/index.jsx'), { suspense: true });
+const TranscationsHistory = dynamic(() => import('@/components/common/transactions-history/index'), { suspense: true });
 
 const Home = () => {
   const [isModalShow, setIsModalShow] = useState(false);
   const [isModalSend, setisModalSend] = useState(false);
-  const { walletAddress, bsvAmount } = useSelector((state) => state.walletConnect);
+  const { walletAddress, bsvAmount, network, mnemonic } = useSelector((state) => state.walletConnect);
+
+  const { CurrenWalletUpdate } = useUpdateBalance();
   const [usd, setUsd] = useState(0);
+
+  useEffect(() => {
+    CurrenWalletUpdate(network, mnemonic);
+  }, []);
 
   useEffect(() => {
     (async () => {
@@ -39,7 +48,11 @@ const Home = () => {
   return (
     <div className="flex justify-center flex-col items-center">
       {/* multiple accounts  */}
-      <AccountDropDown />
+      <Suspense fallback={<Spinner_ />}>
+        <AccountDropDown />
+      </Suspense>
+
+      {/* balance and acount  */}
       <div className={`flex justify-center rounded overflow-hidden ${Styles.home_page}`}>
         <div className="block rounded-xl w-full bg-white shadow border p-4">
           <div className="flex justify-between w-full bg-gray-300 hover:bg-gray-400 rounded-lg p-4">
@@ -120,6 +133,7 @@ const Home = () => {
               </a>
             </div>
 
+            {/* receive modal  */}
             <Modal show={isModalShow} size="md" popup={true} onClose={() => setIsModalShow((prev) => !prev)}>
               <Modal.Header />
               <Modal.Body>
@@ -129,7 +143,7 @@ const Home = () => {
               </Modal.Body>
               <Modal.Footer />
             </Modal>
-
+            {/* send modal  */}
             <Modal show={isModalSend} size="lg" popup={true} onClose={() => setisModalSend((prev) => !prev)}>
               <Modal.Body>
                 <div className="space-y-6 p-6">
@@ -141,12 +155,17 @@ const Home = () => {
           </div>
         </div>
       </div>
+
       {/* tokens list  */}
       <TokenList />
+
       {/* nfts list  */}
       <NftList />
+
       {/* Transcations History */}
-      <TranscationsHistory />
+      <Suspense fallback={<Spinner_ />}>
+        <TranscationsHistory />
+      </Suspense>
     </div>
   );
 };

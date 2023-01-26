@@ -4,8 +4,11 @@ const axios = require('axios');
 
 import { Decryption } from '@/helpers/encryptionAndDecryption';
 import { bsvToSatoshiConversion } from '@/helpers/amountConversion';
-// import { timeDelay } from '@/helpers/time-delay';
 
+/**
+ * @param {network:string}
+ * @returns { getMnemonicKey,getAddress, getBalance, getNetwork }
+ */
 export const CreateAccountData = async (network) => {
   const Network = network === 'mainnet' ? 'livenet' : 'testnet';
   const wallet = new Wallet({ network: Network });
@@ -19,6 +22,10 @@ export const CreateAccountData = async (network) => {
   return { getMnemonicKey, getAddress, getBalance, getNetwork };
 };
 
+/**
+ * @param {mnemonicKey:string,network:string}
+ * @returns { getAddress, getBalance, getNetwork }
+ */
 export const ImportAccountData = async (mnemonicKey, network) => {
   const Network = network === 'mainnet' ? 'livenet' : 'testnet';
   const wallet = new Wallet({ key: mnemonicKey, network: Network });
@@ -49,18 +56,17 @@ export const SendTranasction = async (mnemonicKey, network, to, bsvAmount) => {
     });
     const txHash = await wallet.broadcast(transactionId);
 
-    return { txHash, getBalance };
+    if (txHash && getBalance) {
+      return { txHash, getBalance };
+    }
   } catch (err) {
     return toast.error(err.message);
   }
 };
 
-// send bsv to an address
-// export const SendBSV = async (toAddress, amount, feeRate) => await wallet.send(toAddress, amount, feeRate);
-
 /**
  * @param {network:string,mnemonicKey:string}
- * @returns balance
+ * @returns {balance}
  */
 export const updatedBalance = async (network, mnemonicKey) => {
   const Network = network === 'mainnet' ? 'livenet' : 'testnet';
@@ -71,6 +77,9 @@ export const updatedBalance = async (network, mnemonicKey) => {
 
   return { getBal };
 };
+
+// send bsv to an address
+// export const SendBSV = async (toAddress, amount, feeRate) => await wallet.send(toAddress, amount, feeRate);
 
 /**
  * @param {address:string,page_size:number}
@@ -98,18 +107,11 @@ export async function getTransactionData(txHash) {
  * @param {transactionHash:string} transaction-hash
  * @returns transaction-data and status
  */
-export async function toCheckTransaction(transactionHash) {
-  try {
-    const getTransaction = await getTransactionData(transactionHash);
-    if (getTransaction.confirmations < 7) {
-      // transaction has been not confirm untill 6, or 6+ minor confirm this transaction
-      // const _function = await getTransactionData(transactionHash);
-      // timeDelay(_function, 600); // 10-minute(600 seconds) delay
-      return { getTransaction, status: 'pending' };
-    } else {
-      return { getTransaction, status: 'confirmed' };
-    }
-  } catch (error) {
-    return toast.error(err.message);
+export async function toCheckTransaction(txHash) {
+  const getTransaction = await getTransactionData(txHash);
+  if (getTransaction?.confirmations) {
+    return { getTransaction, status: 'confirmed' };
+  } else {
+    return { getTransaction, status: 'pending' };
   }
 }
