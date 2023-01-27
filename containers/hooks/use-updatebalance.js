@@ -12,26 +12,25 @@ export const useUpdateBalance = () => {
     const { getBal } = await updatedBalance(network, mnemonic);
 
     // updating balance and transcations of addAccount
-    const updatedData = await Promise.all(
-      addAccount?.map((item) => {
-        if (item.mnemonic === mnemonic) {
-          return {
-            ...item,
-            bsvAmount: getBal,
-          };
-        }
-        return item;
-      }),
-    );
+    const updatedData = addAccount?.map((item) => {
+      if (item.mnemonic === mnemonic) {
+        return {
+          ...item,
+          bsvAmount: getBal,
+        };
+      }
+      return item;
+    });
 
-    dispatch(UpdateAccount(updatedData));
-
-    dispatch(
-      ConnetedWallet({
-        ...WalletConnect,
-        bsvAmount: getBal,
-      }),
-    );
+    if (getBal && updatedData) {
+      dispatch(UpdateAccount(updatedData));
+      dispatch(
+        ConnetedWallet({
+          ...WalletConnect,
+          bsvAmount: getBal,
+        }),
+      );
+    }
   };
 
   return { CurrenWalletUpdate };

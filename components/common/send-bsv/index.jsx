@@ -3,15 +3,15 @@ import Image from 'next/image';
 import PropTypes from 'prop-types';
 import { toast } from 'react-toastify';
 import { useSelector, useDispatch } from 'react-redux';
-// import { useRouter } from 'next/router';
+import { useRouter } from 'next/router';
 
 import { checkEmptyValue } from '@/utils/checkEmptyValue.js';
 import { SendTranasction, toCheckTransaction } from '@/services/web3-service/bsv';
-import { ConnetedWallet } from '@/store/features/wallet-connect/index';
+import { AddTranscation, UpdateBsvBalance } from '@/store/features/wallet-connect/index';
 import { UpdateAccount } from '@/store/features/add-account';
 import { satoshiToBsvConversion } from '@/helpers/amountConversion';
-import { useTransactionRefresh } from '@/hooks/useTransactionRefresh';
-import useUpdateBalance from '@/containers/hooks/use-updatebalance';
+// import useUpdateBalance from '@/containers/hooks/use-updatebalance';
+// import { useTransactionRefresh } from '@/hooks/useTransactionRefresh';
 
 const emptyForm = {
   to: '',
@@ -23,13 +23,13 @@ const amountInput = {
 };
 
 const SendBsv = ({ walletAddress, setSendBsvPopup }) => {
-  const WalletConnect = useSelector((state) => state.walletConnect);
+  // const WalletConnect = useSelector((state) => state.walletConnect);
   const { addAccount } = useSelector((state) => state.addAccount);
   const { network, mnemonic, bsvAmount } = useSelector((state) => state.walletConnect);
-  const { transcationUpdated } = useTransactionRefresh();
-  const { CurrenWalletUpdate } = useUpdateBalance();
+  // const { transcationUpdated } = useTransactionRefresh();
+  // const { CurrenWalletUpdate } = useUpdateBalance();
   const dispatch = useDispatch();
-  // const router = useRouter();
+  const router = useRouter();
 
   const [formData, setFormData] = useState(emptyForm);
   const [error, setError] = useState(amountInput);
@@ -75,7 +75,6 @@ const SendBsv = ({ walletAddress, setSendBsvPopup }) => {
 
     if (error?.toBalError) return toast.error(error?.toBalError);
     if (formData.amount > bsvAmount) return toast.error('you does not have a sufficient amount.');
-    // try {
     setLoading(true);
     const { txHash, getBalance } = await SendTranasction(mnemonic, network, formData.to, formData.amount);
     const { getTransaction, status } = await toCheckTransaction(txHash);
@@ -109,58 +108,29 @@ const SendBsv = ({ walletAddress, setSendBsvPopup }) => {
       );
       dispatch(UpdateAccount(updatedData));
       // updating balance and transcations of connect-wallet
+      dispatch(UpdateBsvBalance(getBal));
       dispatch(
-        ConnetedWallet({
-          ...WalletConnect,
-          bsvAmount: getBal,
-          transcations: [
-            ...WalletConnect.transcations,
-            {
-              status: status,
-              transactionHash: txHash,
-              block: getTransaction?.blockheight,
-              feePaid: getTransaction?.fee_paid,
-              size: getTransaction?.size,
-              time: getTransaction?.time,
-              miner: getTransaction?.miner,
-            },
-          ],
+        AddTranscation({
+          status: status,
+          transactionHash: txHash,
+          block: getTransaction?.blockheight,
+          feePaid: getTransaction?.fee_paid,
+          size: getTransaction?.size,
+          time: getTransaction?.time,
+          miner: getTransaction?.miner,
         }),
       );
-      // updating balance of user-second wallet if user have imported and created.
-      // const updatedOldData = await addAccount?.find((item) => item.walletAddress === formData.to);
-      // if (updatedOldData) {
-      //   const updateAccounts = await Promise.all(
-      //     addAccount?.map((item) => {
-      //       if (item.mnemonic === updatedOldData.mnemonic) {
-      //         const getBal = satoshiToBsvConversion(updatedOldData.bsvAmount) + Number(formData.amount);
-      //         return { ...item, bsvAmount: getBal };
-      //       }
-      //       return item;
-      //     }),
-      //   );
-      //   dispatch(UpdateAccount(updateAccounts));
-      // }
 
       if (status === 'confirmed') {
-        toast.success('Transactions Successfully!');
+        toast.success('Transactions Confirmed!');
       } else {
         toast.success('Transactions is Pending!');
       }
-      // after 10-minutes update transaction
-      setTimeout(() => {
-        // updating balance and transaction
-        transcationUpdated(walletAddress);
-        CurrenWalletUpdate(WalletConnect?.network, WalletConnect?.mnemonic);
-      }, 10 * 60 * 1000);
-
+      setLoading(true);
       closeModalState();
-      // router.reload();
+      // CurrenWalletUpdate(WalletConnect?.network, WalletConnect?.mnemonic);
+      router.reload();
     }
-    // } catch (error) {
-    //   closeModalState();
-    //   return toast.error(error.message);
-    // }
   };
 
   const handleCloseModal = () => {
@@ -254,3 +224,44 @@ SendBsv.propTypes = {
 };
 
 export default SendBsv;
+
+// dispatch(
+//   ConnetedWallet({
+//     ...WalletConnect,
+//     bsvAmount: getBal,
+//     transcations: [
+//       ...WalletConnect.transcations,
+//       {
+//         status: status,
+//         transactionHash: txHash,
+//         block: getTransaction?.blockheight,
+//         feePaid: getTransaction?.fee_paid,
+//         size: getTransaction?.size,
+//         time: getTransaction?.time,
+//         miner: getTransaction?.miner,
+//       },
+//     ],
+//   }),
+// );
+
+// updating balance of user-second wallet if user have imported and created.
+// const updatedOldData = await addAccount?.find((item) => item.walletAddress === formData.to);
+// if (updatedOldData) {
+//   const updateAccounts = await Promise.all(
+//     addAccount?.map((item) => {
+//       if (item.mnemonic === updatedOldData.mnemonic) {
+//         const getBal = satoshiToBsvConversion(updatedOldData.bsvAmount) + Number(formData.amount);
+//         return { ...item, bsvAmount: getBal };
+//       }
+//       return item;
+//     }),
+//   );
+//   dispatch(UpdateAccount(updateAccounts));
+// }
+
+// after 10-minutes update transaction
+// setTimeout(() => {
+//   // updating balance and transaction
+//   transcationUpdated(walletAddress);
+//   CurrenWalletUpdate(WalletConnect?.network, WalletConnect?.mnemonic);
+// }, 10 * 60 * 1000);

@@ -1,9 +1,8 @@
-import { Suspense, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { Modal } from 'flowbite-react';
 import { useSelector } from 'react-redux';
-import dynamic from 'next/dynamic';
-
+// import dynamic from 'next/dynamic';
 import Styles from './home.module.css';
 import QRCodeGenerater from '@/components/common/qr-generate/index.jsx';
 import CopyClipBoard from '@/components/common/copy-clip-board/index.jsx';
@@ -13,21 +12,24 @@ import TokenList from '@/components/common/token-list/index.jsx';
 import { bsvToUsd } from '@/utils/bsvToUsd';
 import { satoshiToBsvConversion } from '@/helpers/amountConversion';
 import useUpdateBalance from '../hooks/use-updatebalance';
-import Spinner_ from '@/components/ui/spinner_/index';
 import AccountDropDown from '@/components/ui/accounts-dropdown/index.jsx';
+import TranscationsHistory from '@/components/common/transactions-history/index';
+import { useTransactionRefresh } from '@/hooks/useTransactionRefresh';
+// import Spinner_ from '@/components/ui/spinner_/index';
 // const AccountDropDown = dynamic(() => import('@/components/ui/accounts-dropdown/index.jsx'), { suspense: true });
-const TranscationsHistory = dynamic(() => import('@/components/common/transactions-history/index'), { suspense: true });
+// const TranscationsHistory = dynamic(() => import('@/components/common/transactions-history/index'), { suspense: true });
 
 const Home = () => {
   const [isModalShow, setIsModalShow] = useState(false);
   const [isModalSend, setisModalSend] = useState(false);
   const { walletAddress, bsvAmount, network, mnemonic } = useSelector((state) => state.walletConnect);
-
+  const { transcationUpdated } = useTransactionRefresh();
   const { CurrenWalletUpdate } = useUpdateBalance();
   const [usd, setUsd] = useState(0);
 
   useEffect(() => {
     CurrenWalletUpdate(network, mnemonic);
+    transcationUpdated(walletAddress);
   }, []);
 
   useEffect(() => {
@@ -163,9 +165,7 @@ const Home = () => {
       <NftList />
 
       {/* Transcations History */}
-      <Suspense fallback={<Spinner_ />}>
-        <TranscationsHistory />
-      </Suspense>
+      <TranscationsHistory />
     </div>
   );
 };

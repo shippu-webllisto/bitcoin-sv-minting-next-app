@@ -14,16 +14,16 @@ import { CreateAccountData } from '@/services/web3-service/bsv';
 import { Encryption } from '@/helpers/encryptionAndDecryption';
 import ImportAccountModal from '../input-popup-modal/index';
 import CopyClipBoard from '@/components/common/copy-clip-board';
-import { useTransactionRefresh } from '@/hooks/useTransactionRefresh';
-import useUpdateBalance from '@/containers/hooks/use-updatebalance';
+// import { useTransactionRefresh } from '@/hooks/useTransactionRefresh';
+// import useUpdateBalance from '@/containers/hooks/use-updatebalance';
 
 const avatar = 'https://png.pngtree.com/png-vector/20190223/ourmid/pngtree-vector-avatar-icon-png-image_695765.jpg';
 
 const AccountDropDown = () => {
   const { addAccount } = useSelector((state) => state.addAccount);
   const WalletConnect = useSelector((state) => state.walletConnect);
-  const { transcationUpdated } = useTransactionRefresh();
-  const { CurrenWalletUpdate } = useUpdateBalance();
+  // const { transcationUpdated } = useTransactionRefresh();
+  // const { CurrenWalletUpdate } = useUpdateBalance();
   const router = useRouter();
   const dispatch = useDispatch();
 
@@ -198,8 +198,9 @@ const AccountDropDown = () => {
 
   const handleSeletcedAccount = async (item) => {
     if (item) {
-      await CurrenWalletUpdate(item.network, item.mnemonic);
-      await transcationUpdated(item.walletAddress); // updating transaction
+      // await CurrenWalletUpdate(item.network, item.mnemonic);
+      // await transcationUpdated(item.walletAddress); // updating transaction
+      router.reload();
       dispatch(ConnetedWallet(item));
       setOpen(false);
     }

@@ -44,10 +44,19 @@ const WalletConnect = createSlice({
     UpdateTranscationsHistory: (state, action) => {
       state.transcations = action.payload;
     },
+    UpdateBsvBalance: (state, action) => {
+      state.bsvAmount = action.payload;
+    },
   },
 });
 
-export const { ConnetedWallet, ResetWallet, AddTranscation, DeletedTranscation, UpdateTranscationsHistory } =
-  WalletConnect.actions;
+export const {
+  ConnetedWallet,
+  ResetWallet,
+  AddTranscation,
+  DeletedTranscation,
+  UpdateTranscationsHistory,
+  UpdateBsvBalance,
+} = WalletConnect.actions;
 
 export default WalletConnect.reducer;

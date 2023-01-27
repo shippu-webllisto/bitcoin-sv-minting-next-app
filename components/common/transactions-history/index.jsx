@@ -1,4 +1,3 @@
-import { useEffect } from 'react';
 import { Table } from 'flowbite-react';
 import Image from 'next/image';
 import { toast } from 'react-toastify';
@@ -7,16 +6,9 @@ import { useSelector } from 'react-redux';
 import Styles from './transactions-history.module.css';
 import { CopyClipboard } from '@/helpers/CopyClipboard.js';
 import { getShortAddress } from '@/utils/getShortAddress';
-import { useTransactionRefresh } from '@/hooks/useTransactionRefresh';
 
 export default function TranscationsHistory() {
   const { walletAddress, transcations } = useSelector((state) => state.walletConnect);
-  const { transcationUpdated } = useTransactionRefresh();
-
-  useEffect(() => {
-    // updating transaction
-    transcationUpdated(walletAddress);
-  }, []);
 
   const handleCopyText = (TransactionHash) => {
     CopyClipboard(TransactionHash);
