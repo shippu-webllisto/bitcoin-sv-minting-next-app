@@ -47,7 +47,7 @@ const Navbar = () => {
                     <Image
                       className="cursor-pointer"
                       src="/assets/svgs/refresh-svgrepo-com.svg"
-                      alt="setting-logo"
+                      alt="refresh-logo"
                       width={20}
                       height={20}
                     />

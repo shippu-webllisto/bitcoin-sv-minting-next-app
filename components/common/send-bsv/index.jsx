@@ -3,12 +3,15 @@ import Image from 'next/image';
 import PropTypes from 'prop-types';
 import { toast } from 'react-toastify';
 import { useSelector, useDispatch } from 'react-redux';
+// import { useRouter } from 'next/router';
 
 import { checkEmptyValue } from '@/utils/checkEmptyValue.js';
 import { SendTranasction, toCheckTransaction } from '@/services/web3-service/bsv';
 import { ConnetedWallet } from '@/store/features/wallet-connect/index';
 import { UpdateAccount } from '@/store/features/add-account';
 import { satoshiToBsvConversion } from '@/helpers/amountConversion';
+import { useTransactionRefresh } from '@/hooks/useTransactionRefresh';
+import useUpdateBalance from '@/containers/hooks/use-updatebalance';
 
 const emptyForm = {
   to: '',
@@ -23,7 +26,10 @@ const SendBsv = ({ walletAddress, setSendBsvPopup }) => {
   const WalletConnect = useSelector((state) => state.walletConnect);
   const { addAccount } = useSelector((state) => state.addAccount);
   const { network, mnemonic, bsvAmount } = useSelector((state) => state.walletConnect);
+  const { transcationUpdated } = useTransactionRefresh();
+  const { CurrenWalletUpdate } = useUpdateBalance();
   const dispatch = useDispatch();
+  // const router = useRouter();
 
   const [formData, setFormData] = useState(emptyForm);
   const [error, setError] = useState(amountInput);
@@ -71,39 +77,42 @@ const SendBsv = ({ walletAddress, setSendBsvPopup }) => {
     if (formData.amount > bsvAmount) return toast.error('you does not have a sufficient amount.');
     // try {
     setLoading(true);
-    const { txHash, getBalance } = await SendTranasction(mnemonic, network, formData?.to, formData.amount);
+    const { txHash, getBalance } = await SendTranasction(mnemonic, network, formData.to, formData.amount);
     const { getTransaction, status } = await toCheckTransaction(txHash);
+    const getBal = satoshiToBsvConversion(getBalance) - Number(formData.amount);
 
-    if (!checkEmptyValue(txHash) && !checkEmptyValue(getBalance)) {
+    if (!checkEmptyValue(txHash) && !checkEmptyValue(getBal)) {
       setLoading(true);
       // updating balance and transcations of addAccount
-      const updatedData = addAccount?.map((item) => {
-        if (item.mnemonic === mnemonic) {
-          return {
-            ...item,
-            bsvAmount: getBalance,
-            transcations: [
-              ...item.transcations,
-              {
-                status: status,
-                transactionHash: txHash,
-                block: getTransaction?.blockheight,
-                feePaid: getTransaction?.fee_paid,
-                size: getTransaction?.size,
-                time: getTransaction?.time,
-                miner: getTransaction?.miner,
-              },
-            ],
-          };
-        }
-        return item;
-      });
+      const updatedData = await Promise.all(
+        addAccount?.map((item) => {
+          if (item.mnemonic === mnemonic) {
+            return {
+              ...item,
+              bsvAmount: getBal,
+              transcations: [
+                ...item.transcations,
+                {
+                  status: status,
+                  transactionHash: txHash,
+                  block: getTransaction?.blockheight,
+                  feePaid: getTransaction?.fee_paid,
+                  size: getTransaction?.size,
+                  time: getTransaction?.time,
+                  miner: getTransaction?.miner,
+                },
+              ],
+            };
+          }
+          return item;
+        }),
+      );
       dispatch(UpdateAccount(updatedData));
       // updating balance and transcations of connect-wallet
       dispatch(
         ConnetedWallet({
           ...WalletConnect,
-          bsvAmount: getBalance,
+          bsvAmount: getBal,
           transcations: [
             ...WalletConnect.transcations,
             {
@@ -118,32 +127,35 @@ const SendBsv = ({ walletAddress, setSendBsvPopup }) => {
           ],
         }),
       );
+      // updating balance of user-second wallet if user have imported and created.
+      // const updatedOldData = await addAccount?.find((item) => item.walletAddress === formData.to);
+      // if (updatedOldData) {
+      //   const updateAccounts = await Promise.all(
+      //     addAccount?.map((item) => {
+      //       if (item.mnemonic === updatedOldData.mnemonic) {
+      //         const getBal = satoshiToBsvConversion(updatedOldData.bsvAmount) + Number(formData.amount);
+      //         return { ...item, bsvAmount: getBal };
+      //       }
+      //       return item;
+      //     }),
+      //   );
+      //   dispatch(UpdateAccount(updateAccounts));
+      // }
 
       if (status === 'confirmed') {
         toast.success('Transactions Successfully!');
       } else {
         toast.success('Transactions is Pending!');
       }
-
-      // // updating balance of user-second wallet if user have imported and created.
-      // const updatedOldData = addAccount?.find((item) => item.walletAddress === formData.to);
-      // if (!checkEmptyValue(updatedOldData?.mnemonic)) {
-      //   const updatedAmountData = addAccount?.map((item) => {
-      //     if (item.mnemonic === updatedOldData.mnemonic) {
-      //       updatedBalance(network, item?.mnemonic)
-      //         .then((getBal) => {
-      //           return { ...item, bsvAmount: getBal };
-      //         })
-      //         .catch((err) => {
-      //           return toast.error(`${err}`);
-      //         });
-      //     }
-      //     return item;
-      //   });
-      //   dispatch(UpdateAccount(updatedAmountData));
-      // }
+      // after 10-minutes update transaction
+      setTimeout(() => {
+        // updating balance and transaction
+        transcationUpdated(walletAddress);
+        CurrenWalletUpdate(WalletConnect?.network, WalletConnect?.mnemonic);
+      }, 10 * 60 * 1000);
 
       closeModalState();
+      // router.reload();
     }
     // } catch (error) {
     //   closeModalState();
@@ -157,6 +169,7 @@ const SendBsv = ({ walletAddress, setSendBsvPopup }) => {
     setFormData({ ...emptyForm });
     setError({ ...amountInput });
   };
+
   return (
     <div
       className=" relative flex justify-center flex-col border rounded-lg bg-gray-50"

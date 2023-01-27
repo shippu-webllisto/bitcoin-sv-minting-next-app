@@ -14,8 +14,8 @@ import { bsvToUsd } from '@/utils/bsvToUsd';
 import { satoshiToBsvConversion } from '@/helpers/amountConversion';
 import useUpdateBalance from '../hooks/use-updatebalance';
 import Spinner_ from '@/components/ui/spinner_/index';
-
-const AccountDropDown = dynamic(() => import('@/components/ui/accounts-dropdown/index.jsx'), { suspense: true });
+import AccountDropDown from '@/components/ui/accounts-dropdown/index.jsx';
+// const AccountDropDown = dynamic(() => import('@/components/ui/accounts-dropdown/index.jsx'), { suspense: true });
 const TranscationsHistory = dynamic(() => import('@/components/common/transactions-history/index'), { suspense: true });
 
 const Home = () => {
@@ -48,9 +48,9 @@ const Home = () => {
   return (
     <div className="flex justify-center flex-col items-center">
       {/* multiple accounts  */}
-      <Suspense fallback={<Spinner_ />}>
-        <AccountDropDown />
-      </Suspense>
+      {/* <Suspense fallback={<Spinner_ />}> */}
+      <AccountDropDown />
+      {/* </Suspense> */}
 
       {/* balance and acount  */}
       <div className={`flex justify-center rounded overflow-hidden ${Styles.home_page}`}>
@@ -66,7 +66,7 @@ const Home = () => {
             />
             <div className="text-end text-lg text-bold">
               <h1 className="">
-                {satoshiToBsvConversion(bsvAmount)} <span>BSV</span>
+                {satoshiToBsvConversion(bsvAmount)?.toFixed(6)} <span>BSV</span>
               </h1>
               <p>
                 $ {usd?.toFixed(3)} <span>USD</span>

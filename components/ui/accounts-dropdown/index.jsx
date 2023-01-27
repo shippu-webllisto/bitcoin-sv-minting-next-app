@@ -10,18 +10,20 @@ import { endpoints } from '@/routes/endpoints';
 import { checkEmptyValue } from '@/utils/checkEmptyValue';
 import { AddAccount } from '@/store/features/add-account/index';
 import { ConnetedWallet } from '@/store/features/wallet-connect/index';
-import { CreateAccountData, updatedBalance } from '@/services/web3-service/bsv';
+import { CreateAccountData } from '@/services/web3-service/bsv';
 import { Encryption } from '@/helpers/encryptionAndDecryption';
 import ImportAccountModal from '../input-popup-modal/index';
 import CopyClipBoard from '@/components/common/copy-clip-board';
-// import { useTransactionRefresh } from '@/hooks/useTransactionRefresh';
+import { useTransactionRefresh } from '@/hooks/useTransactionRefresh';
+import useUpdateBalance from '@/containers/hooks/use-updatebalance';
 
 const avatar = 'https://png.pngtree.com/png-vector/20190223/ourmid/pngtree-vector-avatar-icon-png-image_695765.jpg';
 
 const AccountDropDown = () => {
   const { addAccount } = useSelector((state) => state.addAccount);
   const WalletConnect = useSelector((state) => state.walletConnect);
-  // const { transcationUpdated } = useTransactionRefresh();
+  const { transcationUpdated } = useTransactionRefresh();
+  const { CurrenWalletUpdate } = useUpdateBalance();
   const router = useRouter();
   const dispatch = useDispatch();
 
@@ -195,19 +197,12 @@ const AccountDropDown = () => {
   };
 
   const handleSeletcedAccount = async (item) => {
-    // updating balance
-    const { getBal } = await updatedBalance(item?.network, item?.mnemonic);
-    if (getBal) {
-      dispatch(
-        ConnetedWallet({
-          ...item,
-          bsvAmount: getBal,
-        }),
-      );
+    if (item) {
+      await CurrenWalletUpdate(item.network, item.mnemonic);
+      await transcationUpdated(item.walletAddress); // updating transaction
+      dispatch(ConnetedWallet(item));
+      setOpen(false);
     }
-    // transcationUpdated(item?.walletAddress); // updating transaction
-    dispatch(ConnetedWallet(item));
-    setOpen(false);
   };
 
   return (
@@ -225,6 +220,7 @@ const AccountDropDown = () => {
                 alt="logo"
                 width={40}
                 height={40}
+                priority
               />
               <div className="flex flex-col justify-end mx-4 text-black">
                 <span className="font-bold text-lg">{WalletConnect?.account}</span>
@@ -264,6 +260,7 @@ const AccountDropDown = () => {
                           alt="logo"
                           width={30}
                           height={30}
+                          priority
                         />
                         <div className="flex flex-col mx-8 text-black mt-2">
                           <span className="font-bold text-sm">{item?.account}</span>

@@ -1,5 +1,4 @@
 const { Wallet } = require('bsv-wallet');
-import { toast } from 'react-toastify';
 const axios = require('axios');
 
 import { Decryption } from '@/helpers/encryptionAndDecryption';
@@ -46,21 +45,18 @@ export const SendTranasction = async (mnemonicKey, network, to, bsvAmount) => {
   const Network = network === 'mainnet' ? 'livenet' : 'testnet';
   const decryptionMnemonicKey = Decryption(mnemonicKey);
   const amount = bsvToSatoshiConversion(Number(bsvAmount));
-  try {
-    const wallet = new Wallet({ key: decryptionMnemonicKey, network: Network });
-    const getBalance = await wallet.getBalance();
 
-    const transactionId = await wallet.signTx({
-      to: to,
-      amount: amount,
-    });
-    const txHash = await wallet.broadcast(transactionId);
+  const wallet = new Wallet({ key: decryptionMnemonicKey, network: Network });
+  const getBalance = await wallet.getBalance();
 
-    if (txHash && getBalance) {
-      return { txHash, getBalance };
-    }
-  } catch (err) {
-    return toast.error(err.message);
+  const transactionId = await wallet.signTx({
+    to: to,
+    amount: amount,
+  });
+  const txHash = await wallet.broadcast(transactionId);
+
+  if (txHash && getBalance) {
+    return { txHash, getBalance };
   }
 };
 
