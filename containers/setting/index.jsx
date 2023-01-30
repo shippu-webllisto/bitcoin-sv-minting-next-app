@@ -16,6 +16,8 @@ import { Decryption } from '@/helpers/encryptionAndDecryption';
 import { AuthenticatedUser, ResetAuthentication } from '@/store/features/authentication/index';
 import InputPasswordModal from '@/components/ui/input-password-modal/index';
 import { getString } from '@/utils/getString';
+import { ResetToken } from '@/store/features/tokens/index';
+import { ResetNfts } from '@/store/features/nfts/index';
 
 const Setting = () => {
   const router = useRouter();
@@ -51,6 +53,8 @@ const Setting = () => {
     dispatch(ResetAuthentication());
     dispatch(ResetWallet());
     dispatch(ResetAddAccount());
+    dispatch(ResetToken());
+    dispatch(ResetNfts());
     return router.push(endpoints.connect);
   };
 
