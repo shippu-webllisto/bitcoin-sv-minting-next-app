@@ -142,7 +142,7 @@ const AccountDropDown = () => {
         !checkEmptyValue(encryptedMnemonicKey)
       ) {
         const count = addAccount.length + 1;
-        const _account = !checkEmptyValue(nameField) ? nameField : `Account-${count}`;
+        const _account = `Account-${count}`;
         dispatch(
           AddAccount({
             walletAddress: getAddress,
