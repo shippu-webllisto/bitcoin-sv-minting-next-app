@@ -97,7 +97,6 @@ const Connect = () => {
 
   const handleCreateAccount = async (e) => {
     e.preventDefault();
-
     try {
       const encryptedMnemonicKey = Encryption(mnemonicKey);
       const { getAddress, getBalance, getNetwork } = await CreateAccountData('mainnet');
@@ -188,8 +187,9 @@ const Connect = () => {
 
   const handleSignAuthencation1 = () => {
     if (checkEmptyValue(password)) {
-      setSignupModal((prev) => !prev);
-      setModal1((prev) => !prev);
+      setSignupModal(true);
+      setModal1(true);
+      setModal2(false);
     } else {
       handlePopup(true);
     }
@@ -197,8 +197,9 @@ const Connect = () => {
 
   const handleSignAuthencation2 = () => {
     if (checkEmptyValue(password)) {
-      setSignupModal((prev) => !prev);
-      setModal2((prev) => !prev);
+      setSignupModal(true);
+      setModal2(true);
+      setModal1(false);
     } else {
       handleCreateOpenModal();
     }
