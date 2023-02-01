@@ -9,15 +9,15 @@
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "format": "prettier --write \"**/*.{js,jsx,ts,tsx,mjs,cjs,json,css,scss,sass,md,html}\"",
-    "lint-staged": "lint-staged --concurrent false",
-    "pretty-quick": "pretty-quick --staged",
-    "prepare": "rm -rf .husky && husky install && husky add .husky/pre-commit \"yarn lint-staged && yarn pretty-quick\""
+    "lint-staged": "npx lint-staged --concurrent false",
+    "pretty-quick": "npx pretty-quick --staged",
+    "prepare": "rm -rf .husky && husky install && husky add .husky/pre-commit \"npm run lint-staged \nnpm run pretty-quick\""
   },
   "lint-staged": {
     "**/*.{js,jsx,ts,tsx}": [
-      "yarn format",
-      "yarn lint:fix",
-      "yarn lint"
+      "npm run format",
+      "npm run lint:fix",
+      "npm run lint"
     ]
   },
   "dependencies": {
@@ -35,7 +35,8 @@
     "react-dom": "18.2.0",
     "react-redux": "^8.0.5",
     "react-toastify": "^9.1.1",
-    "reduxjs-toolkit-persist": "^7.2.1",
+    "redux-persist": "^6.0.0",
+    "redux-persist-transform-encrypt": "^4.0.0",
     "scryptlib": "^2.1.0"
   },
   "devDependencies": {
@@ -46,10 +47,8 @@
     "eslint-plugin-prettier": "^4.2.1",
     "eslint-plugin-react": "^7.31.11",
     "husky": "^8.0.2",
-    "lint-staged": "^13.1.0",
     "postcss": "^8.4.20",
     "prettier": "^2.8.1",
-    "pretty-quick": "^3.1.3",
     "tailwindcss": "^3.2.4"
   }
 }
