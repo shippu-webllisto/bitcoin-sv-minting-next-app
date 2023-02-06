@@ -8,13 +8,15 @@ import { useDispatch, useSelector } from 'react-redux';
 import { endpoints } from '@/routes/endpoints.js';
 import { checkEmptyValue } from '@/utils/checkEmptyValue.js';
 import { CreateAccountData } from '@/services/web3-service/bsv.js';
-import { AddAccount } from '@/store/features/add-account/index';
-import { ConnetedWallet } from '@/store/features/wallet-connect/index';
+import { AddAccount, ResetAddAccount } from '@/store/features/add-account/index';
+import { ConnetedWallet, ResetWallet } from '@/store/features/wallet-connect/index';
 import { Encryption } from '@/helpers/encryptionAndDecryption';
 import SignUpPage from '@/components/common/signup/index';
-import { AuthenticatedUser } from '@/store/features/authentication/index';
+import { AuthenticatedUser, ResetAuthentication } from '@/store/features/authentication/index';
 import ImportAccountModal from '@/components/ui/input-popup-modal/index.jsx';
 import CopyClipBoard from '@/components/common/copy-clip-board';
+import { ResetToken } from '@/store/features/tokens/index';
+import { ResetNfts } from '@/store/features/nfts/index';
 
 // import avatar from '@/assets/svgs/user-avatar.svg';
 const avatar = 'https://png.pngtree.com/png-vector/20190223/ourmid/pngtree-vector-avatar-icon-png-image_695765.jpg';
@@ -39,6 +41,17 @@ const Connect = () => {
   const [sequenceMnemonicKey, setSequenceMnemonicKey] = useState([]);
   const [isMnemonicVerifyBtn, setMnemonicVerifyBtn] = useState(false);
   const [isMatchIndex, setMatchIndex] = useState([]);
+
+  // reset redux and clear localstorage.
+  const resetWallet = () => {
+    localStorage.removeItem('persist:root');
+    localStorage.removeItem('ally-supports-cache');
+    dispatch(ResetAuthentication());
+    dispatch(ResetWallet());
+    dispatch(ResetAddAccount());
+    dispatch(ResetToken());
+    dispatch(ResetNfts());
+  };
 
   /**
    *@create a new Account
@@ -155,8 +168,8 @@ const Connect = () => {
    *@import_account - adding a exist account
    */
 
-  const handlePopup = async () => {
-    setPopupImportModal((prev) => !prev);
+  const handlePopup = () => {
+    setPopupImportModal(true);
   };
 
   // for random keys
@@ -187,16 +200,18 @@ const Connect = () => {
 
   const handleSignAuthencation1 = () => {
     if (checkEmptyValue(password)) {
+      resetWallet();
       setSignupModal(true);
       setModal1(true);
       setModal2(false);
     } else {
-      handlePopup(true);
+      handlePopup();
     }
   };
 
   const handleSignAuthencation2 = () => {
     if (checkEmptyValue(password)) {
+      resetWallet();
       setSignupModal(true);
       setModal2(true);
       setModal1(false);

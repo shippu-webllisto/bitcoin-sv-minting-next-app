@@ -20,14 +20,17 @@
       "version": "detect"
     }
   },
+  "globals": {},
   "plugins": ["react", "prettier"],
   "rules": {
     "react/jsx-uses-react": "error",
     "react/jsx-uses-vars": "error",
     "react/react-in-jsx-scope": "off",
+    "react/jsx-key": "error",
+    "no-duplicate-imports": "error",
     "no-console": "error",
     "no-debugger": "error",
-    "no-var": "warn",
-    "no-undef": "off"
+    "no-undef": "error",
+    "no-var": "warn"
   }
 }

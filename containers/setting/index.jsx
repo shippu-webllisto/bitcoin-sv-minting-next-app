@@ -50,6 +50,8 @@ const Setting = () => {
   };
 
   const handleResetWallet = () => {
+    localStorage.removeItem('persist:root');
+    localStorage.removeItem('ally-supports-cache');
     dispatch(ResetAuthentication());
     dispatch(ResetWallet());
     dispatch(ResetAddAccount());

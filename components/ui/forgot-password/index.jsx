@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { Button, Label, Modal, TextInput } from 'flowbite-react';
 import { useDispatch } from 'react-redux';
@@ -9,7 +9,7 @@ import { checkEmptyValue } from '@/utils/checkEmptyValue';
 import { HashPassword } from '@/helpers/bcryptjs';
 import { AuthenticatedUser } from '@/store/features/authentication/index';
 import InputBoxes from '../input-boxes/index';
-import { useCallback } from 'react';
+import { endpoints } from '@/routes/endpoints';
 
 const forgotForm = {
   password: '',

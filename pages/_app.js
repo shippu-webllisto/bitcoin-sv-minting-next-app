@@ -11,8 +11,6 @@ import '../styles/globals.css';
 import { store } from '@/store/index';
 import { endpoints } from '@/routes/endpoints';
 import { checkEmptyValue } from '@/utils/checkEmptyValue';
-// import Navbar from '@/layouts/navbar/index';
-// import Footer from '@/layouts/footer/index';
 const Navbar = dynamic(() => import('@/layouts/navbar/index.jsx'), { ssr: false });
 const Footer = dynamic(() => import('@/layouts/footer/index.jsx'), { ssr: false });
 
