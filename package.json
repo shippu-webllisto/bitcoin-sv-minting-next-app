@@ -1,7 +1,20 @@
 {
   "name": "bitcoin-sv-minting-next-app",
   "version": "0.1.0",
+  "description": "bsv wallet",
   "private": true,
+  "keywords": [
+    "react",
+    "next",
+    "javascript",
+    "typescript"
+  ],
+  "author": "Shippu Sharma",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/NiftyCo-io/bsv-ui.git"
+  },
+  "license": "ISC",
   "scripts": {
     "dev": "next dev",
     "build": "rm -rf .next && next build",
@@ -33,6 +46,7 @@
     "qrcode.react": "^3.1.0",
     "react": "18.2.0",
     "react-dom": "18.2.0",
+    "react-qr-reader": "^3.0.0-beta-1",
     "react-redux": "^8.0.5",
     "react-toastify": "^9.1.1",
     "redux-persist": "^6.0.0",

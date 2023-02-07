@@ -13,6 +13,7 @@ import { ConnetedWallet } from '@/store/features/wallet-connect/index';
 import { AuthenticatedUser } from '@/store/features/authentication/index';
 import { ArrayToString } from '@/helpers/arrayToString';
 import { endpoints } from '@/routes/endpoints';
+import QrScanner from '@/components/common/qr-scanner/index';
 
 const avatar = 'https://png.pngtree.com/png-vector/20190223/ourmid/pngtree-vector-avatar-icon-png-image_695765.jpg';
 
@@ -34,13 +35,13 @@ const mnemonicData = {
 const ImportAccountModal = ({ popup, onClose, title, description }) => {
   const { addAccount } = useSelector((state) => state.addAccount);
   const { password } = useSelector((state) => state.authentication);
-
   const router = useRouter();
   const dispatch = useDispatch();
 
   const [mnemonicValue, setMnemonicValue] = useState(mnemonicData);
   const [nameField, setNameField] = useState('');
   const [getError, setGetError] = useState('');
+  const [qrModal, setQrModal] = useState(false);
 
   const onChange = (e) => {
     e.preventDefault();
@@ -147,210 +148,238 @@ const ImportAccountModal = ({ popup, onClose, title, description }) => {
     });
   };
 
+  const handleQROpenModal = (e) => {
+    e.preventDefault();
+    onClose();
+    setQrModal(true);
+  };
+
   return (
-    <Modal show={popup} size="lg" popup={true} onClose={handleOnClose}>
-      <Modal.Header />
-      <Modal.Body>
-        <div className="text-center">
-          <h3 className="text-3xl font-bold text-gray-900 dark:text-gray-400">{title}</h3>
-          <p className="text-sm my-4 font-fono text-gray-500 dark:text-gray-400">{description}</p>
+    <>
+      <Modal show={popup} size="lg" popup={true} onClose={handleOnClose}>
+        <Modal.Header />
+        <Modal.Body>
+          <div className="text-center">
+            <h3 className="text-3xl font-bold text-gray-900 dark:text-gray-400">{title}</h3>
+            <p className="text-sm my-4 font-fono text-gray-500 dark:text-gray-400">{description}</p>
 
-          <div className="border-2 flex justify-center items-center p-3 rounded-lg">
-            <div className="flex flex-col justify-between">
-              <form className="flex flex-col gap-4" onSubmit={submitImportAccount}>
-                <div>
-                  <TextInput
-                    autoComplete="off"
-                    className="w-full lowercase"
-                    title="Account Name"
-                    placeholder="Account Name (optional)"
-                    type="text"
-                    value={nameField?.toLowerCase()}
-                    onChange={(e) => setNameField(e.target.value)}
-                    required={false}
-                  />
-                  {getError && <p className="text-start text-red-600 ml-2 my-1">{getError}</p>}
-                </div>
-                <div className="grid grid-cols-3 gap-4 mt-2">
-                  <TextInput
-                    autoComplete="off"
-                    className="lowercase"
-                    title="1"
-                    placeholder="1"
-                    type="text"
-                    required={true}
-                    name="one"
-                    onChange={onChange}
-                    value={mnemonicValue?.one?.toLowerCase()}
-                    onPaste={(event) => {
-                      onPasteHandler(event);
-                    }}
-                  />
-                  <TextInput
-                    autoComplete="off"
-                    className="lowercase"
-                    title="2"
-                    placeholder="2"
-                    type="text"
-                    name="two"
-                    value={mnemonicValue?.two?.toLowerCase()}
-                    required={true}
-                    onChange={onChange}
-                    onPaste={(event) => {
-                      onPasteHandler(event);
-                    }}
-                  />
-                  <TextInput
-                    autoComplete="off"
-                    className="lowercase"
-                    title="3"
-                    placeholder="3"
-                    type="text"
-                    name="three"
-                    value={mnemonicValue?.three?.toLowerCase()}
-                    required={true}
-                    onChange={onChange}
-                    onPaste={(event) => {
-                      onPasteHandler(event);
-                    }}
-                  />
-                  <TextInput
-                    autoComplete="off"
-                    className="lowercase"
-                    title="4"
-                    placeholder="4"
-                    type="text"
-                    name="four"
-                    value={mnemonicValue?.four?.toLowerCase()}
-                    required={true}
-                    onChange={onChange}
-                    onPaste={(event) => {
-                      onPasteHandler(event);
-                    }}
-                  />
-                  <TextInput
-                    autoComplete="off"
-                    className="lowercase"
-                    title="5"
-                    placeholder="5"
-                    type="text"
-                    name="five"
-                    value={mnemonicValue?.five?.toLowerCase()}
-                    required={true}
-                    onChange={onChange}
-                    onPaste={(event) => {
-                      onPasteHandler(event);
-                    }}
-                  />
-                  <TextInput
-                    autoComplete="off"
-                    className="lowercase"
-                    title="6"
-                    placeholder="6"
-                    type="text"
-                    name="six"
-                    value={mnemonicValue?.six?.toLowerCase()}
-                    required={true}
-                    onChange={onChange}
-                    onPaste={(event) => {
-                      onPasteHandler(event);
-                    }}
-                  />
-                  <TextInput
-                    autoComplete="off"
-                    className="lowercase"
-                    title="7"
-                    placeholder="7"
-                    type="text"
-                    name="seven"
-                    value={mnemonicValue?.seven?.toLowerCase()}
-                    required={true}
-                    onChange={onChange}
-                    onPaste={(event) => {
-                      onPasteHandler(event);
-                    }}
-                  />
-                  <TextInput
-                    autoComplete="off"
-                    className="lowercase"
-                    title="8"
-                    placeholder="8"
-                    type="text"
-                    name="eight"
-                    value={mnemonicValue?.eight?.toLowerCase()}
-                    required={true}
-                    onChange={onChange}
-                    onPaste={(event) => {
-                      onPasteHandler(event);
-                    }}
-                  />
-                  <TextInput
-                    autoComplete="off"
-                    className="lowercase"
-                    title="9"
-                    placeholder="9"
-                    type="text"
-                    name="nine"
-                    value={mnemonicValue?.nine?.toLowerCase()}
-                    required={true}
-                    onChange={onChange}
-                    onPaste={(event) => {
-                      onPasteHandler(event);
-                    }}
-                  />
-                  <TextInput
-                    autoComplete="off"
-                    className="lowercase"
-                    title="10"
-                    placeholder="10"
-                    type="text"
-                    name="ten"
-                    value={mnemonicValue?.ten?.toLowerCase()}
-                    required={true}
-                    onChange={onChange}
-                    onPaste={(event) => {
-                      onPasteHandler(event);
-                    }}
-                  />
-                  <TextInput
-                    autoComplete="off"
-                    className="lowercase"
-                    title="11"
-                    placeholder="11"
-                    type="text"
-                    name="eleven"
-                    value={mnemonicValue?.eleven?.toLowerCase()}
-                    required={true}
-                    onChange={onChange}
-                    onPaste={(event) => {
-                      onPasteHandler(event);
-                    }}
-                  />
-                  <TextInput
-                    autoComplete="off"
-                    className="lowercase"
-                    title="12"
-                    placeholder="12"
-                    type="text"
-                    name="twelve"
-                    value={mnemonicValue?.twelve?.toLowerCase()}
-                    required={true}
-                    onChange={onChange}
-                    onPaste={(event) => {
-                      onPasteHandler(event);
-                    }}
-                  />
-                </div>
+            <div className="border-2 flex justify-center items-center p-3 rounded-lg">
+              <div className="flex flex-col justify-between">
+                <form className="flex flex-col gap-4" onSubmit={submitImportAccount}>
+                  <div>
+                    <TextInput
+                      autoComplete="off"
+                      className="w-full lowercase"
+                      title="Account Name"
+                      placeholder="Account Name (optional)"
+                      type="text"
+                      value={nameField?.toLowerCase()}
+                      onChange={(e) => setNameField(e.target.value)}
+                      required={false}
+                    />
+                    {getError && <p className="text-start text-red-600 ml-2 my-1">{getError}</p>}
+                  </div>
+                  <div className="grid grid-cols-3 gap-4 mt-2">
+                    <TextInput
+                      autoComplete="off"
+                      className="lowercase"
+                      title="1"
+                      placeholder="1"
+                      type="text"
+                      required={true}
+                      name="one"
+                      onChange={onChange}
+                      value={mnemonicValue?.one?.toLowerCase()}
+                      onPaste={(event) => {
+                        onPasteHandler(event);
+                      }}
+                    />
+                    <TextInput
+                      autoComplete="off"
+                      className="lowercase"
+                      title="2"
+                      placeholder="2"
+                      type="text"
+                      name="two"
+                      value={mnemonicValue?.two?.toLowerCase()}
+                      required={true}
+                      onChange={onChange}
+                      onPaste={(event) => {
+                        onPasteHandler(event);
+                      }}
+                    />
+                    <TextInput
+                      autoComplete="off"
+                      className="lowercase"
+                      title="3"
+                      placeholder="3"
+                      type="text"
+                      name="three"
+                      value={mnemonicValue?.three?.toLowerCase()}
+                      required={true}
+                      onChange={onChange}
+                      onPaste={(event) => {
+                        onPasteHandler(event);
+                      }}
+                    />
+                    <TextInput
+                      autoComplete="off"
+                      className="lowercase"
+                      title="4"
+                      placeholder="4"
+                      type="text"
+                      name="four"
+                      value={mnemonicValue?.four?.toLowerCase()}
+                      required={true}
+                      onChange={onChange}
+                      onPaste={(event) => {
+                        onPasteHandler(event);
+                      }}
+                    />
+                    <TextInput
+                      autoComplete="off"
+                      className="lowercase"
+                      title="5"
+                      placeholder="5"
+                      type="text"
+                      name="five"
+                      value={mnemonicValue?.five?.toLowerCase()}
+                      required={true}
+                      onChange={onChange}
+                      onPaste={(event) => {
+                        onPasteHandler(event);
+                      }}
+                    />
+                    <TextInput
+                      autoComplete="off"
+                      className="lowercase"
+                      title="6"
+                      placeholder="6"
+                      type="text"
+                      name="six"
+                      value={mnemonicValue?.six?.toLowerCase()}
+                      required={true}
+                      onChange={onChange}
+                      onPaste={(event) => {
+                        onPasteHandler(event);
+                      }}
+                    />
+                    <TextInput
+                      autoComplete="off"
+                      className="lowercase"
+                      title="7"
+                      placeholder="7"
+                      type="text"
+                      name="seven"
+                      value={mnemonicValue?.seven?.toLowerCase()}
+                      required={true}
+                      onChange={onChange}
+                      onPaste={(event) => {
+                        onPasteHandler(event);
+                      }}
+                    />
+                    <TextInput
+                      autoComplete="off"
+                      className="lowercase"
+                      title="8"
+                      placeholder="8"
+                      type="text"
+                      name="eight"
+                      value={mnemonicValue?.eight?.toLowerCase()}
+                      required={true}
+                      onChange={onChange}
+                      onPaste={(event) => {
+                        onPasteHandler(event);
+                      }}
+                    />
+                    <TextInput
+                      autoComplete="off"
+                      className="lowercase"
+                      title="9"
+                      placeholder="9"
+                      type="text"
+                      name="nine"
+                      value={mnemonicValue?.nine?.toLowerCase()}
+                      required={true}
+                      onChange={onChange}
+                      onPaste={(event) => {
+                        onPasteHandler(event);
+                      }}
+                    />
+                    <TextInput
+                      autoComplete="off"
+                      className="lowercase"
+                      title="10"
+                      placeholder="10"
+                      type="text"
+                      name="ten"
+                      value={mnemonicValue?.ten?.toLowerCase()}
+                      required={true}
+                      onChange={onChange}
+                      onPaste={(event) => {
+                        onPasteHandler(event);
+                      }}
+                    />
+                    <TextInput
+                      autoComplete="off"
+                      className="lowercase"
+                      title="11"
+                      placeholder="11"
+                      type="text"
+                      name="eleven"
+                      value={mnemonicValue?.eleven?.toLowerCase()}
+                      required={true}
+                      onChange={onChange}
+                      onPaste={(event) => {
+                        onPasteHandler(event);
+                      }}
+                    />
+                    <TextInput
+                      autoComplete="off"
+                      className="lowercase"
+                      title="12"
+                      placeholder="12"
+                      type="text"
+                      name="twelve"
+                      value={mnemonicValue?.twelve?.toLowerCase()}
+                      required={true}
+                      onChange={onChange}
+                      onPaste={(event) => {
+                        onPasteHandler(event);
+                      }}
+                    />
+                  </div>
+                  <button
+                    type="button"
+                    title="Scan Your QR Code"
+                    className="cursor-pointer text-green-700 hover:text-green-500 font-bold"
+                    onClick={handleQROpenModal}
+                  >
+                    or Scan a QR Code
+                  </button>
 
-                <Button type="submit" className="mt-4">
-                  import
-                </Button>
-              </form>
+                  <Button type="submit" title="import account" className="mt-4">
+                    import
+                  </Button>
+                </form>
+              </div>
             </div>
           </div>
-        </div>
-      </Modal.Body>
-    </Modal>
+        </Modal.Body>
+      </Modal>
+
+      {/* Scan a QR Code modal  */}
+      <QrScanner
+        show={qrModal}
+        setQrModal={setQrModal}
+        onClose={() => {
+          onClose();
+          setQrModal(false);
+        }}
+        title="Scan QR Code"
+        description="scan QR to import your account."
+      />
+    </>
   );
 };
 
