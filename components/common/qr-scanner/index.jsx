@@ -125,8 +125,8 @@ function QrScanner({ show, onClose, title, description }) {
                 {checkEmptyValue(data) && stop && (
                   <QrReader
                     className="w-72 mx-auto flex justify-center items-center"
-                    facingMode="environment"
-                    // facingMode={{ exact: mobileDetected() ? 'environment' : 'user' }}
+                    facingMode={{ exact: 'environment' }}
+                    // facingMode={{ exact: mobileDetected() ? 'user' : 'environment' }}
                     scanDelay={200}
                     onResult={onResult}
                     style={{ width: '100%' }}
