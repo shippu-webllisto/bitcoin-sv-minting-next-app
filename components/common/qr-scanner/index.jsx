@@ -101,7 +101,9 @@ function QrScanner({ show, onClose, title, description }) {
           router.replace(endpoints.login);
         }, oneWeek);
 
-        handleOnClose();
+        setGetError('');
+        setData('');
+        onClose();
         return router.push(endpoints.home);
       }
     } catch (error) {
@@ -122,6 +124,7 @@ function QrScanner({ show, onClose, title, description }) {
                 {checkEmptyValue(data) && stop && (
                   <QrReader
                     className="w-72 mx-auto flex justify-center items-center"
+                    facingMode="environment"
                     scanDelay={200}
                     onResult={onResult}
                     style={{ width: '100%' }}
@@ -178,42 +181,3 @@ QrScanner.propTypes = {
 };
 
 export default QrScanner;
-
-// return (
-//   <div className="text-center">
-//     <h3 className="text-3xl font-bold text-gray-900 dark:text-gray-400">{title}</h3>
-//     <p className="text-sm my-4 font-fono text-gray-500 dark:text-gray-400">{description}</p>
-//     {show && (
-//       <div>
-//         {checkEmptyValue(data) && (
-//           <QrReader
-//             className="w-72 mx-auto flex justify-center items-center"
-//             scanDelay={200}
-//             facingMode={show}
-//             onResult={(result, error) => {
-//               if (error) {
-//                 setGetError(error.message);
-//               }
-//               if (result) {
-//                 setData(result?.text);
-//               }
-//             }}
-//             style={{ width: '100%' }}
-//           />
-//         )}
-//         <div className="my-2 break-all">
-//           {getError && (
-//             <p className="relative lowercase text-center border-2 border-red-500 bg-red-100 rounded-lg p-2 m-2">
-//               {getError}
-//             </p>
-//           )}
-//           {data && (
-//             <p className="relative lowercase text-center border-2 border-gray-500 bg-gray-100 rounded-lg p-2 m-2">
-//               {data}
-//             </p>
-//           )}
-//         </div>
-//       </div>
-//     )}
-//   </div>
-// );
