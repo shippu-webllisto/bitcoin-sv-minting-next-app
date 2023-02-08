@@ -13,7 +13,7 @@ import { ImportAccountData } from '@/services/web3-service/bsv';
 import { ConnetedWallet } from '@/store/features/wallet-connect/index';
 import { endpoints } from '@/routes/endpoints';
 import { AuthenticatedUser } from '@/store/features/authentication/index';
-import { mobileDetected } from '@/helpers/mobileDetected';
+// import { mobileDetected } from '@/helpers/mobileDetected';
 
 const avatar = 'https://png.pngtree.com/png-vector/20190223/ourmid/pngtree-vector-avatar-icon-png-image_695765.jpg';
 
@@ -125,7 +125,7 @@ function QrScanner({ show, onClose, title, description }) {
                 {checkEmptyValue(data) && stop && (
                   <QrReader
                     className="w-72 mx-auto flex justify-center items-center"
-                    facingMode={{ exact: mobileDetected() ? 'user' : 'environment' }}
+                    facingMode={{ exact: 'environment' }}
                     scanDelay={200}
                     onResult={onResult}
                     style={{ width: '100%' }}
