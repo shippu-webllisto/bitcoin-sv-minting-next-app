@@ -13,39 +13,43 @@ import { ImportAccountData } from '@/services/web3-service/bsv';
 import { ConnetedWallet } from '@/store/features/wallet-connect/index';
 import { endpoints } from '@/routes/endpoints';
 import { AuthenticatedUser } from '@/store/features/authentication/index';
-// import { mobileDetected } from '@/helpers/mobileDetected';
+// import { mobileDetect } from '@/helpers/mobileDetected';
 
 const avatar = 'https://png.pngtree.com/png-vector/20190223/ourmid/pngtree-vector-avatar-icon-png-image_695765.jpg';
 
-function QrScanner({ show, onClose, title, description }) {
+function QRScanner({ show, onClose, title, description }) {
   const { addAccount } = useSelector((state) => state.addAccount);
   const { password } = useSelector((state) => state.authentication);
   const router = useRouter();
   const dispatch = useDispatch();
 
+  const [selected, setSelected] = useState('environment');
   const [getError, setGetError] = useState('');
   const [data, setData] = useState('');
   // const [stop, setStop] = useState(true);
 
-  // const handleReScan = () => {
-  //   setStop(false);
-  //   setGetError('');
-  //   setData('');
-  // };
-
   const handleOnClose = () => {
+    // setStop(false);
     setGetError('');
     setData('');
     onClose();
-    router.reload();
+    // router.reload();
   };
 
+  // const constraints = {
+  //   facingMode: 'environment',
+  //   // facingMode: { exact: mobileDetect() ? 'environment' : 'user' },
+  // };
+
   const onResult = (result, error) => {
-    if (error) {
-      setGetError(error.message);
-    }
+    if (data === result?.text) return;
     if (result) {
       setData(result?.text);
+      // setStop(false);
+    }
+    if (error) {
+      setGetError(error.message);
+      // setStop(false);
     }
   };
 
@@ -119,18 +123,28 @@ function QrScanner({ show, onClose, title, description }) {
         <div className="text-center">
           <h3 className="text-3xl font-bold text-gray-900 dark:text-gray-400">{title}</h3>
           <p className="text-sm my-4 font-fono text-gray-500 dark:text-gray-400">{description}</p>
+
           <div className="flex flex-col justify-center items-center p-3 rounded-lg">
             {show && (
               <div className="">
-                {checkEmptyValue(data) && stop && (
+                {/* {checkEmptyValue(data) && ( */}
+                <>
+                  <div>
+                    <select onChange={(e) => setSelected(e.target.value)}>
+                      <option value={'environment'}>Back Camera</option>
+                      <option value={'user'}>Front Camera</option>
+                    </select>
+                  </div>
                   <QrReader
                     className="w-72 mx-auto flex justify-center items-center"
-                    facingMode={{ exact: 'environment' }}
+                    // constraints={constraints}
+                    constraints={{ facingMode: selected }}
                     scanDelay={200}
                     onResult={onResult}
                     style={{ width: '100%' }}
                   />
-                )}
+                </>
+                {/* )} */}
               </div>
             )}
             <div className="my-2 break-all">
@@ -153,10 +167,10 @@ function QrScanner({ show, onClose, title, description }) {
             type="button"
             title="Re-Scan"
             className="mt-4 w-full"
-            onClick={handleReScan}
-            disabled={checkEmptyValue(data)}
+            onClick={() => setStop((prev) => !prev)}
+            // disabled={checkEmptyValue(data)}
           >
-            re-scan
+            {stop ? 'Stop Scan' : 'Start Scan'}
           </Button> */}
           <Button
             type="button"
@@ -174,11 +188,11 @@ function QrScanner({ show, onClose, title, description }) {
   );
 }
 
-QrScanner.propTypes = {
+QRScanner.propTypes = {
   show: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
   title: PropTypes.string.isRequired,
   description: PropTypes.string.isRequired,
 };
 
-export default QrScanner;
+export default QRScanner;
