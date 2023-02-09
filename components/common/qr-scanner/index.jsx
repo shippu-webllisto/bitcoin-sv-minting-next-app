@@ -45,6 +45,7 @@ function QRScanner({ isResetAuth = false, show, onClose, title, description }) {
   };
 
   const handleCamera = () => {
+    setCamera('user');
     setCamera((prev) => !prev);
   };
 
