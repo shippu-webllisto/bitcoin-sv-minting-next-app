@@ -45,8 +45,7 @@ function QRScanner({ isResetAuth = false, show, onClose, title, description }) {
   };
 
   const handleCamera = () => {
-    setCamera('user');
-    setCamera((prev) => !prev);
+    setCamera((prev) => (prev === 'environment' ? 'user' : 'environment'));
   };
 
   const handleScannedImportAccount = async () => {
@@ -160,7 +159,7 @@ function QRScanner({ isResetAuth = false, show, onClose, title, description }) {
             onClick={handleCamera}
             disabled={data}
           >
-            {camera ? 'Rear Camera' : 'Front Camera'}
+            {camera === 'environment' ? 'Rear Camera' : 'Front Camera'}
           </Button>
           <Button
             type="button"
