@@ -14,6 +14,7 @@ import { AuthenticatedUser } from '@/store/features/authentication/index';
 import { ArrayToString } from '@/helpers/arrayToString';
 import { endpoints } from '@/routes/endpoints';
 import QrScanner from '@/components/common/qr-scanner/index';
+import { trimSpaces } from '@/utils/trimSpaces';
 
 const avatar = 'https://png.pngtree.com/png-vector/20190223/ourmid/pngtree-vector-avatar-icon-png-image_695765.jpg';
 
@@ -32,7 +33,7 @@ const mnemonicData = {
   twelve: '',
 };
 
-const ImportAccountModal = ({ popup, onClose, title, description }) => {
+const ImportAccountModal = ({ isResetAuth = false, popup, onClose, title, description }) => {
   const { addAccount } = useSelector((state) => state.addAccount);
   const { password } = useSelector((state) => state.authentication);
   const router = useRouter();
@@ -59,8 +60,9 @@ const ImportAccountModal = ({ popup, onClose, title, description }) => {
     e.preventDefault();
     try {
       const propertyValues = Object.values(mnemonicValue);
-      const getMnemonic = ArrayToString(propertyValues);
-      if (checkEmptyValue(getMnemonic)) return toast.error('Invalid Mnemonic key!');
+      const _getMnemonic = ArrayToString(propertyValues);
+      const getMnemonic = trimSpaces(_getMnemonic);
+      if (checkEmptyValue(_getMnemonic) || checkEmptyValue(getMnemonic)) return toast.error('Invalid Mnemonic key!');
       // Name Already Exist
       const oldName = addAccount?.find((item) => item.account === nameField);
       if (oldName?.account?.toLowerCase() === nameField?.toLowerCase()) {
@@ -109,12 +111,14 @@ const ImportAccountModal = ({ popup, onClose, title, description }) => {
             transcations: [],
           }),
         );
-        // remove auth for a week(7*24*60*60)
-        const oneWeek = 7 * 24 * 60 * 60 * 1000;
-        setTimeout(() => {
-          dispatch(AuthenticatedUser({ password: password, auth: false }));
-          router.replace(endpoints.login);
-        }, oneWeek);
+        if (isResetAuth) {
+          // remove auth for a week(7*24*60*60)
+          const oneWeek = 7 * 24 * 60 * 60 * 1000;
+          setTimeout(() => {
+            dispatch(AuthenticatedUser({ password: password, auth: false }));
+            router.replace(endpoints.login);
+          }, oneWeek);
+        }
 
         handleOnClose();
         return router.push(endpoints.home);
@@ -370,6 +374,7 @@ const ImportAccountModal = ({ popup, onClose, title, description }) => {
 
       {/* Scan a QR Code modal  */}
       <QrScanner
+        isResetAuth={false}
         show={qrModal}
         setQrModal={setQrModal}
         onClose={() => {
@@ -384,6 +389,7 @@ const ImportAccountModal = ({ popup, onClose, title, description }) => {
 };
 
 ImportAccountModal.propTypes = {
+  isResetAuth: PropTypes.bool,
   popup: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
   title: PropTypes.string.isRequired,

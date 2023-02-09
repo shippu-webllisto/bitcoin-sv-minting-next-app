@@ -241,6 +241,7 @@ const Connect = () => {
 
       {/* import your Account - modal  */}
       <ImportAccountModal
+        isResetAuth={true}
         popup={popupImportModal}
         onClose={() => setPopupImportModal(false)}
         title="Import an Account !"

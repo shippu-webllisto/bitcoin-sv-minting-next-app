@@ -13,19 +13,29 @@ import { ImportAccountData } from '@/services/web3-service/bsv';
 import { ConnetedWallet } from '@/store/features/wallet-connect/index';
 import { endpoints } from '@/routes/endpoints';
 import { AuthenticatedUser } from '@/store/features/authentication/index';
-import { trimSpaces } from '@/utils/trimSpaces';
+import { mobileDetect } from '@/helpers/mobileDetected';
 
 const avatar = 'https://png.pngtree.com/png-vector/20190223/ourmid/pngtree-vector-avatar-icon-png-image_695765.jpg';
 
-function QRScanner({ isResetAuth = false, show, onClose, title, description }) {
+function QRScanner({ show, onClose, title, description }) {
   const { addAccount } = useSelector((state) => state.addAccount);
   const { password } = useSelector((state) => state.authentication);
   const router = useRouter();
   const dispatch = useDispatch();
+  // const myRef = useRef(null);
 
-  const [camera, setCamera] = useState('environment');
   const [getError, setGetError] = useState('');
   const [data, setData] = useState('');
+  // const [stop, setStop] = useState(true);
+
+  // const handleReScan = () => {
+  //   setGetError('');
+  //   setData('');
+  // };
+
+  // const stop = () => {
+  //   myRef.current.stopCamera();
+  // };
 
   const handleOnClose = () => {
     setGetError('');
@@ -34,25 +44,21 @@ function QRScanner({ isResetAuth = false, show, onClose, title, description }) {
     router.reload();
   };
 
-  const onResult = (result, error) => {
-    if (data === result?.text) return;
-    if (result) {
-      setData(result?.text);
-    }
-    if (error) {
-      setGetError(error.message);
-    }
+  const constraints = {
+    facingMode: mobileDetect() ? 'environment' : 'user',
+    // facingMode: { exact: mobileDetect() ? 'environment' : 'user' },
   };
 
-  const handleCamera = () => {
-    setCamera((prev) => !prev);
+  const onResult = (result, error) => {
+    if (data === result?.text) return;
+    if (result) return setData(result?.text);
+    if (error) return setGetError(error.message);
   };
 
   const handleScannedImportAccount = async () => {
-    const getMnemonic = trimSpaces(data);
-    if (checkEmptyValue(data) || checkEmptyValue(getMnemonic)) return toast.error('Invalid Mnemonic key!');
+    if (checkEmptyValue(data)) return toast.error('Invalid Mnemonic key!');
     try {
-      const encryptedMnemonicKey = Encryption(getMnemonic?.toLowerCase());
+      const encryptedMnemonicKey = Encryption(data?.toLowerCase());
       // mnemonic account already exist and
       const existMnemonicKey = addAccount?.find((item) => item.mnemonic === encryptedMnemonicKey);
       if (existMnemonicKey?.mnemonic === encryptedMnemonicKey) {
@@ -60,7 +66,7 @@ function QRScanner({ isResetAuth = false, show, onClose, title, description }) {
         return toast.error('this mnemonic account already exist!!');
       }
 
-      const { getAddress, getBalance, getNetwork } = await ImportAccountData(getMnemonic, 'mainnet');
+      const { getAddress, getBalance, getNetwork } = await ImportAccountData(data, 'mainnet');
       if (
         !checkEmptyValue(encryptedMnemonicKey) &&
         !checkEmptyValue(getAddress) &&
@@ -95,14 +101,12 @@ function QRScanner({ isResetAuth = false, show, onClose, title, description }) {
             transcations: [],
           }),
         );
-        if (isResetAuth) {
-          // remove auth for a week(7*24*60*60)
-          const oneWeek = 7 * 24 * 60 * 60 * 1000;
-          setTimeout(() => {
-            dispatch(AuthenticatedUser({ password: password, auth: false }));
-            router.replace(endpoints.login);
-          }, oneWeek);
-        }
+        // remove auth for a week(7*24*60*60)
+        const oneWeek = 7 * 24 * 60 * 60 * 1000;
+        setTimeout(() => {
+          dispatch(AuthenticatedUser({ password: password, auth: false }));
+          router.replace(endpoints.login);
+        }, oneWeek);
 
         setGetError('');
         setData('');
@@ -127,10 +131,11 @@ function QRScanner({ isResetAuth = false, show, onClose, title, description }) {
                 {checkEmptyValue(data) && (
                   <QrReader
                     className="w-72 mx-auto flex justify-center items-center"
-                    constraints={{ facingMode: camera }}
+                    constraints={constraints}
                     scanDelay={200}
                     onResult={onResult}
                     style={{ width: '100%' }}
+                    // ref={myRef}
                   />
                 )}
               </div>
@@ -151,16 +156,15 @@ function QRScanner({ isResetAuth = false, show, onClose, title, description }) {
               )}
             </div>
           </div>
-          <Button
+          {/* <Button
             type="button"
-            color="gray"
-            title="Camera"
+            title="Re-Scan"
             className="mt-4 w-full"
-            onClick={handleCamera}
-            disabled={data}
+            onClick={handleReScan}
+            disabled={checkEmptyValue(data)}
           >
-            {camera ? 'Rear Camera' : 'Front Camera'}
-          </Button>
+            re-scan
+          </Button> */}
           <Button
             type="button"
             title="import account"
@@ -178,7 +182,6 @@ function QRScanner({ isResetAuth = false, show, onClose, title, description }) {
 }
 
 QRScanner.propTypes = {
-  isResetAuth: PropTypes.bool,
   show: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
   title: PropTypes.string.isRequired,

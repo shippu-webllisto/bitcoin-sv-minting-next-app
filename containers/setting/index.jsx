@@ -348,6 +348,7 @@ const Setting = () => {
         data={mnemonicHash}
         popup={exportMnemonicPopup}
         onClose={() => setExportMnemonicPopup(false)}
+        qrText="Scan QR to get a Mnemonic key"
       />
 
       {/* Delete Current Account modal */}
@@ -381,6 +382,7 @@ const Setting = () => {
         data={privateKeyHash}
         popup={exportPrivateKeyPopup}
         onClose={() => setExportPrivateKeyPopup(false)}
+         qrText="Scan QR to get a Private key"
       /> */}
     </>
   );

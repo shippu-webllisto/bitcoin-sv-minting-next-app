@@ -6,7 +6,7 @@ import QRCode from 'qrcode.react';
 
 import { CopyClipboard } from '@/helpers/CopyClipboard';
 
-const ExportDataModal = ({ title, data, popup, onClose }) => {
+const ExportDataModal = ({ title, data, popup, onClose, qrText }) => {
   const handleCopyText = () => {
     CopyClipboard(data);
     return toast.success('copied');
@@ -16,7 +16,6 @@ const ExportDataModal = ({ title, data, popup, onClose }) => {
     <Modal show={popup} size="lg" popup={true} onClose={onClose}>
       <div className="p-4">
         <Modal.Header>{title}</Modal.Header>
-        <hr className="my-2" />
         <Modal.Body>
           <div className="flex text-center justify-center flex-col border rounded-lg p-2 ">
             <div className="flex flex-row justify-around bg-gray-200 border-2 rounded-lg">
@@ -30,10 +29,10 @@ const ExportDataModal = ({ title, data, popup, onClose }) => {
                 onClick={handleCopyText}
               />
             </div>
-            <p className="my-2 text-center font-mono text-gray-700">or</p>
+            <p className="mt-2 text-center font-mono text-gray-500">or</p>
             <div className="text-center my-1">
               <QRCode className="inline-block my-2" value={data} renderAs="canvas" />
-              <p className="text-center text-gray-500">scan QR to get a mnemonic key</p>
+              <p className="text-center text-gray-500">{qrText}</p>
             </div>
           </div>
         </Modal.Body>
@@ -47,6 +46,7 @@ ExportDataModal.propTypes = {
   data: PropTypes.string.isRequired,
   popup: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
+  qrText: PropTypes.string.isRequired,
 };
 
 export default ExportDataModal;

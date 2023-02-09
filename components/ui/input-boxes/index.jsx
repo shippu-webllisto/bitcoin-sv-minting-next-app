@@ -6,6 +6,7 @@ import PropTypes from 'prop-types';
 
 import { Encryption } from '@/helpers/encryptionAndDecryption';
 import { ArrayToString } from '@/helpers/arrayToString';
+import { trimSpaces } from '@/utils/trimSpaces';
 
 const InputBoxes = ({
   clearDisabledState,
@@ -25,7 +26,8 @@ const InputBoxes = ({
   const handleVerify = () => {
     try {
       const propertyValues = Object.values(mnemonicValue);
-      const getMnemonic = ArrayToString(propertyValues);
+      const _getMnemonic = ArrayToString(propertyValues);
+      const getMnemonic = trimSpaces(_getMnemonic);
 
       const encryptedMnemonicKey = Encryption(getMnemonic);
       const getUser = addAccount?.find((item) => item.mnemonic === encryptedMnemonicKey);

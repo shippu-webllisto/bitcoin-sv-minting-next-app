@@ -1,4 +1,5 @@
 export const trimSpaces = (text) => {
-  const result = text.replace(/\s+/g, ' ');
+  const Text = text.trim();
+  const result = Text.replace(/\s+/g, ' ');
   return result;
 };
