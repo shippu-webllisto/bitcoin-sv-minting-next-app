@@ -23,7 +23,6 @@ function QRScanner({ isResetAuth = false, show, onClose, title, description }) {
   const router = useRouter();
   const dispatch = useDispatch();
 
-  const [camera, setCamera] = useState('environment');
   const [getError, setGetError] = useState('');
   const [data, setData] = useState('');
 
@@ -42,10 +41,6 @@ function QRScanner({ isResetAuth = false, show, onClose, title, description }) {
     if (error) {
       setGetError(error.message);
     }
-  };
-
-  const handleCamera = () => {
-    setCamera((prev) => (prev === 'environment' ? 'user' : 'environment'));
   };
 
   const handleScannedImportAccount = async () => {
@@ -127,7 +122,7 @@ function QRScanner({ isResetAuth = false, show, onClose, title, description }) {
                 {checkEmptyValue(data) && (
                   <QrReader
                     className="w-72 mx-auto flex justify-center items-center"
-                    constraints={{ facingMode: camera }}
+                    constraints={{ facingMode: 'environment' }}
                     scanDelay={200}
                     onResult={onResult}
                     style={{ width: '100%' }}
@@ -151,16 +146,6 @@ function QRScanner({ isResetAuth = false, show, onClose, title, description }) {
               )}
             </div>
           </div>
-          <Button
-            type="button"
-            color="gray"
-            title="Camera"
-            className="mt-4 w-full"
-            onClick={handleCamera}
-            disabled={data}
-          >
-            {camera === 'environment' ? 'Rear Camera' : 'Front Camera'}
-          </Button>
           <Button
             type="button"
             title="import account"
