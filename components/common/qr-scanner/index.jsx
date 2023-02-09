@@ -12,44 +12,32 @@ import { Encryption } from '@/helpers/encryptionAndDecryption';
 import { ImportAccountData } from '@/services/web3-service/bsv';
 import { ConnetedWallet } from '@/store/features/wallet-connect/index';
 import { endpoints } from '@/routes/endpoints';
-import { AuthenticatedUser } from '@/store/features/authentication/index';
 // import { mobileDetect } from '@/helpers/mobileDetected';
 
 const avatar = 'https://png.pngtree.com/png-vector/20190223/ourmid/pngtree-vector-avatar-icon-png-image_695765.jpg';
 
 function QRScanner({ show, onClose, title, description }) {
   const { addAccount } = useSelector((state) => state.addAccount);
-  const { password } = useSelector((state) => state.authentication);
   const router = useRouter();
   const dispatch = useDispatch();
 
-  const [selected, setSelected] = useState('environment');
   const [getError, setGetError] = useState('');
   const [data, setData] = useState('');
-  // const [stop, setStop] = useState(true);
 
   const handleOnClose = () => {
-    // setStop(false);
     setGetError('');
     setData('');
     onClose();
-    // router.reload();
+    router.reload();
   };
-
-  // const constraints = {
-  //   facingMode: 'environment',
-  //   // facingMode: { exact: mobileDetect() ? 'environment' : 'user' },
-  // };
 
   const onResult = (result, error) => {
     if (data === result?.text) return;
     if (result) {
-      setData(result?.text);
-      // setStop(false);
+      return setData(result?.text);
     }
     if (error) {
-      setGetError(error.message);
-      // setStop(false);
+      return setGetError(error.message);
     }
   };
 
@@ -99,13 +87,6 @@ function QRScanner({ show, onClose, title, description }) {
             transcations: [],
           }),
         );
-        // remove auth for a week(7*24*60*60)
-        const oneWeek = 7 * 24 * 60 * 60 * 1000;
-        setTimeout(() => {
-          dispatch(AuthenticatedUser({ password: password, auth: false }));
-          router.replace(endpoints.login);
-        }, oneWeek);
-
         setGetError('');
         setData('');
         onClose();
@@ -127,24 +108,15 @@ function QRScanner({ show, onClose, title, description }) {
           <div className="flex flex-col justify-center items-center p-3 rounded-lg">
             {show && (
               <div className="">
-                {/* {checkEmptyValue(data) && ( */}
-                <>
-                  <div>
-                    <select onChange={(e) => setSelected(e.target.value)}>
-                      <option value={'environment'}>Back Camera</option>
-                      <option value={'user'}>Front Camera</option>
-                    </select>
-                  </div>
+                {checkEmptyValue(data) && (
                   <QrReader
                     className="w-72 mx-auto flex justify-center items-center"
-                    // constraints={constraints}
-                    constraints={{ facingMode: selected }}
+                    constraints={{ facingMode: 'environment' }}
                     scanDelay={200}
                     onResult={onResult}
                     style={{ width: '100%' }}
                   />
-                </>
-                {/* )} */}
+                )}
               </div>
             )}
             <div className="my-2 break-all">
@@ -163,15 +135,6 @@ function QRScanner({ show, onClose, title, description }) {
               )}
             </div>
           </div>
-          {/* <Button
-            type="button"
-            title="Re-Scan"
-            className="mt-4 w-full"
-            onClick={() => setStop((prev) => !prev)}
-            // disabled={checkEmptyValue(data)}
-          >
-            {stop ? 'Stop Scan' : 'Start Scan'}
-          </Button> */}
           <Button
             type="button"
             title="import account"
