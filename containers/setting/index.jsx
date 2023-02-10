@@ -50,13 +50,13 @@ const Setting = () => {
   };
 
   const handleResetWallet = () => {
-    localStorage.removeItem('persist:root');
-    localStorage.removeItem('ally-supports-cache');
     dispatch(ResetAuthentication());
     dispatch(ResetWallet());
     dispatch(ResetAddAccount());
     dispatch(ResetToken());
     dispatch(ResetNfts());
+    localStorage.removeItem('persist:root');
+    localStorage.removeItem('ally-supports-cache');
     return router.push(endpoints.connect);
   };
 

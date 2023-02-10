@@ -1,8 +1,10 @@
 import axios from 'axios';
+import { config } from '@/config/index';
 import { checkEmptyValue } from './checkEmptyValue';
 
+// const coingecko_eth_URL = `${config.coingeckoBaseUrl}v3/simple/price?ids=ethereum&vs_currencies=usd`;
 // const SENSILET_URL = 'https://sensilet.com/api/bsv_price?versionCode=17';
-const coingecko_URL = 'https://api.coingecko.com/api/v3/simple/price?ids=bitcoin-cash-sv&vs_currencies=usd';
+const coingecko_URL = `${config.coingeckoBaseUrl}/v3/simple/price?ids=bitcoin-cash-sv&vs_currencies=usd`;
 
 export const getUSDPrice = async (url) => {
   const price = await axios.get(url);

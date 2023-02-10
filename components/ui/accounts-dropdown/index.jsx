@@ -14,16 +14,12 @@ import { CreateAccountData } from '@/services/web3-service/bsv';
 import { Encryption } from '@/helpers/encryptionAndDecryption';
 import ImportAccountModal from '../input-popup-modal/index';
 import CopyClipBoard from '@/components/common/copy-clip-board';
-// import { useTransactionRefresh } from '@/hooks/useTransactionRefresh';
-// import useUpdateBalance from '@/containers/hooks/use-updatebalance';
 
 const avatar = 'https://png.pngtree.com/png-vector/20190223/ourmid/pngtree-vector-avatar-icon-png-image_695765.jpg';
 
 const AccountDropDown = () => {
   const { addAccount } = useSelector((state) => state.addAccount);
   const WalletConnect = useSelector((state) => state.walletConnect);
-  // const { transcationUpdated } = useTransactionRefresh();
-  // const { CurrenWalletUpdate } = useUpdateBalance();
   const router = useRouter();
   const dispatch = useDispatch();
 
@@ -198,21 +194,29 @@ const AccountDropDown = () => {
 
   const handleSeletcedAccount = async (item) => {
     if (item) {
-      // await CurrenWalletUpdate(item.network, item.mnemonic);
-      // await transcationUpdated(item.walletAddress); // updating transaction
       router.reload();
       dispatch(ConnetedWallet(item));
       setOpen(false);
     }
   };
 
+  useEffect(() => {
+    const dropdownElm = document.querySelector('button#account-dropdown-wrp');
+    window.addEventListener('click', (event) => {
+      if (event.target.closest('button#account-dropdown-wrp') !== dropdownElm) {
+        setOpen(false);
+      }
+    });
+  }, [open]);
+
   return (
     <>
-      <div className="inline-flex text-center bg-white my-1 justify-center ">
+      <div className="inline-flex text-center bg-white my-1 justify-center">
         <div className="relative">
           <div className="flex bg-[#f5f7fa] hover:border-black border-2  rounded-full my-2 px-10 p-3 m-3 align-middle">
             <button
               className="flex justify-between px-6 text-sm text-gray-400 w-full"
+              id="account-dropdown-wrp"
               onClick={(e) => handleOpenAccount(e)}
             >
               <Image
@@ -239,6 +243,7 @@ const AccountDropDown = () => {
 
           {open && (
             <div
+              id="account_lists"
               className="absolute z-10 w-full origin-top-right rounded-md border border-gray-100 bg-white shadow-lg"
               role="menu"
             >
@@ -348,7 +353,7 @@ const AccountDropDown = () => {
       </Modal>
 
       {/* create modal */}
-      <Modal show={generatePopup} size="md" popup={true} onClose={() => handlemodallClose()}>
+      <Modal show={generatePopup} size="lg" popup={true} onClose={() => handlemodallClose()}>
         <Modal.Header />
         <Modal.Body>
           <div className="text-center ">
@@ -411,7 +416,10 @@ const AccountDropDown = () => {
       {/* import your Account - modal  */}
       <ImportAccountModal
         popup={popupImportModal}
-        onClose={() => setPopupImportModal(false)}
+        onClose={() => {
+          setPopupImportModal(false);
+          setPopup(false);
+        }}
         title="Import an Account !"
         description="add your mnemonic key here below down!"
       />

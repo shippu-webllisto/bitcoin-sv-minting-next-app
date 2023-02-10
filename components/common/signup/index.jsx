@@ -62,7 +62,7 @@ function SignUpPage({ signupModal, onClose, signup }) {
                 required={true}
                 onChange={onChange}
                 value={signupData?.password}
-                autoComplete="new-password"
+                autoComplete="off"
               />
             </div>
             <div>
@@ -77,7 +77,7 @@ function SignUpPage({ signupModal, onClose, signup }) {
                 required={true}
                 onChange={onChange}
                 value={signupData?.confirmPassword}
-                autoComplete="new-password"
+                autoComplete="off"
               />
             </div>
 

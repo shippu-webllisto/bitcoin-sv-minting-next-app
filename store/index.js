@@ -2,11 +2,11 @@ import { configureStore } from '@reduxjs/toolkit';
 import { encryptTransform } from 'redux-persist-transform-encrypt';
 import { persistStore, persistReducer } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
-
+import { config } from '@/config/index';
 import { rootReducer } from './features/rootReducer.js';
 
 const encryptor = encryptTransform({
-  secretKey: process.env.NEXT_PUBLIC_SALT,
+  secretKey: config.salt,
   onError: function (error) {
     return new Error(error);
   },

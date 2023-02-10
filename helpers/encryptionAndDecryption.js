@@ -1,4 +1,5 @@
-const salt = process.env.NEXT_PUBLIC_SALT;
+import { config } from '@/config/index';
+const salt = config.salt;
 
 export const Encryption = (text) => {
   const textToChars = (text) => text.split('').map((c) => c.charCodeAt(0));
@@ -11,6 +12,7 @@ export const Encryption = (text) => {
 export const Decryption = (encoded) => {
   const textToChars = (text) => text.split('').map((c) => c.charCodeAt(0));
   const applySaltToChar = (code) => textToChars(salt).reduce((a, b) => a ^ b, code);
+
   return encoded
     .match(/.{1,2}/g)
     .map((hex) => parseInt(hex, 16))

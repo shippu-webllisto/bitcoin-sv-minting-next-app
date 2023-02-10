@@ -374,7 +374,7 @@ const ImportAccountModal = ({ isResetAuth = false, popup, onClose, title, descri
 
       {/* Scan a QR Code modal  */}
       <QrScanner
-        isResetAuth={false}
+        isResetAuth={isResetAuth}
         show={qrModal}
         setQrModal={setQrModal}
         onClose={() => {

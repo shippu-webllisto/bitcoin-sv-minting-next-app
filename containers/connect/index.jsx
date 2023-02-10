@@ -18,7 +18,6 @@ import CopyClipBoard from '@/components/common/copy-clip-board';
 import { ResetToken } from '@/store/features/tokens/index';
 import { ResetNfts } from '@/store/features/nfts/index';
 
-// import avatar from '@/assets/svgs/user-avatar.svg';
 const avatar = 'https://png.pngtree.com/png-vector/20190223/ourmid/pngtree-vector-avatar-icon-png-image_695765.jpg';
 
 const Connect = () => {
@@ -44,13 +43,13 @@ const Connect = () => {
 
   // reset redux and clear localstorage.
   const resetWallet = () => {
-    localStorage.removeItem('persist:root');
-    localStorage.removeItem('ally-supports-cache');
     dispatch(ResetAuthentication());
     dispatch(ResetWallet());
     dispatch(ResetAddAccount());
     dispatch(ResetToken());
     dispatch(ResetNfts());
+    localStorage.removeItem('persist:root');
+    localStorage.removeItem('ally-supports-cache');
   };
 
   /**

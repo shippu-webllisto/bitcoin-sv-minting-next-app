@@ -1,10 +1,11 @@
 import axios from 'axios';
 import { toast } from 'react-toastify';
+import { config } from '@/config/index';
+
+const pinataApiKey = config.pinataApiKey;
+const pinataSecretApiKey = config.pinataSecretApiKey;
 
 const instance = axios.create();
-
-const pinataApiKey = process.env.NEXT_PUBLIC_PINATA_API_KEY;
-const pinataSecretApiKey = process.env.NEXT_PUBLIC_PINATA_SECRET_API_KEY;
 
 export const pinataForIpfs = async (data) => {
   try {

@@ -1,13 +1,13 @@
 {
-  "name": "bitcoin-sv-minting-next-app",
+  "name": "bsv-wallet",
   "version": "0.1.0",
   "description": "bsv wallet",
   "private": true,
   "keywords": [
-    "react",
-    "next",
-    "javascript",
-    "typescript"
+    "bsv",
+    "bitcoin-sv",
+    "bitcoin-satoshi-vision",
+    "bitcoin"
   ],
   "author": "Shippu Sharma",
   "repository": {
