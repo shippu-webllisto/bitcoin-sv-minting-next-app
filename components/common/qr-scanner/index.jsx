@@ -44,7 +44,7 @@ function QRScanner({ isResetAuth = false, show, onClose, title, description }) {
   };
 
   const videoContainerStyle = {
-    border: '2px solid blue',
+    border: '3px solid blue',
     borderRadius: '10px',
   };
 
@@ -123,10 +123,11 @@ function QRScanner({ isResetAuth = false, show, onClose, title, description }) {
           <p className="text-sm my-4 font-fono text-gray-500 dark:text-gray-400">{description}</p>
           <div className="flex flex-col justify-center items-center p-3 rounded-lg">
             {show && (
-              <div className="">
+              <div className="relative">
+                <span className="absolute w-[98%] h-[3px] top-2 mx-auto left-0 right-0 bg-[#1ede39] qr_scanner"></span>
                 {checkEmptyValue(data) && (
                   <QrReader
-                    className="w-72 mx-auto flex justify-center items-center"
+                    className="w-72 mx-auto flex justify-center items-center "
                     constraints={{ facingMode: 'environment' }}
                     scanDelay={200}
                     onResult={onResult}

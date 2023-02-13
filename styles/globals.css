@@ -7,8 +7,26 @@
   margin: 0;
 }
 
+/* centering modal in Android and IOS Device  */
 @layer {
   .modals > div {
     @apply flex items-center justify-center !important;
+  }
+}
+
+/* qr scanner style*/
+.qr_scanner {
+  z-index: 3;
+  box-shadow: 0px 11px 16px 5px rgb(11 255 0 / 40%);
+  -webkit-animation: scanning 3s infinite;
+  -moz-animation: scanning 3s infinite;
+  animation: scanning 3s infinite;
+}
+
+@keyframes scanning {
+  50% {
+    -webkit-transform: translateY(250px);
+    -moz-transform: translateY(250px);
+    transform: translateY(250px);
   }
 }
