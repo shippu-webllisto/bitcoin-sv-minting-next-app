@@ -248,7 +248,7 @@ const Connect = () => {
       />
 
       {/* create modal  */}
-      <Modal show={generatePopup} size="md" popup={true} onClose={() => setGeneratePopup(false)}>
+      <Modal show={generatePopup} size="md" popup={true} onClose={() => setGeneratePopup(false)} className="modals">
         <Modal.Header />
         <Modal.Body>
           <div className="text-center">
@@ -292,6 +292,7 @@ const Connect = () => {
           setMnemonicVerifyModel(false);
           setGeneratePopup(true);
         }}
+        className="modals"
       >
         <Modal.Header />
         <Modal.Body>

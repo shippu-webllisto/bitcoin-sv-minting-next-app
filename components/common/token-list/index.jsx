@@ -237,7 +237,7 @@ export function Tokens({ item }) {
       />
 
       {/* qr code  */}
-      <Modal show={isModalShow} size="lg" popup={true} onClose={() => setIsModalShow(false)}>
+      <Modal show={isModalShow} size="lg" popup={true} onClose={() => setIsModalShow(false)} className="modals">
         <Modal.Header />
         <Modal.Body>
           <div className="space-y-6 p-6">
@@ -248,7 +248,7 @@ export function Tokens({ item }) {
       </Modal>
 
       {/* send token  */}
-      <Modal show={isModalSend} size="lg" popup={true} onClose={() => setIsModalSend(false)}>
+      <Modal show={isModalSend} size="lg" popup={true} onClose={() => setIsModalSend(false)} className="modals">
         <Modal.Header />
         <Modal.Body>
           <div className="space-y-6 p-6">

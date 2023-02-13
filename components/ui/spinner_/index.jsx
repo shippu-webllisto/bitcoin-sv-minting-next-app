@@ -1,5 +1,4 @@
 import { Spinner } from 'flowbite-react';
-import React from 'react';
 
 export default function Spinner_() {
   return (

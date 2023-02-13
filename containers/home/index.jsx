@@ -136,7 +136,13 @@ const Home = () => {
             </div>
 
             {/* receive modal  */}
-            <Modal show={isModalShow} size="md" popup={true} onClose={() => setIsModalShow((prev) => !prev)}>
+            <Modal
+              show={isModalShow}
+              size="lg"
+              popup={true}
+              onClose={() => setIsModalShow((prev) => !prev)}
+              className="modals"
+            >
               <Modal.Header />
               <Modal.Body>
                 <div className="space-y-6 p-6">
@@ -145,8 +151,15 @@ const Home = () => {
               </Modal.Body>
               <Modal.Footer />
             </Modal>
+
             {/* send modal  */}
-            <Modal show={isModalSend} size="lg" popup={true} onClose={() => setisModalSend((prev) => !prev)}>
+            <Modal
+              show={isModalSend}
+              size="lg"
+              popup={true}
+              onClose={() => setisModalSend((prev) => !prev)}
+              className="modals"
+            >
               <Modal.Body>
                 <div className="space-y-6 p-6">
                   <SendBsv walletAddress={walletAddress} setSendBsvPopup={() => setisModalSend(false)} />

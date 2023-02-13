@@ -294,7 +294,7 @@ const Setting = () => {
       </div>
 
       {/* change alias name  */}
-      <Modal show={nameModal} size="lg" popup={true} onClose={openAliasNameModal}>
+      <Modal show={nameModal} size="lg" popup={true} onClose={openAliasNameModal} className="modals">
         <Modal.Header />
         <Modal.Body>
           <div className="text-center">

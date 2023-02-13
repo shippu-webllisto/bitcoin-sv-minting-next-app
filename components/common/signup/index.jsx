@@ -39,7 +39,7 @@ function SignUpPage({ signupModal, onClose, signup }) {
   };
 
   return (
-    <Modal show={signupModal} size="lg" popup={true} onClose={onClose}>
+    <Modal show={signupModal} size="lg" popup={true} onClose={onClose} className="modals">
       <Modal.Header />
       <Modal.Body>
         <div>

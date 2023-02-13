@@ -6,3 +6,9 @@
   padding: 0;
   margin: 0;
 }
+
+@layer {
+  .modals > div {
+    @apply flex items-center justify-center !important;
+  }
+}

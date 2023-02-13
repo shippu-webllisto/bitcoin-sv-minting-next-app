@@ -124,7 +124,7 @@ const NftList = () => {
       </div>
 
       {/* Mint NFT  */}
-      <Modal show={isModalMint} size="lg" popup={true} onClose={() => setIsModalMint(false)}>
+      <Modal show={isModalMint} size="lg" popup={true} onClose={() => setIsModalMint(false)} className="modals">
         <Modal.Header />
         <Modal.Body>
           <div className="space-y-6">
@@ -431,7 +431,7 @@ export function NFTs({ item }) {
       />
 
       {/* transfer nft  */}
-      <Modal show={isModalTransfer} size="lg" popup={true} onClose={() => setIsModalTransfer(false)}>
+      <Modal show={isModalTransfer} size="lg" popup={true} onClose={() => setIsModalTransfer(false)} className="modals">
         <Modal.Header />
         <Modal.Body>
           <div className="space-y-6">

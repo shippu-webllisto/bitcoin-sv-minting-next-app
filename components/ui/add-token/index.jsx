@@ -41,7 +41,7 @@ const Addtoken = ({ walletAddress, popup, onClose }) => {
   };
 
   return (
-    <Modal show={popup} size="lg" popup={true} onClose={onClose}>
+    <Modal show={popup} size="lg" popup={true} onClose={onClose} className="modals">
       <Modal.Header />
       <Modal.Body>
         <div className="text-center">

@@ -301,7 +301,7 @@ const AccountDropDown = () => {
       </div>
 
       {/* create and import - buttons group   */}
-      <Modal show={popup} size="lg" popup={true} onClose={() => setPopup(false)}>
+      <Modal show={popup} size="lg" popup={true} onClose={() => setPopup(false)} className="modals">
         <Modal.Header />
         <Modal.Body>
           <div className="item-center flex flex-col justify-center">
@@ -316,7 +316,13 @@ const AccountDropDown = () => {
       </Modal>
 
       {/* create your Account - modal  */}
-      <Modal show={mnemonicVerifyModel} size="lg" popup={true} onClose={() => setMnemonicVerifyModel(false)}>
+      <Modal
+        show={mnemonicVerifyModel}
+        size="lg"
+        popup={true}
+        onClose={() => setMnemonicVerifyModel(false)}
+        className="modals"
+      >
         <Modal.Header />
         <Modal.Body>
           <div className="text-center">
@@ -353,7 +359,7 @@ const AccountDropDown = () => {
       </Modal>
 
       {/* create modal */}
-      <Modal show={generatePopup} size="lg" popup={true} onClose={() => handlemodallClose()}>
+      <Modal show={generatePopup} size="lg" popup={true} onClose={() => handlemodallClose()} className="modals">
         <Modal.Header />
         <Modal.Body>
           <div className="text-center ">

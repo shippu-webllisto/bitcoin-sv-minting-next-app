@@ -35,7 +35,7 @@ function InputPasswordModal({ show, onClose, onClick, title, description }) {
   }
 
   return (
-    <Modal show={show} size="lg" popup={true} onClose={handleOnClose}>
+    <Modal show={show} size="lg" popup={true} onClose={handleOnClose} className="modals">
       <Modal.Header />
       <Modal.Body>
         <div className="text-center">

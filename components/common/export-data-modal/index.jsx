@@ -13,7 +13,7 @@ const ExportDataModal = ({ title, data, popup, onClose, qrText }) => {
   };
 
   return (
-    <Modal show={popup} size="lg" popup={true} onClose={onClose}>
+    <Modal show={popup} size="lg" popup={true} onClose={onClose} className="modals">
       <div className="p-4">
         <Modal.Header>{title}</Modal.Header>
         <Modal.Body>

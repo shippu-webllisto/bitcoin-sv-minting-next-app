@@ -4,7 +4,7 @@ import { Button, Modal } from 'flowbite-react';
 
 const PopupModal = ({ popup, handlePopup, title, description, onClick }) => {
   return (
-    <Modal show={popup} size="md" popup={true} onClose={handlePopup}>
+    <Modal show={popup} size="md" popup={true} onClose={handlePopup} className="modals">
       <Modal.Header />
       <Modal.Body>
         <div className="text-center">

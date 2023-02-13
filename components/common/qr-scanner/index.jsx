@@ -43,6 +43,11 @@ function QRScanner({ isResetAuth = false, show, onClose, title, description }) {
     }
   };
 
+  const videoContainerStyle = {
+    border: '2px solid blue',
+    borderRadius: '10px',
+  };
+
   const handleScannedImportAccount = async () => {
     const getMnemonic = trimSpaces(data);
     if (checkEmptyValue(data) || checkEmptyValue(getMnemonic)) return toast.error('Invalid Mnemonic key!');
@@ -110,7 +115,7 @@ function QRScanner({ isResetAuth = false, show, onClose, title, description }) {
   };
 
   return (
-    <Modal show={show} size="lg" popup={true} onClose={handleOnClose}>
+    <Modal show={show} size="lg" popup={true} onClose={handleOnClose} className="modals">
       <Modal.Header />
       <Modal.Body>
         <div className="text-center">
@@ -125,6 +130,7 @@ function QRScanner({ isResetAuth = false, show, onClose, title, description }) {
                     constraints={{ facingMode: 'environment' }}
                     scanDelay={200}
                     onResult={onResult}
+                    videoContainerStyle={videoContainerStyle}
                     style={{ width: '100%' }}
                   />
                 )}

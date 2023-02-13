@@ -160,7 +160,7 @@ const ImportAccountModal = ({ isResetAuth = false, popup, onClose, title, descri
 
   return (
     <>
-      <Modal show={popup} size="lg" popup={true} onClose={handleOnClose}>
+      <Modal show={popup} size="lg" popup={true} onClose={handleOnClose} className="modals">
         <Modal.Header />
         <Modal.Body>
           <div className="text-center">

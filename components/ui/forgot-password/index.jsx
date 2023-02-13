@@ -104,7 +104,7 @@ function ForgotPassword({ forgotModal, onClose }) {
   };
 
   return (
-    <Modal show={forgotModal} size="lg" popup={true} onClose={PopupCloseHanler}>
+    <Modal show={forgotModal} size="lg" popup={true} onClose={PopupCloseHanler} className="modals">
       <Modal.Header />
       <Modal.Body>
         <div className="text-center">
